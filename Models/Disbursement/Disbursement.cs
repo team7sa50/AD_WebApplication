@@ -12,8 +12,7 @@ namespace Team7_StationeryStore.Models
     public class Disbursement
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string id;
-
+        public string Id { get; set; }
         public string DepartmentsId { get; set; }
         public DateTime GeneratedDate { get; set; }
         public DateTime CollectionDate { get; set; }

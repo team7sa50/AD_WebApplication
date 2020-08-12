@@ -17,26 +17,24 @@ namespace Team7_StationeryStore.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; set; }
         [Required]
-        [Key]
-        [ForeignKey("Inventory")]
-        public string InventoryItemId { get; set; }
+        public string InventoryId { get; set; }
         [Required]
-        [Key]
-        [ForeignKey("Employee")]
         public string EmployeeId { get; set; }
+        /*        [Required]
+                public string reqEmployeeId { get; set; }*/
+
         //Beaware of this
-        [Required]
-        [Key]
-        [ForeignKey("ApprovedEmployee")]
-        public string approvedEmployeeId { get; set; }
+        /*        [Required]
+                public string approvedEmployeeId { get; set; }*/
         public int qty { get;  set; }
         public DateTime date { get;  set; }
         public string reason { get;  set; }
         public Status status { get;  set; }
 
-
+/*        [ForeignKey("reqEmployeeId")]*/
         public virtual Employee Employee { get;  set; }
-        public virtual Employee ApprovedEmployee { get; set; }
+/*        [ForeignKey("approvedEmployeeId")]
+        public virtual Employee ApprovedEmployee { get; set; }*/
         public virtual Inventory Inventory { get; set; }
 
     }
