@@ -19,7 +19,9 @@ namespace Team7_StationeryStore.Models
         [Required]
         public string InventoryId { get; set; }
         [Required]
-        public string EmployeeId { get; set; }
+        public string EmEmployeeId { get; set; }
+        [Required]
+        public string appEmEmployeeId { get; set; }
         /*        [Required]
                 public string reqEmployeeId { get; set; }*/
 
@@ -32,7 +34,8 @@ namespace Team7_StationeryStore.Models
         public Status status { get;  set; }
 
 /*        [ForeignKey("reqEmployeeId")]*/
-        public virtual Employee Employee { get;  set; }
+        public virtual Employee EmEmployee { get;  set; }
+        public virtual Employee appEmEmployee { get; set; }
 /*        [ForeignKey("approvedEmployeeId")]
         public virtual Employee ApprovedEmployee { get; set; }*/
         public virtual Inventory Inventory { get; set; }

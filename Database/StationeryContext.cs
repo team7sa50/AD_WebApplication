@@ -14,7 +14,20 @@ namespace Team7_StationeryStore.Database
 
         protected override void OnModelCreating(ModelBuilder model)
         {
+            model.Entity<AdjustmentVoucher>(entity =>
+            {
+                entity.HasOne(d => d.EmEmployee)
+                .WithMany(p => p.empAdjustment)
+                .HasForeignKey(d => d.EmEmployeeId)
+                .HasConstraintName("FK_Adjustment_Employee");
 
+                entity.HasOne(d => d.appEmEmployee)
+       .WithMany(p => p.appEmpAdjustment)
+       .HasForeignKey(d => d.appEmEmployeeId)
+       .OnDelete(DeleteBehavior.SetNull)
+       .OnDelete(DeleteBehavior.NoAction)
+       .HasConstraintName("FK_Adjustment_Employee_Approved");
+            });
         }
 
         public DbSet<CollectionPoint> collectionPoints { get; set; }
