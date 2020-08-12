@@ -9,7 +9,7 @@ namespace Team7_StationeryStore.Models
     public class Inventory
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string ItemId { get; set; }
+        public string Id { get; set; }
         [Required]
         public string ItemCategoryId { get; set; }
         public string itemCode { get; set; }

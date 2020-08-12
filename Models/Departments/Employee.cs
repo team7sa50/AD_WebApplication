@@ -23,7 +23,7 @@ namespace Team7_StationeryStore.Models
         public string Password { get;  set; }
         public Role Role { get;  set; }
         [Required]
-        public string DepartmentId { get;  set; }
+        public string DepartmentsId { get;  set; }
         public virtual Departments Departments { get;set; }
     }
 }

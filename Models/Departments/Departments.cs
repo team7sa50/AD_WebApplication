@@ -15,8 +15,11 @@ namespace Team7_StationeryStore.Models
         public string DeptName { get; set; }
         [Required]
         public string DeptCode { get; set; }
-        public string PhoneNumber { get; set; }
-        public string FaxNumber { get; set; }
+        public long PhoneNumber { get; set; }
+        public long FaxNumber { get; set; }
+        public string ContactName { get; set; }
+        public string DeptHead { get; set; }
+        public string Representative { get; set; }
         [Required]
         public string CollectionPointId { get;  set; }
         [Required]

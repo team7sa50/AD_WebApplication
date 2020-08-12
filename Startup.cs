@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Microsoft.EntityFrameworkCore;
+using Team7_StationeryStore.Models;
+using Team7_StationeryStore.Database;
 namespace Team7_StationeryStore
 {
     public class Startup
@@ -24,10 +26,14 @@ namespace Team7_StationeryStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContext<StationeryContext>(opt =>
+           opt.UseLazyLoadingProxies()
+           .UseSqlServer(Configuration.GetConnectionString("DbConn")));
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, StationeryContext db)
         {
             if (env.IsDevelopment())
             {
@@ -43,7 +49,7 @@ namespace Team7_StationeryStore
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseSession();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -52,6 +58,9 @@ namespace Team7_StationeryStore
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+            new DbSeeder(db);
         }
     }
 }

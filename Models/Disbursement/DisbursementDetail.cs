@@ -9,7 +9,7 @@ namespace Team7_StationeryStore.Models
     public class DisbursementDetail
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string id;
+        public string Id { get; set; }
 
         public string RequisitionDetailId { get; set; }
         public string DisbursementId { get; set; }

@@ -9,7 +9,7 @@ namespace Team7_StationeryStore.Models
     public class EmployeeCart
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string CartId { get; set; }
+        public string Id { get; set; }
         public string EmployeeId { get; set; }
         public string InventoryId { get; set; }
         public virtual Inventory Inventory { get; set;}
