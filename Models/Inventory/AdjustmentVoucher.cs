@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Team7_StationeryStore.Models
+{
+    public enum Status
+    {
+        APPROVED, PENDING
+    }
+
+    public class AdjustmentVoucher
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public string Id { get; set; }
+        [Required]
+        [Key]
+        [ForeignKey("Inventory")]
+        public string InventoryItemId { get; set; }
+        [Required]
+        [Key]
+        [ForeignKey("Employee")]
+        public string EmployeeId { get; set; }
+        //Beaware of this
+        [Required]
+        [Key]
+        [ForeignKey("ApprovedEmployee")]
+        public string approvedEmployeeId { get; set; }
+        public int qty { get;  set; }
+        public DateTime date { get;  set; }
+        public string reason { get;  set; }
+        public Status status { get;  set; }
+
+
+        public virtual Employee Employee { get;  set; }
+        public virtual Employee ApprovedEmployee { get; set; }
+        public virtual Inventory Inventory { get; set; }
+
+    }
+}
