@@ -24,6 +24,7 @@ namespace Team7_StationeryStore.Models
         public Role Role { get;  set; }
         [Required]
         public string DepartmentsId { get;  set; }
+        public string Status { get; set; }
         public virtual Departments Departments { get;set; }
         public virtual ICollection<AdjustmentVoucher> empAdjustment { get; set; }
         public  virtual ICollection<AdjustmentVoucher> appEmpAdjustment { get; set; }

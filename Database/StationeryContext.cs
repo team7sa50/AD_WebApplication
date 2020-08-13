@@ -9,7 +9,7 @@ namespace Team7_StationeryStore.Database
 {
     public class StationeryContext : DbContext
     {
-        public StationeryContext(DbContextOptions<StationeryContext> options) 
+        public StationeryContext(DbContextOptions<StationeryContext> options)
             : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder model)
@@ -22,11 +22,11 @@ namespace Team7_StationeryStore.Database
                 .HasConstraintName("FK_Adjustment_Employee");
 
                 entity.HasOne(d => d.appEmEmployee)
-       .WithMany(p => p.appEmpAdjustment)
-       .HasForeignKey(d => d.appEmEmployeeId)
-       .OnDelete(DeleteBehavior.SetNull)
-       .OnDelete(DeleteBehavior.NoAction)
-       .HasConstraintName("FK_Adjustment_Employee_Approved");
+               .WithMany(p => p.appEmpAdjustment)
+               .HasForeignKey(d => d.appEmEmployeeId)
+               .OnDelete(DeleteBehavior.SetNull)
+               .OnDelete(DeleteBehavior.NoAction)
+               .HasConstraintName("FK_Adjustment_Employee_Approved");
             });
         }
 
