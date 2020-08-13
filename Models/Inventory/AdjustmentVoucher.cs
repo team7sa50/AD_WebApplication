@@ -22,22 +22,13 @@ namespace Team7_StationeryStore.Models
         public string EmEmployeeId { get; set; }
         [Required]
         public string appEmEmployeeId { get; set; }
-        /*        [Required]
-                public string reqEmployeeId { get; set; }*/
-
-        //Beaware of this
-        /*        [Required]
-                public string approvedEmployeeId { get; set; }*/
         public int qty { get;  set; }
         public DateTime date { get;  set; }
         public string reason { get;  set; }
         public Status status { get;  set; }
 
-/*        [ForeignKey("reqEmployeeId")]*/
         public virtual Employee EmEmployee { get;  set; }
         public virtual Employee appEmEmployee { get; set; }
-/*        [ForeignKey("approvedEmployeeId")]
-        public virtual Employee ApprovedEmployee { get; set; }*/
         public virtual Inventory Inventory { get; set; }
 
     }
