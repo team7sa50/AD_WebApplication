@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Team7_StationeryStore.Models;
-using Team7_StationeryStore.Services;
 using Team7_StationeryStore.Database;
 namespace Team7_StationeryStore.Controllers
 {
