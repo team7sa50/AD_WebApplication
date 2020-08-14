@@ -1,0 +1,84 @@
+﻿
+@{
+    ViewData["Title"] = "PurchaseOrder";
+    var lists = (List<Supplier>)ViewData["suppliers"];
+    var inventories = (List<Inventory>)ViewData["inventories"];
+
+
+}
+
+<h1>PurchaseOrder</h1>
+<head>
+  
+</head>
+<div>
+<div>
+    <table cellspacing="0" cellpadding="0" border="0" width="325">
+        <tr>
+            <td>
+                <table cellspacing="0" cellpadding="1" border="1" width="300">
+                    <tr style="color:white;background-color:grey">
+                        <th>ItemCode</th>
+                        <th>Description</th>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div style="width:320px; height:80px; overflow:auto;">
+                    <table cellspacing="0" cellpadding="1" border="1" width="300">
+                        @foreach (var i in inventories)
+                        {
+                        <tr>
+                            <td>@i.itemCode</td>
+                            <td>@i.description</td>
+                        </tr>
+                        }
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+                <div>
+                    <body>
+                        @using (Html.BeginForm("SavePurchaseOrder", "PurchaseOrder", FormMethod.Post))
+                        {
+
+                            <table>
+                                <tr>
+                                    <td>Supplier</td>
+                                    <td>
+                                        <select name="suppliers" id="suppliers">
+
+                                            @foreach (var c in lists)
+                                            {
+                                                <option value="@c.Id"> @c.name</option>
+
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ItemCode</td>
+                                    <td><input type="text" name="ItemCode" id="itemCode" required /></td>
+                                </tr>
+                                <tr>
+                                    <td>Quantity</td>
+                                    <td><input type="number" name="Quantity" id="quantity" required /></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><input type="Submit" value="Enter" id="login" /></td>
+                                </tr>
+                            </table>
+                        }
+                    </body>
+                </div>
+
+</div>

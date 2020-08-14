@@ -14,14 +14,14 @@ namespace Team7_StationeryStore.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; set; }
-        
+        public string DepartmentId { get; set; }
         [ForeignKey("Employee")]
         public string EmployeeId { get; set; }
-
         [ForeignKey("ApprovedEmployee")]
         public string ApprovedEmployeeId { get; set; }
         public DateTime DateSubmitted { get; set; }
         public ReqStatus status { get; set; }
+        public string Remarks { get; set; }
         public virtual Employee Employee { get; set; }
         public virtual Employee ApprovedEmployee { get; set; }
     }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Team7_StationeryStore.Database;
 using Team7_StationeryStore.Models;
-using Team7_StationeryStore.Services;
 
 namespace Team7_StationeryStore.Controllers
 {
@@ -16,11 +16,10 @@ namespace Team7_StationeryStore.Controllers
         private readonly ILogger<HomeController> _logger;
 
         protected StationeryContext dbcontext;
-        protected UserService userService;
-
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, StationeryContext dbcontext)
         {
             _logger = logger;
+            this.dbcontext = dbcontext;
         }
 
         public IActionResult Index()
@@ -38,12 +37,14 @@ namespace Team7_StationeryStore.Controllers
             if (email == null || password == null) {
                 return View();
             }
-
-            Employee user = userService.findEmployee(email);
+            Employee user = dbcontext.employees.Where(x => x.Email == email).FirstOrDefault();
             if (user == null || password !=user.Password) {
                 ViewData["login_error"] = "User not found/Password Incorrect";
                 return View();
             }
+
+            ViewData["userId"] = user.Id;
+
             if (user.Role == Role.DEPT_HEAD || user.Role == Role.DEPT_REP || user.Role == Role.EMPLOYEE)
             {
                 return RedirectToAction("Index", "Department", new {userid = user.Id});
@@ -55,6 +56,7 @@ namespace Team7_StationeryStore.Controllers
         }
         public ActionResult Logout()
         {
+            HttpContext.Session.Clear();
             return RedirectToAction("Login", "Home");
         }
 
