@@ -1,71 +1,170 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+header {
+    z-index: 1;
+    background: white;
+    height: 60px;
+    padding-top: 5px;
+    font-family: 'Source Sans Pro', sans-serif;
 }
 
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
+.logo {
+    color: #1e459c;
+    width: 200px;
+    height: 60px;
+    font-size: 20px;
+    padding-top: 15px;
+    padding-left: 15px;
+    display: inline-block;
+    float: left;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    .logo span {
+        color: #4877bd;
+    }
+
+header ul {
+    list-style-type: none;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+
+/* The button used to open the sidebar */
+header .menubtn {
+    font-size: 15px;
+    position: relative;
+    cursor: pointer;
+    background: white;
+    color: rgb(31,77,137);
+    float: left;
+    text-align: center;
+    display: inline-block;
+    border: none;
+    width: 150px;
+    height: 55px;
+    font-weight: 700;
+    padding-left: 10px;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    header .menubtn:hover {
+        color: #4877bd;
+        border: none;
+    }
+
+header .userdetails {
+    display: inline-block;
+    float: right;
+    width: 150px;
+    text-align: center;
+    border-left-style: solid;
+    border-left-color: grey;
+    font-size: 15px;
+    margin: 15px 15px;
+    color: rgb(31,77,137);
+    font-weight: 700;
 }
 
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+header img {
+    display: inline-block;
+    float: right;
+    margin-top: 5px;
+    max-width: 40px;
 }
 
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
-}
+/*Login Page CSS*/
+@charset "utf=8"
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: black !important;
 }
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+
+* {
+    margin: 0px;
+    padding: 0px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
+
+
+.homecontainer {
+    position: relative;
+    width: 650px;
+    min-height: 400px;
+    margin: 0 auto;
+    margin-top: 100px;
+    background: url('~/lib/img/loginbg.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    box-shadow: 5px 10px 10px #888888;
+}
+
+.logocontainer {
+    float: left;
+    width: 40%;
+    ;
+    margin-left: 10px;
+    margin-top: 20%;
+    padding-left: 30px;
+    font-size: 11px;
+    font-family: Arial, Helvetica;
+    color: #1F4D89;
+    text-align: center;
+}
+
+    .logocontainer p {
+        font-size: 8px;
+        color: black;
+    }
+
+    .logocontainer h1{
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .logocontainer img {
+        width: 30%;
+    }
+
+.logincontainer {
+    float: right;
+    height: 100%;
+    margin-top: 16%;
+    width: 30%;
+    margin-right: 8%;
+}
+
+    .logincontainer h5 {
+        color: #1F4D89;
+        padding: 10px 0px;
+        font-size: 12px;
+        font-family: Arial, Helvetica;
+    }
+
+
+    .logincontainer input[type=text] {
+        border: 1px solid gray;
+        padding: 6px 10px;
+        margin-bottom: 4px;
+        width: 100%;
+        font-size: 10px;
+        height: 30px;
+        text-decoration: none;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
+
+    .logincontainer input[type=submit] {
+        background-color: #5080FB;
+        border: none;
+        color: white;
+        margin-top: 20px;
+        padding: 6px 10px;
+        font-size: 11px;
+        text-decoration: none;
+        cursor: pointer;
+        width: 100%;
+    }

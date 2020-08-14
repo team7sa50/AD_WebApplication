@@ -24,12 +24,7 @@ namespace Team7_StationeryStore.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-
-        public IActionResult Login() {
-            return View();
+            return View("Login");
         }
 
         public IActionResult Login(string email, string password) {

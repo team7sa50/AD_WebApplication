@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf=8">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="~/css/viewReq.css">
+    <link rel="stylesheet" type="text/css" href="~/css/site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <script src="https://use.fontawesome.com/973befe495.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <ul>
+            <li class="logo">Logic <span>Stationery</span></li>
+            <li> <button class="menubtn" href="#home"> Menu</button></li>
+            <li> <button class="menubtn" href="#inventory">Inventory</li>
+            <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
+            <li><p class="userdetails">Adam Smith</p> <img src="employeeicon.jpg"> </li>
+        </ul>
+    </header>
+
+    <!--Tab for All Requisitions-->
+
+    <div class="requisitionmenu">
+        <button class="tablinks" onclick="openReq(event, 'All')" id="defaultOpen">All</button>
+        <button class="tablinks" onclick="openReq(event, 'New')">New</button>
+        <button class="tablinks" onclick="openReq(event, 'Outstanding')">Outstanding</button>
+    </div>
+
+    <div id="main">
+        <div class="requisitioncontainer" id="All">
+            <div class="requisitionfilter">
+
+                <form>
+                    <h1>Requisitions</h1>
+                    <fieldset>
+                        <div style="float:left;margin-right:20px;">
+                            <label for="Department">Department name</label>
+                            <select id="dept" name="Department">
+                                <option value="All" selected>All Departments</option>
+                                <option value="Library">Library Department</option>
+                                <option value="Math">Math Department</option>
+                                <option value="English">English Department</option>
+                                <option value="History">History Department</option>
+                            </select>
+                        </div>
+                        <div style="float:left;">
+                            <label for="Status">Status</label>
+                            <select id="status" name="Status">
+                                <option value="All" selected>All</option>
+                                <option value="Recieved">Recieved</option>
+                                <option value="Processing">Processing</option>
+                                <option value="Collection">Collection</option>
+                                <option value="Outstanding">Outstanding</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <div style="float:left;margin-right:20px;">
+                            <label for="StartDate">Start date</label>
+                            <input type="Date" name="StartDate">
+                        </div>
+                        <div style="float:left;">
+                            <label for="EndDate">End date</label>
+                            <input type="Date" name="EndDate">
+                        </div>
+                        <input style="float:left;margin-right:20px;" type="submit" value="Filter">
+                    </fieldset>
+
+                </form>
+            </div>
+
+            <table class="requisitiontable">
+                <tr>
+                    <th>Checkbox</th>
+                    <th>Date</th>
+                    <th>Id</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+                <tr>
+                    <td><input type=checkbox></td>
+                    <td>03/08/2020</td>
+                    <td>FASS_01</td>
+                    <td>Outstanding</td>
+                    <td><button onclick="openDetail()">View</button></td>
+                </tr>
+                <tr>
+                    <td><input type=checkbox></td>
+                    <td>03/08/2020</td>
+                    <td>ISS_01</td>
+                    <td>Recieved</td>
+                    <td><button onclick="openDetail()">View</button></td>
+                </tr>
+                <tr>
+                    <td><input type=checkbox></td>
+                    <td>03/08/2020</td>
+                    <td>SOE_01</td>
+                    <td>Recieved</td>
+                    <td><button onclick="openDetail()">View</button></td>
+                </tr>
+                <tr>
+                    <td><input type=checkbox></td>
+                    <td>03/08/2020</td>
+                    <td>SSAS_01</td>
+                    <td>Outstanding</td>
+                    <td><button onclick="openDetail()">View</button></td>
+                </tr>
+                <tr>
+                    <td><input type=checkbox></td>
+                    <td>03/08/2020</td>
+                    <td>ZOOM_01</td>
+                    <td>Outstanding</td>
+                    <td><button onclick="openDetail()">View</button></td>
+                </tr>
+                <tr>
+                    <td><input type=checkbox></td>
+                    <td>03/08/2020</td>
+                    <td>LIB_055</td>
+                    <td>Recieved</td>
+                    <td><button onclick="openDetail()">View</button></td>
+                </tr>
+                <tr>
+                    <td><input type=checkbox></td>
+                    <td>03/08/2020</td>
+                    <td>MED_01</td>
+                    <td>Recieved</td>
+                    <td><button onclick="openDetail()">View</button></td>
+                </tr>
+            </table>
+            <button id="genretrieval"> Generate Retrieval List</button>
+        </div>
+    </div>
+
+    <!--Tab for New Requisitions-->
+
+    <div class="requisitioncontainer" id="New">
+        <div class="requisitionfilter">
+
+            <form>
+                <h1>Requisitions</h1>
+                <fieldset>
+                    <div style="float:left;margin-right:20px;">
+                        <label for="Department">Department name</label>
+                        <select id="dept" name="Department">
+                            <option value="All" selected>All Departments</option>
+                            <option value="Library">Library Department</option>
+                            <option value="Math">Math Department</option>
+                            <option value="English">English Department</option>
+                            <option value="History">History Department</option>
+                        </select>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div style="float:left;margin-right:20px;">
+                        <label for="StartDate">Start date</label>
+                        <input type="Date" name="StartDate">
+                    </div>
+                    <div style="float:left;">
+                        <label for="EndDate">End date</label>
+                        <input type="Date" name="EndDate">
+                    </div>
+                    <input style="float:left;margin-right:20px;" type="submit" value="Filter">
+                </fieldset>
+
+            </form>
+        </div>
+
+        <table class="requisitiontable">
+            <tr>
+                <th>Checkbox</th>
+                <th>Date</th>
+                <th>Id</th>
+                <th>Status</th>
+                <th>Details</th>
+            </tr>
+
+            <tr>
+                <td><input type=checkbox></td>
+                <td>03/08/2020</td>
+                <td>ISS_01</td>
+                <td>Recieved</td>
+                <td><button onclick="openDetail()">View</button></td>
+            </tr>
+            <tr>
+                <td><input type=checkbox></td>
+                <td>03/08/2020</td>
+                <td>SOE_01</td>
+                <td>Recieved</td>
+                <td><button onclick="openDetail()">View</button></td>
+            </tr>
+
+            <tr>
+                <td><input type=checkbox></td>
+                <td>03/08/2020</td>
+                <td>LIB_055</td>
+                <td>Recieved</td>
+                <td><button onclick="openDetail()">View</button></td>
+            </tr>
+            <tr>
+                <td><input type=checkbox></td>
+                <td>03/08/2020</td>
+                <td>MED_01</td>
+                <td>Recieved</td>
+                <td><button onclick="openDetail()">View</button></td>
+            </tr>
+        </table>
+        <button id="genretrieval"> Generate Retrieval List</button>
+    </div>
+
+
+    <!--Tab for Outstanding Requisitions-->
+
+    <div class="requisitioncontainer" id="Outstanding">
+        <div class="requisitionfilter">
+
+            <form>
+                <h1>Requisitions</h1>
+                <fieldset>
+                    <div style="float:left;margin-right:20px;">
+                        <label for="Department">Department name</label>
+                        <select id="dept" name="Department">
+                            <option value="All" selected>All Departments</option>
+                            <option value="Library">Library Department</option>
+                            <option value="Math">Math Department</option>
+                            <option value="English">English Department</option>
+                            <option value="History">History Department</option>
+                        </select>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div style="float:left;margin-right:20px;">
+                        <label for="StartDate">Start date</label>
+                        <input type="Date" name="StartDate">
+                    </div>
+                    <div style="float:left;">
+                        <label for="EndDate">End date</label>
+                        <input type="Date" name="EndDate">
+                    </div>
+                    <input style="float:left;margin-right:20px;" type="submit" value="Filter">
+                </fieldset>
+
+            </form>
+        </div>
+
+        <table class="requisitiontable">
+            <tr>
+                <th>Checkbox</th>
+                <th>Date</th>
+                <th>Id</th>
+                <th>Status</th>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td><input type=checkbox></td>
+                <td>03/08/2020</td>
+                <td>FASS_01</td>
+                <td>Outstanding</td>
+                <td><button onclick="openDetail()">View</button></td>
+            </tr>
+
+            <tr>
+                <td><input type=checkbox></td>
+                <td>03/08/2020</td>
+                <td>SSAS_01</td>
+                <td>Outstanding</td>
+                <td><button onclick="openDetail()">View</button></td>
+            </tr>
+            <tr>
+                <td><input type=checkbox></td>
+                <td>03/08/2020</td>
+                <td>ZOOM_01</td>
+                <td>Outstanding</td>
+                <td><button onclick="openDetail()">View</button></td>
+            </tr>
+
+            <tr>
+                <td><input type=checkbox></td>
+                <td>03/08/2020</td>
+                <td>MED_01</td>
+                <td>Recieved</td>
+                <td><button onclick="openDetail()">View</button></td>
+            </tr>
+
+        </table>
+        <button id="genretrieval"> Generate Retrieval List</button>
+    </div>
+
+    <div id="myDetail" class="detail">
+        <a href="javascript:void(0)" id="detailclosebtn" onclick="closeDetail()">&times;</a>
+
+        <table class="detailRForm">
+
+            <tr>
+                <th style="font-size: 14px;">Request FASS01</th>
+            </tr>
+            <tr style="border-top: 1px solid gray;">
+                <th>Department</th>
+                <td>Arts and Social Science</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>03/08/2020</td>
+            </tr>
+            <tr>
+                <th>Recieved By</th>
+                <td>Chris Lee</td>
+            </tr>
+
+            <tr>
+                <th>Status</th>
+                <td>
+                    <p id="originalStatus">Recieved<button class="editbtn" onclick="showChangeStatus()"><i class="far fa-edit"></i></button></p>
+
+                    <form id="changeStatus">
+                        <select>
+                            <option value="Recieved">Recieved</option>
+                            <option value="Processing">Processing</option>
+                        </select>
+                        <input type="submit" value="Ok" style="font-size:11px"></input>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+    <script>
+        function openDetail() {
+            document.getElementById("myDetail").style.width = "300px";
+            document.getElementById("All").style.marginRight = "250px";
+            document.getElementById("Outstanding").style.marginRight = "250px";
+            document.getElementById("New").style.marginRight = "250px";
+        }
+
+        /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+        function closeDetail() {
+            document.getElementById("myDetail").style.width = "0";
+            document.getElementById("All").style.marginRight = "auto";
+            document.getElementById("Outstanding").style.marginRight = "auto";
+            document.getElementById("New").style.marginRight = "auto";
+        }
+
+        function showChangeStatus() {
+            document.getElementById("changeStatus").style.display = "block";
+            document.getElementById("originalStatus").style.display = "none";
+        }
+
+        document.getElementById("defaultOpen").click();
+
+        function openReq(evt, cityName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("requisitioncontainer");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+</body>
