@@ -1,0 +1,43 @@
+﻿
+@{
+    var lists = (List<Employee>)ViewData["Employees"];
+    var userid = TempData["UserId"];
+}
+<div>
+    <h2>Delegate Approval Duties</h2>
+    <h3>Choose an employee in your department to take over your approval duties for a specified period</h3>
+    @using (Html.BeginForm("submitDelegation", "Department", FormMethod.Post))
+     {
+        <input type="hidden" id="userId" name="userId" value=@userid/>
+        <div>
+            <table>
+
+                <tr>
+                    <td>Employee Name: </td>
+                    <td>
+                        <select name="employeeName" id="employeeName">
+                            @foreach (var d in lists)
+                            {
+                                <option>@d.Name</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>From: </td>
+                    <td>
+                        <input type="date" id="startDate" name="startDate" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>To: </td>
+                    <td>
+                        <input type="date" id="endDate" name="endDate" />
+                    </td>
+                </tr>
+            </table>
+            <input type="submit" id="submit" value="Assign" />
+        </div>
+
+     }
+</div>
