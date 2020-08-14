@@ -16,7 +16,6 @@ namespace Team7_StationeryStore.Controllers
         private readonly ILogger<HomeController> _logger;
 
         protected StationeryContext dbcontext;
-
         public HomeController(ILogger<HomeController> logger, StationeryContext dbcontext)
         {
             _logger = logger;
@@ -38,7 +37,6 @@ namespace Team7_StationeryStore.Controllers
             if (email == null || password == null) {
                 return View();
             }
-
             Employee user = dbcontext.employees.Where(x => x.Email == email).FirstOrDefault();
             if (user == null || password !=user.Password) {
                 ViewData["login_error"] = "User not found/Password Incorrect";
