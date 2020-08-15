@@ -23,6 +23,7 @@ namespace Team7_StationeryStore.Models
         public ReqStatus status { get; set; }
         public string Remarks { get; set; }
         public virtual Employee Employee { get; set; }
+        public virtual Departments Department { get; set; }
         public virtual Employee ApprovedEmployee { get; set; }
     }
 }
