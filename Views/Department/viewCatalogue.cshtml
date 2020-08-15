@@ -1,19 +1,136 @@
 ﻿@using Team7_StationeryStore.Models;
+
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-            var lists = (List<Inventory>)ViewData["stationeryCatalgoue"];
+    var lists = (List<Inventory>)ViewData["stationeryCatalgoue"];
+    var categories = (List<ItemCategory>)ViewData["categories"];
+    var userid = TempData["userid"];
 }
-<div>
-    <table>
-        @foreach(var c in lists)
+
+
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</head>
+
+
+<br>
+
+<form class="form-inline md-form mr-auto mb-4" action="">
+    <input class="form-control mr-sm-2" type="text" placeholder="Search categories" aria-label="Search">
+    <button class="btn btn-outline-warning btn-rounded btn-sm my-0" type="submit">Search</button>
+</form>
+
+<form asp-controller="Department" asp-action="Search" method="POST">
+    <p>
+        <input type="hidden" name="userid" value="@userid" />
+        <input type="text" name="SearchString" placeholder="Search categories">
+        <input type="submit" value="Search" />
+    </p>
+</form>
+
+<form action="/action_page.php">
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Please select categories
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+            @foreach (var x in categories)
             {
-                <tr>
-                    <td>@c.itemCode</td>
-                    <td>@c.description</td>
-                    <td>@c.ItemCategory.name</td>
-                </tr>
+                <a class="dropdown-item" href="#">Action</a>
+                @x.name
+                <button> category</button>
             }
-    </table>
-</div>
+
+        </div>
+    </div>
+    <br>
+</form>
+
+<form asp-controller="Department" asp-action="Search" method="POST">
+    <div align=center>
+        <div style="width:320px; height:80px; overflow:auto;">
+            <table cellspacing="0" cellpadding="1" border="1" width="300">
+                @foreach (var i in lists)
+                {
+                    <tr>
+                        <td>@i.itemCode</td>
+                        <td>@i.description</td>
+                        <td><button data-toggle="modal" data-target="#myModal">Add to Cart</button></td>
+
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+
+    <div align=center>
+        foreach
+        <img src="pic_trulli.jpg" alt="Trulli" width="500" height="333">
+        Description
+        <button data-toggle="modal" data-target="#myModal">Add to Cart</button>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="modal-title" id="myModalLabel">#Item Code Item Name</h4>
+                </div>
+                <div class="modal-body">Quantity Needed</div>
+                <input type="text" value="1" class="xpf" name="wsxpf" id="txt">
+                <input type="button" onclick="add()" value="+"><input type="button" onclick="sub()" value="-"></td>
+
+                <script>
+                    var a = document.getElementsByClassName("xpf")[0];
+                    console.log('-----', a);
+                    var b = document.getElementsByName("wsxpf")[0];
+                    console.log('-----', b);
+                    var c = document.getElementById("txt");
+                    console.log('-----', c);
+                    function add() {
+                        var txt = document.getElementsByClassName("xpf")[0];
+                        var a = txt.value;
+                        a++;
+                        txt.value = a;
+                    }
+                    function sub() {
+                        var txt = document.getElementsByClassName("xpf")[0];
+                        var a = txt.value;
+                        if (a > 1) {
+                            a--;
+                            txt.value = a;
+                        } else {
+                            txt.value = 1;
+                        }
+                    }
+                </script>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Confirm</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</form>
+
+
+
+
+
+
+    <script src="scripts.js"></script>
