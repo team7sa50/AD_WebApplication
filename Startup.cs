@@ -62,7 +62,7 @@ namespace Team7_StationeryStore
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Login}/{id?}");
             });
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();

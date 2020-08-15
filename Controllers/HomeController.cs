@@ -24,7 +24,7 @@ namespace Team7_StationeryStore.Controllers
 
         public IActionResult Index()
         {
-            return View("Login");
+            return View();
         }
 
         public IActionResult Login(string email, string password) {
@@ -34,6 +34,7 @@ namespace Team7_StationeryStore.Controllers
             }
             Employee user = dbcontext.employees.Where(x => x.Email == email).FirstOrDefault();
             if (user == null || password !=user.Password) {
+                Console.WriteLine("Wrong Password");
                 ViewData["login_error"] = "User not found/Password Incorrect";
                 return View();
             }
@@ -45,7 +46,7 @@ namespace Team7_StationeryStore.Controllers
                 return RedirectToAction("Index", "Department", new {userid = user.Id});
             }
             else {
-
+                Console.WriteLine("Login successful, redirecting to clerk");
                 return RedirectToAction("Home", "StationeryStore", new { userid = user.Id});
             }
         }

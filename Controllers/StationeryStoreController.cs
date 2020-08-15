@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Team7_StationeryStore.Controllers
 {
-    public class StationeyStoreController : Controller
+    public class StationeryStoreController : Controller
     {
         public IActionResult Index()
         {
+            Console.WriteLine("Reach the stationery store controller");
             return View();
         }
     }

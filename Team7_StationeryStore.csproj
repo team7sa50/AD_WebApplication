@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\StationeyStore\NewFolder\" />
+    <Folder Include="Views\StationeryStore\NewFolder\" />
   </ItemGroup>
 
 </Project>
