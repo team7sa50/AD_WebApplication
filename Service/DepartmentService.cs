@@ -15,6 +15,10 @@ namespace Team7_StationeryStore.Service
         {
             this.dbcontext = dbcontext;
         }
+        public List<Departments> findAllDepartments()
+        {
+            return dbcontext.departments.ToList();
+        }
 
         public Employee findEmployeeById(string userId)
         {
