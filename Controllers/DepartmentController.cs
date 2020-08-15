@@ -33,10 +33,29 @@ namespace Team7_StationeryStore.Controllers
             return View();
         }
 
-        public IActionResult viewCatalogue() {
+        public IActionResult viewCatalogue()
+        {
             List<Inventory> stationeryCatalogue = invService.retrieveCatalogue();
+            List<ItemCategory> categories = invService.retrieveCategories();
             ViewData["stationeryCatalgoue"] = stationeryCatalogue;
+            ViewData["categories"] = categories;
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Search(string SearchString, string? userid)
+        {
+            List<ItemCategory> categories = invService.retrieveCategories();
+            List<Inventory> items = new List<Inventory>();
+
+            if (!String.IsNullOrEmpty(SearchString))
+            {
+                items = dbcontext.inventories.Where(s => s.itemCode.Contains(SearchString) || s.description.Contains(SearchString)).ToList();
+            }
+            ViewData["categories"] = categories;
+            ViewData["stationeryCatalgoue"] = items;
+            ViewData["userid"] = userid;
+            return View("viewCatalogue");
         }
 
         public IActionResult RaiseRequisition() {
@@ -44,8 +63,68 @@ namespace Team7_StationeryStore.Controllers
             return View();
         }
 
-        public IActionResult AddToCart(string itemId,int qty) {
+
+
+        /*public IActionResult AddToCart(string itemId,int qty) {
             return RedirectToAction("");
+        }*/
+
+        public IActionResult AddToCart(string itemid, int qty)
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            var User = dbcontext.employees.Where(x => x.Id == userid).FirstOrDefault();
+            AddItem(userid, itemid, qty);
+            return RedirectToAction("viewCatalogue");
+        }
+
+        public void AddItem(string userid, string itemid, int qty)
+        {
+            var cartItem = new EmployeeCart()
+            {
+                Id = Guid.NewGuid().ToString(),
+                EmployeeId = userid,
+                InventoryId = itemid,
+                Qty = qty,
+                Inventory = dbcontext.inventories.SingleOrDefault(p => p.Id == itemid)
+            };
+            dbcontext.employeeCarts.Add(cartItem);
+            dbcontext.SaveChanges();
+        }
+
+        public IActionResult UpdateQty(string itemId, int newQty)
+        {
+            int newqty = newQty;
+            string itemid = itemId;
+            string user = HttpContext.Session.GetString("userid");
+
+            var cartItem = dbcontext.employeeCarts
+                .Where(x => x.EmployeeId == user && x.InventoryId == itemid)
+                .FirstOrDefault();
+
+            if (cartItem != null)
+            {
+                if (newqty > 0)
+                {
+                    cartItem.Qty = newqty;
+                }
+                else
+                {
+                    RemoveItem(user, itemid);
+                }
+            }
+            dbcontext.SaveChanges();
+            return RedirectToAction("viewRequisition");
+        }
+
+        public void RemoveItem(string userid, string itemId)
+        {
+            var cartItem = dbcontext.employeeCarts
+                .Where(x => x.EmployeeId == userid && x.InventoryId == itemId)
+                .FirstOrDefault();
+            if (cartItem != null)
+            {
+                dbcontext.employeeCarts.Remove(cartItem);
+            }
         }
 
         public IActionResult viewRequisitionList() {
