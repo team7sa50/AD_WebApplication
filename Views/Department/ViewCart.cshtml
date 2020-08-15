@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewData["Title"] = "ViewCart";
+    var lists = (List<EmployeeCart>)ViewData["employeeCarts"];
+
+}
+
+<h1>ViewCart</h1>
+<table cellspacing="0" cellpadding="1" border="1" width="300">
+    @foreach (var i in lists)
+    {
+        <tr>
+            <td>@i.Inventory.itemCode</td>
+            <td>@i.Inventory.ItemCategory.name</td>
+            <td>@i.Qty</td>
+
+        </tr>
+    }
+    <tr>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+            <form asp-controller="Department" asp-action="RaiseRequisition" method="POST">
+                <input type="submit" value="Submit Requisition">
+            </form>
+        </td>
+    </tr>
+</table>
+

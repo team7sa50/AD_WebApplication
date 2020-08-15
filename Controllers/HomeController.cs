@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,26 +28,32 @@ namespace Team7_StationeryStore.Controllers
             return View("Login");
         }
 
-        public IActionResult Login(string email, string password) {
-
-            if (email == null || password == null) {
+        public IActionResult Login(string email, string password)
+        {
+            if (email == null || password == null)
+            {
+                ViewData["login_error"] = "Fill in User and Password";
                 return View();
             }
             Employee user = dbcontext.employees.Where(x => x.Email == email).FirstOrDefault();
-            if (user == null || password !=user.Password) {
-                ViewData["login_error"] = "User not found/Password Incorrect";
-                return View();
-            }
-
-            ViewData["userId"] = user.Id;
-
-            if (user.Role == Role.DEPT_HEAD || user.Role == Role.DEPT_REP || user.Role == Role.EMPLOYEE)
+            using (MD5 md5Hash = MD5.Create())
             {
-                return RedirectToAction("Index", "Department", new {userid = user.Id});
+                string hashPwd = MD5Hash.GetMd5Hash(md5Hash, password);
+                if (user == null || user.Password != hashPwd)
+                {
+                    ViewData["login_error"] = "User not found/Password Incorrect";
+                    return View();
+                }
             }
-            else {
-
-                return RedirectToAction("Home", "StationeryStore", new { userid = user.Id});
+            ViewData["userId"] = user.Id;
+            HttpContext.Session.SetString("userId", user.Id);
+            HttpContext.Session.SetString("Department", user.DepartmentsId); if (user.Role == Role.DEPT_HEAD || user.Role == Role.DEPT_REP || user.Role == Role.EMPLOYEE)
+            {
+                return RedirectToAction("viewCatalogue", "Department");
+            }
+            else
+            {
+                return RedirectToAction("Home", "StationeryStore", new { userid = user.Id });
             }
         }
         public ActionResult Logout()
