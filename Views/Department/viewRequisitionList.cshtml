@@ -1,0 +1,25 @@
+﻿@using Team7_StationeryStore.Models;
+@{
+    ViewData["Title"] = "viewRequisitionList";
+    var lists = (List<Requisition>)ViewData["Requisitions"];
+
+}
+
+<h1>viewRequisitionList</h1>
+<table cellspacing="0" cellpadding="1" border="1" width="300">
+    @foreach (var i in lists)
+    {
+        <tr>
+            <td>@i.Id</td>
+            <td>@i.DateSubmitted</td>
+            <td>@i.status</td>
+            <td></td>
+            <td></td>
+
+        </tr>
+    }
+
+</table>
+
+
+

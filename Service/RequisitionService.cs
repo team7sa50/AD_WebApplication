@@ -12,10 +12,12 @@ namespace Team7_StationeryStore.Service
     public class RequisitionService
     {
         protected StationeryContext dbcontext;
+        protected DepartmentService deptService;
 
-        public RequisitionService(StationeryContext dbcontext)
+        public RequisitionService(StationeryContext dbcontext, DepartmentService deptService)
         {
             this.dbcontext = dbcontext;
+            this.deptService = deptService;
         }
         public List<Requisition> findAllRequisitionsFromStationery()
         {
@@ -31,6 +33,11 @@ namespace Team7_StationeryStore.Service
         public List<Requisition> retrieveRequisitionList(Employee employee) { 
             
             return dbcontext.requisitions.Where(x => x.DepartmentId == employee.DepartmentsId).ToList();
+        }
+        public List<Requisition> retrieveRequisitionByEmployee(Employee e)
+        {
+            return dbcontext.requisitions.Where(x => x.EmployeeId == e.Id).ToList();
+
         }
 
         public Requisition findRequisition(string requisitionId) { 
@@ -64,6 +71,34 @@ namespace Team7_StationeryStore.Service
 
             }
             return data;
+        }
+        public List<EmployeeCart> retrieveEmployeeCart(string userId) { 
+            return dbcontext.employeeCarts.Where(x => x.EmployeeId == userId).ToList();
+        }
+        public void CreateRequisition(string userId)
+        {
+            List<EmployeeCart> cartList = dbcontext.employeeCarts.Where(x => x.EmployeeId == userId).ToList();
+            Employee emp = deptService.findEmployeeById(userId);
+            Requisition newRequisition = new Requisition(emp.Departments.DeptCode);
+            newRequisition.status = ReqStatus.AWAITING_APPROVAL;
+            Employee approver = deptService.setApprover(userId);
+            newRequisition.ApprovedEmployee = approver;
+            newRequisition.ApprovedEmployeeId = approver.Id;
+            newRequisition.Employee = emp;
+            newRequisition.EmployeeId = emp.Id;
+            newRequisition.DepartmentId = emp.Departments.Id;
+            foreach (var i in cartList)
+            {
+                Inventory inv = dbcontext.inventories.Where(x => x.Id == i.Id).FirstOrDefault();
+                RequisitionDetail requisitionDetail = new RequisitionDetail();
+                requisitionDetail.Id= Guid.NewGuid().ToString();
+                requisitionDetail.Inventory = i.Inventory;
+                requisitionDetail.RequestedQty = i.Qty;
+                dbcontext.Add(requisitionDetail);
+            }
+            dbcontext.Add(newRequisition);
+            dbcontext.employeeCarts.RemoveRange(cartList);
+            dbcontext.SaveChanges();
         }
 
     }
