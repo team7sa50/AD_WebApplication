@@ -37,10 +37,13 @@ namespace Team7_StationeryStore.Controllers
 
         public IActionResult viewCatalogue()
         {
+            string userid = HttpContext.Session.GetString("userId");
             List<Inventory> stationeryCatalogue = invService.retrieveCatalogue();
             List<ItemCategory> categories = invService.retrieveCategories();
+            Employee emp = deptService.findEmployeeById(userid);
             ViewData["stationeryCatalgoue"] = stationeryCatalogue;
             ViewData["categories"] = categories;
+            ViewData["username"] = emp.Name;
             return View();
         }
 
@@ -76,7 +79,10 @@ namespace Team7_StationeryStore.Controllers
         {
             string userid = HttpContext.Session.GetString("userId");
             List<EmployeeCart> employeeCarts = reqService.retrieveEmployeeCart(userid);
+            Employee emp = deptService.findEmployeeById(userid);
             ViewData["employeeCarts"] = employeeCarts;
+            ViewData["username"] = emp.Name;
+            ViewData["userid"] = userid;
             return View();
         }
         public void AddItem(string userid, string itemid, int qty)
@@ -106,9 +112,7 @@ namespace Team7_StationeryStore.Controllers
             }
         }
 
-        //Double check if this is needed
-        public IActionResult UpdateQty(string itemId, int newQty)
-        {
+        /*public IActionResult UpdateQty(string itemId, int newQty)
             int newqty = newQty;
             string itemid = itemId;
             string user = HttpContext.Session.GetString("userid");
@@ -130,9 +134,9 @@ namespace Team7_StationeryStore.Controllers
             }
             dbcontext.SaveChanges();
             return RedirectToAction("viewRequisition");
-        }
+        }*/
 
-        public void RemoveItem(string userid, string itemId)
+        public IActionResult RemoveItem(string userid, string itemId)
         {
             var cartItem = dbcontext.employeeCarts
                 .Where(x => x.EmployeeId == userid && x.InventoryId == itemId)
@@ -141,6 +145,25 @@ namespace Team7_StationeryStore.Controllers
             {
                 dbcontext.employeeCarts.Remove(cartItem);
             }
+           
+            dbcontext.SaveChanges();
+            return RedirectToAction("ViewCart");
+        }
+
+        public IActionResult RemoveAllItems()
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            var cartItem = dbcontext.employeeCarts
+                .Where(x => x.EmployeeId == userid)
+                .ToList();
+            if (cartItem != null)
+            {
+                foreach (var i in cartItem)
+                    dbcontext.employeeCarts.Remove(i);
+            }
+
+            dbcontext.SaveChanges();
+            return RedirectToAction("viewCatalogue");
         }
         
         //For Employee
@@ -176,44 +199,6 @@ namespace Team7_StationeryStore.Controllers
             TempData["UserId"] = userId;
             return View();
         }
-
-/*        public IActionResult approveRequisition(string requisitionId, string remarks) {
-            string userId = HttpContext.Session.GetString("userId");
-            Requisition requisition = dbcontext.requisitions.Where(x => x.Id == requisitionId).FirstOrDefault();
-            if (requisition == null) {
-                ViewData["ErrorMsg"] = "Failed to locate requisition";    
-                return RedirectToAction("ViewPendingRequisition");
-            }
-            if (requisition.EmployeeId == userId) {
-                ViewData["ErrorMsg"] = "Cannot self-approve requisition";
-                return RedirectToAction("ViewPendingRequisition");
-            }
-            requisition.status = ReqStatus.APPROVED;
-            requisition.Remarks = remarks;
-            dbcontext.Update(requisition);
-            dbcontext.SaveChanges();
-            return RedirectToAction("viewPendingRequisition");       
-        }
-
-        public IActionResult rejectRequisition(string requisitionId, string remarks) {
-            string userId = HttpContext.Session.GetString("userId");
-            Requisition requisition = dbcontext.requisitions.Where(x => x.Id == requisitionId).FirstOrDefault();
-            if (requisition == null)
-            {
-                ViewData["ErrorMsg"] = "Failed to locate requisition";
-                return RedirectToAction("ViewPendingRequisition");
-            }
-            if (requisition.EmployeeId == userId)
-            {
-                ViewData["ErrorMsg"] = "Cannot self-approve requisition";
-                return RedirectToAction("ViewPendingRequisition");
-            }
-            requisition.status = ReqStatus.REJECTED;
-            requisition.Remarks = remarks;
-            dbcontext.Update(requisition);
-            dbcontext.SaveChanges();
-            return RedirectToAction("viewPendingRequisition");
-        }*/
 
         public IActionResult updateRequisition(string requisitionId, string remarks,string action)
         {
