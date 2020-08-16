@@ -129,21 +129,5 @@ namespace Team7_StationeryStore.Service
             }
             return reqPerDept;
         }
-
-            public void renameThisLater()
-        {
-
-
-            //Group by unqiue items and total count
-            Dictionary<string, int> totalItemQty = getTotalQtyPerItem(selectedReqDetail);
-            Dictionary<string, List<RequisitionDetail>> reqPerIt = getReqDetailPerItem(selectedReqDetail);
-
-            
-            ViewData["totalItemQty"] = totalItemQty;
-            recommendQty(reqPerIt);
-
-            Dictionary<string, List<RequisitionDetail>> reqPerDept = getReqPerDeptPerItem(reqPerIt);
-            
-        }
     }
 }
