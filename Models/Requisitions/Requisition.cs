@@ -23,6 +23,18 @@ namespace Team7_StationeryStore.Models
         public ReqStatus status { get; set; }
         public string Remarks { get; set; }
         public virtual Employee Employee { get; set; }
+        public virtual Departments Department { get; set; }
         public virtual Employee ApprovedEmployee { get; set; }
+
+        public virtual List<RequisitionDetail> RequisitionDetails { get; set; }
+
+        public Requisition() { }
+
+        public Requisition(string DeptCode)
+        {
+            this.DateSubmitted = DateTime.Now;
+            this.Id = DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
+            this.status = ReqStatus.AWAITING_APPROVAL;
+        }
     }
 }

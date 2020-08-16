@@ -15,6 +15,10 @@ namespace Team7_StationeryStore.Service
         {
             this.dbcontext = dbcontext;
         }
+        public List<Departments> findAllDepartments()
+        {
+            return dbcontext.departments.ToList();
+        }
 
         public Employee findEmployeeById(string userId)
         {
@@ -27,6 +31,11 @@ namespace Team7_StationeryStore.Service
             return dbcontext.employees.Where(x => (x.Role == Role.EMPLOYEE || x.Role == Role.DEPT_REP)
                                         && x.DepartmentsId == emp.DepartmentsId).ToList();
 
+        }
+        public Departments findDepartmentByEmployee(string userId)
+        {
+            Employee emp = dbcontext.employees.Where(x => x.Id == userId).FirstOrDefault();
+            return emp.Departments;
         }
         public Employee findEmployeeByName(string name)
         {
@@ -62,6 +71,20 @@ namespace Team7_StationeryStore.Service
             dbcontext.SaveChanges();
         }
 
+        public Employee setApprover(string userId)
+        {
+            Departments department = findDepartmentByEmployee(userId);
+            //To extract authorization that is from the dept and have overlapping dates with Today
+            EmployeeAuthorize employeeAuthorize = dbcontext.employeeAuthorizes
+                                                .Where(x => DateTime.Now >= x.startDate
+                                                        && DateTime.Now <= x.endDate
+                                                        && x.DepartmentsId == department.Id).FirstOrDefault();
+            if (employeeAuthorize != null)
+            {
+                return findEmployeeById(employeeAuthorize.EmployeeId);
+            }
+            return dbcontext.employees.Where(x => x.DepartmentsId == department.Id && x.Role == Role.DEPT_HEAD).FirstOrDefault();
 
+        }
     }
 }

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Team7_StationeryStore.Database;
 using Team7_StationeryStore.Models;
-using System.Security.Cryptography;
 
 namespace Team7_StationeryStore.Controllers
 {
@@ -17,8 +17,6 @@ namespace Team7_StationeryStore.Controllers
         private readonly ILogger<HomeController> _logger;
 
         protected StationeryContext dbcontext;
-
-
         public HomeController(ILogger<HomeController> logger, StationeryContext dbcontext)
         {
             _logger = logger;
@@ -27,49 +25,35 @@ namespace Team7_StationeryStore.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View("Login");
         }
 
-        public IActionResult Login(string Email, string Password) {
-
-            System.Diagnostics.Debug.WriteLine("Reached Login Controller");
-            if (Email == null || Password == null) {
-                return View();
-            }
-            System.Diagnostics.Debug.WriteLine("Processing Login Information Now");
-            Employee user = dbcontext.employees.Where(x => x.Email == Email).FirstOrDefault();
-            if (user == null && Password != null)
+        public IActionResult Login(string email, string password)
+        {
+            if (email == null || password == null)
             {
-                ViewData["login_error"] = "The username cannot be found.";
-
+                ViewData["login_error"] = "Fill in User and Password";
                 return View();
             }
-            System.Diagnostics.Debug.WriteLine("User found, comparing password now");
-            ViewData["userId"] = user.Id;
-
+            Employee user = dbcontext.employees.Where(x => x.Email == email).FirstOrDefault();
             using (MD5 md5Hash = MD5.Create())
             {
-                System.Diagnostics.Debug.WriteLine("Hash?");
-                string hashPwd = MD5Hash.GetMd5Hash(md5Hash, Password);
-                System.Diagnostics.Debug.WriteLine(hashPwd);
-                System.Diagnostics.Debug.WriteLine(user.Password);
-                if (user.Password != hashPwd)
+                string hashPwd = MD5Hash.GetMd5Hash(md5Hash, password);
+                if (user == null || user.Password != hashPwd)
                 {
-                    ViewData["login_error"] = "Password is wrong. Please try again.";
+                    ViewData["login_error"] = "User not found/Password Incorrect";
                     return View();
                 }
-                System.Diagnostics.Debug.WriteLine("Hashed");
             }
-
-
-            if (user.Role == Role.DEPT_HEAD || user.Role == Role.DEPT_REP || user.Role == Role.EMPLOYEE)
+            ViewData["userId"] = user.Id;
+            HttpContext.Session.SetString("userId", user.Id);
+            HttpContext.Session.SetString("Department", user.DepartmentsId); if (user.Role == Role.DEPT_HEAD || user.Role == Role.DEPT_REP || user.Role == Role.EMPLOYEE)
             {
-                return RedirectToAction("Index", "Department", new {userid = user.Id});
+                return RedirectToAction("viewCatalogue", "Department");
             }
-            else {
-                System.Diagnostics.Debug.WriteLine("Login successful, redirecting to clerk");
-                return RedirectToAction("Index", "Home");
-                /*return RedirectToAction("Index", "StationeryStore", new { userid = user.Id});*/
+            else
+            {
+                return RedirectToAction("Home", "StationeryStore", new { userid = user.Id });
             }
         }
         public ActionResult Logout()

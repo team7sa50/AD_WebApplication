@@ -356,7 +356,7 @@ namespace Team7_StationeryStore.Database
 
                 Departments regr = new Departments();
                 regr.Id = Guid.NewGuid().ToString();
-                regr.DeptCode = "ENGL";
+                regr.DeptCode = "Regr";
                 regr.DeptName = "Registra Dept";
                 regr.DeptHead = "ava";
                 regr.FaxNumber = 3333333;
@@ -526,6 +526,65 @@ namespace Team7_StationeryStore.Database
                 employee15.Role = Role.EMPLOYEE;
                 employee15.DepartmentsId = regr.Id;
                 dbcontext.Add(employee15);
+
+                Requisition requisition1 = new Requisition();
+                requisition1.Id = EN.DeptCode+"_"+DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
+                requisition1.DepartmentId = EN.Id;
+                requisition1.EmployeeId = employee6.Id;
+                requisition1.ApprovedEmployeeId = employee4.Id;
+                requisition1.DateSubmitted = DateTime.Now;
+                requisition1.status = ReqStatus.APPROVED;
+                requisition1.Remarks = "nothing";
+                dbcontext.Add(requisition1);
+
+                RequisitionDetail requisition1Detail = new RequisitionDetail();
+                requisition1Detail.Id = Guid.NewGuid().ToString();
+                requisition1Detail.RequisitionId = requisition1.Id;
+                requisition1Detail.InventoryId = item1.Id;
+                requisition1Detail.RequestedQty = 20;
+                requisition1Detail.DistributedQty = 0;
+                dbcontext.Add(requisition1Detail);
+
+                RequisitionDetail requisition1Detail2 = new RequisitionDetail();
+                requisition1Detail2.Id = Guid.NewGuid().ToString();
+                requisition1Detail2.RequisitionId = requisition1.Id;
+                requisition1Detail2.InventoryId = item2.Id;
+                requisition1Detail2.RequestedQty = 20;
+                requisition1Detail2.DistributedQty = 0;
+                dbcontext.Add(requisition1Detail2);
+
+                Requisition requisition2 = new Requisition();
+                requisition2.Id = CS.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
+                requisition2.DepartmentId = CS.Id;
+                requisition2.EmployeeId = employee9.Id;
+                requisition2.ApprovedEmployeeId = employee7.Id;
+                requisition2.DateSubmitted = DateTime.Now;
+                requisition2.status = ReqStatus.OUTSTAND;
+                requisition2.Remarks = "nothing";
+                dbcontext.Add(requisition2);
+
+                Requisition requisition3 = new Requisition();
+                requisition3.Id = regr.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
+                requisition3.DepartmentId = regr.Id;
+                requisition3.EmployeeId = employee15.Id;
+                requisition3.ApprovedEmployeeId = employee13.Id;
+                requisition3.DateSubmitted = DateTime.Now;
+                requisition3.status = ReqStatus.REJECTED;
+                requisition3.Remarks = "nothing";
+                dbcontext.Add(requisition3);
+
+                Requisition requisition4 = new Requisition();
+                requisition4.Id = regr.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm");
+                requisition4.DepartmentId = regr.Id;
+                requisition4.EmployeeId = employee15.Id;
+                requisition4.ApprovedEmployeeId = employee13.Id;
+                requisition4.DateSubmitted = DateTime.Now;
+                requisition4.status = ReqStatus.PROCESSING;
+                requisition4.Remarks = "nothing";
+                dbcontext.Add(requisition4);
+
+
+
                 dbcontext.SaveChanges();
 
                 Requisition rq1 = new Requisition();

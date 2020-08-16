@@ -20,5 +20,10 @@ namespace Team7_StationeryStore.Service
         {
             return dbcontext.inventories.ToList();
         }
+
+        public List<ItemCategory> retrieveCategories()
+        {
+            return dbcontext.itemCategories.ToList();
+        }
     }
 }
