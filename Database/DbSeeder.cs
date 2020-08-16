@@ -528,8 +528,98 @@ namespace Team7_StationeryStore.Database
                 dbcontext.Add(employee15);
                 dbcontext.SaveChanges();
 
+                Requisition rq1 = new Requisition();
+                rq1.Id = Guid.NewGuid().ToString();
+                rq1.ApprovedEmployee = employee10;
+                rq1.DepartmentId = Comm.Id;
+                rq1.Employee = employee12;
+                rq1.DateSubmitted = DateTime.Today;
+                rq1.status = ReqStatus.APPROVED;
+                dbcontext.Add(rq1);
 
 
+                RequisitionDetail rqd1 = new RequisitionDetail();
+                rqd1.Id = Guid.NewGuid().ToString();
+                rqd1.Requisition = rq1;
+                rqd1.Inventory = item8;
+                rqd1.RequestedQty = 88;
+                dbcontext.Add(rqd1);
+
+                RequisitionDetail rqd2 = new RequisitionDetail();
+                rqd2.Id = Guid.NewGuid().ToString();
+                rqd2.Requisition = rq1;
+                rqd2.Inventory = item7;
+                rqd2.RequestedQty = 77;
+                dbcontext.Add(rqd2);
+
+                RequisitionDetail rqd3 = new RequisitionDetail();
+                rqd3.Id = Guid.NewGuid().ToString();
+                rqd3.Requisition = rq1;
+                rqd3.Inventory = item5;
+                rqd3.RequestedQty = 55;
+                dbcontext.Add(rqd3);
+
+                Requisition rq2 = new Requisition();
+                rq2.Id = Guid.NewGuid().ToString();
+                rq2.ApprovedEmployee = employee10;
+                rq2.DepartmentId = Comm.Id;
+                rq2.Employee = employee12;
+                rq2.DateSubmitted = DateTime.Today;
+                rq2.status = ReqStatus.APPROVED;
+                dbcontext.Add(rq2);
+
+                RequisitionDetail rqd4 = new RequisitionDetail();
+                rqd4.Id = Guid.NewGuid().ToString();
+                rqd4.Requisition = rq2;
+                rqd4.Inventory = item4;
+                rqd4.RequestedQty = 44;
+                dbcontext.Add(rqd4);
+
+                RequisitionDetail rqd5 = new RequisitionDetail();
+                rqd5.Id = Guid.NewGuid().ToString();
+                rqd5.Requisition = rq2;
+                rqd5.Inventory = item5;
+                rqd5.RequestedQty = 55;
+                dbcontext.Add(rqd5);
+
+                RequisitionDetail rqd6 = new RequisitionDetail();
+                rqd6.Id = Guid.NewGuid().ToString();
+                rqd6.Requisition = rq2;
+                rqd6.Inventory = item7;
+                rqd6.RequestedQty = 30;
+                dbcontext.Add(rqd6);
+
+                Requisition rq3 = new Requisition();
+                rq3.Id = Guid.NewGuid().ToString();
+                rq3.ApprovedEmployee = employee4;
+                rq3.DepartmentId = EN.Id;
+                rq3.Employee = employee6;
+                rq3.DateSubmitted = DateTime.Today;
+                rq3.status = ReqStatus.APPROVED;
+                dbcontext.Add(rq3);
+
+                RequisitionDetail rqd7 = new RequisitionDetail();
+                rqd7.Id = Guid.NewGuid().ToString();
+                rqd7.Requisition = rq3;
+                rqd7.Inventory = item5;
+                rqd7.RequestedQty = 50;
+                dbcontext.Add(rqd7);
+
+                RequisitionDetail rqd8 = new RequisitionDetail();
+                rqd8.Id = Guid.NewGuid().ToString();
+                rqd8.Requisition = rq3;
+                rqd8.Inventory = item4;
+                rqd8.RequestedQty = 50;
+                dbcontext.Add(rqd8);
+
+                RequisitionDetail rqd9 = new RequisitionDetail();
+                rqd9.Id = Guid.NewGuid().ToString();
+                rqd9.Requisition = rq3;
+                rqd9.Inventory = item1;
+                rqd9.RequestedQty = 50;
+                dbcontext.Add(rqd8);
+
+                dbcontext.SaveChanges();
             }
         }
     }
