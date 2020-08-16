@@ -7,6 +7,8 @@ using Team7_StationeryStore.Models;
 using Team7_StationeryStore.Database;
 using Microsoft.AspNetCore.Http;
 using Team7_StationeryStore.Service;
+using Newtonsoft.Json;
+using Team7_StationeryStore.Models.Requisitions;
 
 namespace Team7_StationeryStore.Controllers
 {
@@ -26,10 +28,10 @@ namespace Team7_StationeryStore.Controllers
             this.dbcontext = dbcontext;
         }
 
-        public IActionResult Index(string userid)
+        public IActionResult Home()
         {
-            Employee employee = dbcontext.employees.Where(x => x.Id == userid).FirstOrDefault();
-
+            Employee employee = dbcontext.employees.Where(x => x.Id == HttpContext.Session.GetString("userId")).FirstOrDefault();
+            ViewData["Employee"] = employee;
             return View();
         }
 
@@ -62,10 +64,6 @@ namespace Team7_StationeryStore.Controllers
             reqService.CreateRequisition(HttpContext.Session.GetString("userId"));
             return RedirectToAction("viewRequisitionList", "Department");
         }
-
-        /*public IActionResult AddToCart(string itemId,int qty) {
-            return RedirectToAction("");
-        }*/
 
         public IActionResult AddToCart(string itemId, int quantity)
         {
@@ -108,6 +106,7 @@ namespace Team7_StationeryStore.Controllers
             }
         }
 
+        //Double check if this is needed
         public IActionResult UpdateQty(string itemId, int newQty)
         {
             int newqty = newQty;
@@ -143,13 +142,30 @@ namespace Team7_StationeryStore.Controllers
                 dbcontext.employeeCarts.Remove(cartItem);
             }
         }
-
+        
+        //For Employee
         public IActionResult viewRequisitionList() {
             string userId = HttpContext.Session.GetString("userId");
             Employee employee = deptService.findEmployeeById(userId);
             List<Requisition> Requisition = reqService.retrieveRequisitionByEmployee(employee);
             ViewData["Requisitions"] = Requisition;
             return View();
+        }
+        //For Department Head
+        public IActionResult viewPendingRequisition() {
+            string deptId = HttpContext.Session.GetString("Department");
+            List<Requisition> pendingRequisitions = reqService.findRequisitionsByDept(deptId, ReqStatus.AWAITING_APPROVAL);
+            List<Requisition> allRequisitions = reqService.findRequisitionsByDept(deptId, null);
+            ViewData["PendingRequisitions"] = pendingRequisitions;
+            ViewData["AllRequisitions"] = allRequisitions;
+            return View();
+        }
+
+        [Route("Department/findRequisitionDetail/{reqId}")]
+        public ActionResult findRequisitionDetail(String reqId)
+        {
+            List<RequisitionDetailView> requisitionDetails = reqService.findRequisitionDetail(reqId);
+            return Content(JsonConvert.SerializeObject(requisitionDetails));
         }
 
         public IActionResult viewRequisition(string requisitionId)
@@ -161,7 +177,7 @@ namespace Team7_StationeryStore.Controllers
             return View();
         }
 
-        public IActionResult approveRequisition(string requisitionId) {
+/*        public IActionResult approveRequisition(string requisitionId, string remarks) {
             string userId = HttpContext.Session.GetString("userId");
             Requisition requisition = dbcontext.requisitions.Where(x => x.Id == requisitionId).FirstOrDefault();
             if (requisition == null) {
@@ -173,20 +189,55 @@ namespace Team7_StationeryStore.Controllers
                 return RedirectToAction("ViewPendingRequisition");
             }
             requisition.status = ReqStatus.APPROVED;
+            requisition.Remarks = remarks;
             dbcontext.Update(requisition);
             dbcontext.SaveChanges();
-            return RedirectToAction();       
+            return RedirectToAction("viewPendingRequisition");       
         }
 
-        public IActionResult rejectRequisition(string requisitionId) {
+        public IActionResult rejectRequisition(string requisitionId, string remarks) {
             string userId = HttpContext.Session.GetString("userId");
             Requisition requisition = dbcontext.requisitions.Where(x => x.Id == requisitionId).FirstOrDefault();
+            if (requisition == null)
+            {
+                ViewData["ErrorMsg"] = "Failed to locate requisition";
+                return RedirectToAction("ViewPendingRequisition");
+            }
+            if (requisition.EmployeeId == userId)
+            {
+                ViewData["ErrorMsg"] = "Cannot self-approve requisition";
+                return RedirectToAction("ViewPendingRequisition");
+            }
             requisition.status = ReqStatus.REJECTED;
+            requisition.Remarks = remarks;
             dbcontext.Update(requisition);
             dbcontext.SaveChanges();
-            return View();
+            return RedirectToAction("viewPendingRequisition");
+        }*/
 
+        public IActionResult updateRequisition(string requisitionId, string remarks,string action)
+        {
+            string userId = HttpContext.Session.GetString("userId");
+            Requisition requisition = dbcontext.requisitions.Where(x => x.Id == requisitionId).FirstOrDefault();
+            if (requisition == null)
+            {
+                ViewData["ErrorMsg"] = "Failed to locate requisition";
+                return RedirectToAction("ViewPendingRequisition");
+            }
+            if (requisition.EmployeeId == userId)
+            {
+                ViewData["ErrorMsg"] = "Cannot self-approve requisition";
+                return RedirectToAction("ViewPendingRequisition");
+            }
+            if(action == "approve") { requisition.status = ReqStatus.APPROVED; }
+            if(action == "reject") { requisition.status = ReqStatus.REJECTED; }
+            requisition.Remarks = remarks;
+            dbcontext.Update(requisition);
+            dbcontext.SaveChanges();
+            return RedirectToAction("viewPendingRequisition");
         }
+
+
 
         public IActionResult delegateAuthority() {
             string userId = HttpContext.Session.GetString("userId");

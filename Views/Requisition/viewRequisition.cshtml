@@ -27,7 +27,7 @@
         </ul>
     </header>
 
-    <!--Tab for All Requisitions-->
+
 
     <div class="requisitionmenu">
         <button class="tablinks" onclick="openReq(event, 'All')" id="defaultOpen">All</button>
@@ -35,6 +35,7 @@
         <button class="tablinks" onclick="openReq(event, 'Outstanding')">Outstanding</button>
     </div>
 
+    <!--Tab for All Requisitions-->
     <div id="main">
         <div class="requisitioncontainer" id="All">
             <div class="requisitionfilter">
@@ -158,9 +159,9 @@
                     </tr>
                 }
             </table>
-            <input id="genretrieval" type="submit" value="Generate Retrieval List" style="font-size:11px"/>
-            </form>
-</div>
+            <input id="genretrieval" type="submit" value="Generate Retrieval List" style="font-size:11px" />
+        </form>
+    </div>
 
 
     <!--Tab for Outstanding Requisitions-->
@@ -196,27 +197,27 @@
             </form>
         </div>
         <form asp-controller="Requisition" asp-action="generateRetrievalList" method="POST">
-                <table class="requisitiontable">
+            <table class="requisitiontable">
+                <tr>
+                    <th>Checkbox</th>
+                    <th>Id</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+                @foreach (var o in outstandingRe)
+                {
                     <tr>
-                        <th>Checkbox</th>
-                        <th>Id</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Details</th>
+                        <td><input type=checkbox value="@o.Id" name="req"></td>
+                        <td>@o.Id</td>
+                        <td>@o.DateSubmitted</td>
+                        <td>@o.status</td>
+                        <td><a onclick="openDetail('@o.Id', '@o.Department.DeptName')"><u>View</u></a></td>
                     </tr>
-                    @foreach (var o in outstandingRe)
-                    {
-                        <tr>
-                            <td><input type=checkbox value="@o.Id" name="req"></td>
-                            <td>@o.Id</td>
-                            <td>@o.DateSubmitted</td>
-                            <td>@o.status</td>
-                            <td><a onclick="openDetail('@o.Id', '@o.Department.DeptName')"><u>View</u></a></td>
-                        </tr>
-                    }
-                </table>
-                <input type="submit" id="genretrieval" value="Generate Retrieval List" style="font-size:11px"/>
-            </form>
+                }
+            </table>
+            <input type="submit" id="genretrieval" value="Generate Retrieval List" style="font-size:11px" />
+        </form>
     </div>
 
     <div id="myDetail" class="detail">
@@ -235,9 +236,6 @@
                 <th>Id</th>
                 <td id="reqid"></td>
             </tr>
-
-
-
             <tr>
                 <th>Status</th>
                 <td>
@@ -262,30 +260,29 @@
     <script>
         function openDetail(id, department) {
             document.getElementById("dept").innerHTML = department;
-            document.getElementById("reqid").innerHTML = id
-                ;
+            document.getElementById("reqid").innerHTML = id;
 
             document.getElementById("myDetail").style.width = "300px";
             document.getElementById("All").style.marginRight = "250px";
             document.getElementById("Outstanding").style.marginRight = "250px";
             document.getElementById("New").style.marginRight = "250px";
-             $.ajax({
-            url: "/Requisition/GetRequisitionDetail/id",
-            method: "POST",
-            data: { reqId: id },
-            dataType: 'json',
-                 success: function (response) {
-                     console.log("hello detail");
-                     $('.table-body-req-detail').html("");
-                     if (response.lenght != 0) {
-                         $('.table-body-req-detail').append(`<tr><th>Item</td><td>Required Quantity</td></tr>`)
-                     }
-                     for (const item of response) {
-                         $('.table-body-req-detail').append(`<tr><td>${item.itemCode}</td><td>${item.RequestedQty}</td></tr>`)
-                     }
-                     console.log(response);
-            }
-        });
+            $.ajax({
+                url: "/Requisition/GetRequisitionDetail/id",
+                method: "POST",
+                data: { reqId: id },
+                dataType: 'json',
+                success: function (response) {
+                    console.log("hello detail");
+                    $('.table-body-req-detail').html("");
+                    if (response.lenght != 0) {
+                        $('.table-body-req-detail').append(`<tr><th>Item</td><td>Required Quantity</td></tr>`)
+                    }
+                    for (const item of response) {
+                        $('.table-body-req-detail').append(`<tr><td>${item.itemCode}</td><td>${item.RequestedQty}</td></tr>`)
+                    }
+                    console.log(response);
+                }
+            });
         }
 
         /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
