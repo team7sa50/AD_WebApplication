@@ -52,11 +52,7 @@ namespace Team7_StationeryStore.Controllers
             List<RequisitionDetailView> requisitionDetails = reqService.findRequisitionDetail(reqId);
             return Content(JsonConvert.SerializeObject(requisitionDetails));
         }
-        public IActionResult generateRetrievalList(List<string> req)
-        {
-            ViewData["req"] = req;
-            return View();
-        }
+
 
     }
 }

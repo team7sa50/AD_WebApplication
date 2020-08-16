@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Team7_StationeryStore.Database;
@@ -13,11 +14,13 @@ namespace Team7_StationeryStore.Controllers
     {
         protected StationeryContext dbcontext;
         protected RetrievalService rservice;
+        protected RequisitionService requisitionService;
 
-        public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice)
+        public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService)
         {
             this.dbcontext = dbcontext;
             this.rservice = rservice;
+            this.requisitionService = requisitionService;
         }
 
         public IActionResult Index()
@@ -25,13 +28,18 @@ namespace Team7_StationeryStore.Controllers
             System.Diagnostics.Debug.WriteLine("Reached Stationery Store Controller");
             return RedirectToAction("viewRetrieval", "StationeryStore");
         }
-        
 
-        public IActionResult viewRetrieval()
+        public IActionResult viewRetrieval(List<string> req)
         {
+            List<Requisition> selectedReq=new List<Requisition>();
+            foreach (string value in req)
+            {
+                Requisition r = requisitionService.findRequisition(value);
+                selectedReq.Add(r);
+            }
             //Replace with the selected Requisitions from RequisitionController
-            List<Requisition> selectedReq = (from x in dbcontext.requisitions
-                                            select x).ToList();
+           // List<Requisition> selectedReq = (from x in dbcontext.requisitions
+                                            //select x).ToList();
 
             //Retrieval List Generation Starts here
             List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);          
