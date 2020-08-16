@@ -104,6 +104,7 @@ namespace Team7_StationeryStore.Service
                 Inventory inv = dbcontext.inventories.Where(x => x.Id == i.Id).FirstOrDefault();
                 RequisitionDetail requisitionDetail = new RequisitionDetail();
                 requisitionDetail.Id= Guid.NewGuid().ToString();
+                requisitionDetail.RequisitionId = newRequisition.Id;
                 requisitionDetail.Inventory = i.Inventory;
                 requisitionDetail.RequestedQty = i.Qty;
                 dbcontext.Add(requisitionDetail);
