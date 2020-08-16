@@ -552,7 +552,33 @@ namespace Team7_StationeryStore.Database
                 requisition1Detail2.RequestedQty = 20;
                 requisition1Detail2.DistributedQty = 0;
                 dbcontext.Add(requisition1Detail2);
+//----------------------------------------------------------------------------------------------------------------------------------> Keith
+                Requisition requisition11 = new Requisition();
+                requisition11.Id = EN.DeptCode + "_" + DateTime.Now;
+                requisition11.DepartmentId = EN.Id;
+                requisition11.EmployeeId = employee6.Id;
+                requisition11.ApprovedEmployeeId = employee4.Id;
+                requisition11.DateSubmitted = DateTime.Now;
+                requisition11.status = ReqStatus.AWAITING_APPROVAL;
+                requisition11.Remarks = "nothing";
+                dbcontext.Add(requisition11);
 
+                RequisitionDetail requisition1Detail11 = new RequisitionDetail();
+                requisition1Detail.Id = Guid.NewGuid().ToString();
+                requisition1Detail.RequisitionId = requisition11.Id;
+                requisition1Detail.InventoryId = item1.Id;
+                requisition1Detail.RequestedQty = 20;
+                requisition1Detail.DistributedQty = 0;
+                dbcontext.Add(requisition1Detail);
+
+                RequisitionDetail requisition1Detail12 = new RequisitionDetail();
+                requisition1Detail2.Id = Guid.NewGuid().ToString();
+                requisition1Detail2.RequisitionId = requisition11.Id;
+                requisition1Detail2.InventoryId = item2.Id;
+                requisition1Detail2.RequestedQty = 20;
+                requisition1Detail2.DistributedQty = 0;
+                dbcontext.Add(requisition1Detail2);
+//----------------------------------------------------------------------------------------------------------------------------------> Keith
                 Requisition requisition2 = new Requisition();
                 requisition2.Id = CS.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
                 requisition2.DepartmentId = CS.Id;
@@ -574,7 +600,7 @@ namespace Team7_StationeryStore.Database
                 dbcontext.Add(requisition3);
 
                 Requisition requisition4 = new Requisition();
-                requisition4.Id = regr.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm");
+                requisition4.Id = regr.DeptCode + "_" + DateTime.Now;
                 requisition4.DepartmentId = regr.Id;
                 requisition4.EmployeeId = employee15.Id;
                 requisition4.ApprovedEmployeeId = employee13.Id;

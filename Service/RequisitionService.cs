@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -28,6 +29,17 @@ namespace Team7_StationeryStore.Service
         {
             return dbcontext.requisitions.Where(x => x.status.Equals(ReqStatus.OUTSTAND)).ToList();
 
+        }
+
+        public List<Requisition> findRequisitionsByDept(string departmentId,ReqStatus? status) {
+            if (status == null) {
+
+                return dbcontext.requisitions.Where(x => x.DepartmentId == departmentId).ToList();
+            }
+            else
+            {
+                return dbcontext.requisitions.Where(x => x.DepartmentId == departmentId && x.status == status).ToList();
+            }  
         }
 
         public List<Requisition> retrieveRequisitionList(Employee employee) { 
