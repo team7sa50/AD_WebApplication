@@ -686,6 +686,7 @@ namespace Team7_StationeryStore.Database
                 RequisitionDetail rqd7 = new RequisitionDetail();
                 rqd7.Id = Guid.NewGuid().ToString();
                 rqd7.Requisition = rq3;
+                rqd7.RequisitionId = rq3.Id;
                 rqd7.Inventory = item5;
                 rqd7.RequestedQty = 50;
                 dbcontext.Add(rqd7);
@@ -693,6 +694,7 @@ namespace Team7_StationeryStore.Database
                 RequisitionDetail rqd8 = new RequisitionDetail();
                 rqd8.Id = Guid.NewGuid().ToString();
                 rqd8.Requisition = rq3;
+                rqd8.RequisitionId = rq3.Id;
                 rqd8.Inventory = item4;
                 rqd8.RequestedQty = 50;
                 dbcontext.Add(rqd8);
@@ -700,6 +702,7 @@ namespace Team7_StationeryStore.Database
                 RequisitionDetail rqd9 = new RequisitionDetail();
                 rqd9.Id = Guid.NewGuid().ToString();
                 rqd9.Requisition = rq3;
+                rqd9.RequisitionId = rq3.Id;
                 rqd9.Inventory = item1;
                 rqd9.RequestedQty = 50;
                 dbcontext.Add(rqd8);

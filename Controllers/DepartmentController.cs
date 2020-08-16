@@ -18,14 +18,16 @@ namespace Team7_StationeryStore.Controllers
         protected RequisitionService reqService;
         protected InventoryService invService;
         protected DepartmentService deptService;
+        protected DisbursementService disService;
 
 
-        public DepartmentController(RequisitionService reqService, InventoryService invService, DepartmentService deptService ,StationeryContext dbcontext)
+        public DepartmentController(RequisitionService reqService, InventoryService invService, DepartmentService deptService, DisbursementService disService, StationeryContext dbcontext)
         {
             this.deptService = deptService;
             this.invService = invService;
             this.reqService = reqService;
             this.dbcontext = dbcontext;
+            this.disService = disService;
         }
 
         public IActionResult Home()
@@ -175,7 +177,7 @@ namespace Team7_StationeryStore.Controllers
             return View();
         }
         //For Department Head
-        public IActionResult viewPendingRequisition() {
+        public IActionResult viewDeptartmentRequisition() {
             string deptId = HttpContext.Session.GetString("Department");
             List<Requisition> pendingRequisitions = reqService.findRequisitionsByDept(deptId, ReqStatus.AWAITING_APPROVAL);
             List<Requisition> allRequisitions = reqService.findRequisitionsByDept(deptId, null);
@@ -222,7 +224,24 @@ namespace Team7_StationeryStore.Controllers
             return RedirectToAction("viewPendingRequisition");
         }
 
+        public IActionResult viewDisbursements() {
 
+            List<Disbursement> disbursements = disService.retrieveDisbursementByDept(HttpContext.Session.GetString("Department"));
+            ViewData["disbursements"] = disbursements;
+            return View();
+        }
+
+        [Route("Department/findDisbursementDetail/{disId}")]
+        public ActionResult findDisbursementDetail(String disId)
+        {
+            List<DisbursementDetailView> disbursementDetails = disService.retrieveDisbursmentDetailsView(disId);
+            return Content(JsonConvert.SerializeObject(disbursementDetails));
+        }
+
+/*        public IActionResult appointRepresentative() { 
+        
+            
+        }*/
 
         public IActionResult delegateAuthority() {
             string userId = HttpContext.Session.GetString("userId");
