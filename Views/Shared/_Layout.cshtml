@@ -8,23 +8,20 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <!--
     <header>
         <ul>
             <li class="logo">Logic <span>Stationery</span></li>
-            <li> <button class="menubtn" href="#home"> Menu</button></li>
             <li> <button class="menubtn" href="#inventory">Inventory</li>
             <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
-            <li><p class="userdetails">Adam Smith</p> <img src="employeeicon.jpg"> </li>
+            <li><p class="userdetails">Adam Smith</p> <img src="~/lib/img/employeeicon.jpg"> </li>
         </ul>
-    </header>-->
+    </header>
 
     <div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
     <footer class="border-top footer text-muted" style="position:fixed;bottom:0; width:100%">
         <div class="container" style="text-align:center">
             &copy; 2020 - Team7_StationeryStore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

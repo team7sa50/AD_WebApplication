@@ -1,0 +1,268 @@
+﻿@using Team7_StationeryStore.Models;
+
+@{
+    var plists = (List<Requisition>)ViewData["PendingRequisitions"];
+    var lists = (List<Requisition>)ViewData["AllRequisitions"];
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf=8">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="~/css/viewReq.css">
+    <link rel="stylesheet" type="text/css" href="~/css/site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <script src="https://use.fontawesome.com/973befe495.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <ul>
+            <li class="logo">Logic <span>Stationery</span></li>
+            <li> <button class="menubtn" href="#home"> Menu</button></li>
+            <li> <button class="menubtn" href="#inventory">Inventory</button></li>
+            <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
+            <li><p class="userdetails">Adam Smith</p> <img src="employeeicon.jpg"> </li>
+        </ul>
+    </header>
+
+    <div class="requisitionmenu">
+        <button class="tablinks" onclick="openReq(event, 'All')">All</button>
+        <button class="tablinks" onclick="openReq(event, 'Pending')"id="defaultOpen">Pending</button>
+    </div>
+
+    <!--Tab for All Requisitions-->
+    <div id="main">
+        <div class="requisitioncontainer" id="All">
+            <div class="requisitionfilter">
+
+                <form>
+                    <h1>Requisitions</h1>
+                    <div style="float:left;">
+                        <label for="Status">Status</label>
+                        <select id="status" name="Status">
+                            <option value="All" selected>All</option>
+                            <option value="Recieved">Recieved</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Collection">Collection</option>
+                            <option value="Outstanding">Outstanding</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    </fieldset>
+                    <fieldset>
+                        <div style="float:left;margin-right:20px;">
+                            <label for="StartDate">Start date</label>
+                            <input type="Date" name="StartDate">
+                        </div>
+                        <div style="float:left;">
+                            <label for="EndDate">End date</label>
+                            <input type="Date" name="EndDate">
+                        </div>
+                        <input style="float:left;margin-right:20px;" type="submit" value="Filter">
+                    </fieldset>
+
+                </form>
+            </div>
+            <table class="requisitiontable">
+                <tr>
+                    <th>Id</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+                @foreach (var c in lists)
+                {
+                    <tr>
+                        <td>@c.Id</td>
+                        <td>@c.DateSubmitted</td>
+                        <td>@c.status</td>
+                        <td>
+                            @if (c.status == ReqStatus.AWAITING_APPROVAL)
+                            {
+                                <a onclick="openDetail('@c.Id', '@c.Department.DeptCode')"><u>View</u></a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+
+        <!--Tab for Pending Requisitions-->
+        <div id="main">
+            <div class="requisitioncontainer" id="Pending">
+                <div class="requisitionfilter">
+
+                    <form>
+                        <h1>Requisitions</h1>
+                        <div style="float:left;">
+                            <label for="Status">Status</label>
+                            <select id="status" name="Status">
+                                <option value="All" selected>All</option>
+                                <option value="Recieved">Recieved</option>
+                                <option value="Processing">Processing</option>
+                                <option value="Collection">Collection</option>
+                                <option value="Outstanding">Outstanding</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                        </fieldset>
+                        <fieldset>
+                            <div style="float:left;margin-right:20px;">
+                                <label for="StartDate">Start date</label>
+                                <input type="Date" name="StartDate">
+                            </div>
+                            <div style="float:left;">
+                                <label for="EndDate">End date</label>
+                                <input type="Date" name="EndDate">
+                            </div>
+                            <input style="float:left;margin-right:20px;" type="submit" value="Filter">
+                        </fieldset>
+
+                    </form>
+                </div>
+                <table class="requisitiontable">
+                    <tr>
+                        <th>Id</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Details</th>
+                    </tr>
+                    @foreach (var c in plists)
+                    {
+                        <tr>
+                            <td>@c.Id</td>
+                            <td>@c.DateSubmitted</td>
+                            <td>@c.status</td>
+                            <td>
+                                <a onclick="openDetail('@c.Id', '@c.Department.DeptCode')"><u>View</u></a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+
+        <div id="myDetail" class="detail">
+            <a href="javascript:void(0)" id="detailclosebtn" onclick="closeDetail()">&times;</a>
+
+            <table class="detailRForm">
+
+                <tr>
+                    <th id="reqid" style="font-size: 14px;"></th>
+                </tr>
+                <tr style="border-top: 1px solid gray;">
+                    <th>Department</th>
+                    <td id="dept"></td>
+                </tr>
+                <tbody class="table-body-req-detail"></tbody>
+                <tr>
+                    <td><button class="btn btn-success" onclick="approve()">Approve</button></td>
+                    <td><button class="btn btn-danger" onclick="reject()">Reject</button></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="modal fade" id="myRemarkModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <h4 class="modal-title" id="myModalLabel"> Add Remarks</h4>
+                        <p id="myModalLabel" />
+                    </div>
+                    <div class="modal-body">
+                        <form asp-controller="Department" asp-action="updateRequisition" method="POST">
+                            <input type="text" name="remarks" placeholder="Optional" id="remarks" style="height: 80px; width:100%;text-align:start">
+                            <input type="hidden" id="requisitionId" name="requisitionId">
+                            <input type="hidden" id="action" name="action">
+                            <br />
+                            <input type="submit" class="btn btn-outline-primary" value="Submit" style="margin-top: 20px">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function openDetail(id, department) {
+                document.getElementById("dept").innerHTML = department;
+                document.getElementById("reqid").innerHTML = id;
+
+                document.getElementById("myDetail").style.width = "350px";
+                document.getElementById("All").style.marginRight = "300px";
+                document.getElementById("Pending").style.marginRight = "300px";
+                $.ajax({
+                    url: "/Department/findRequisitionDetail/id",
+                    method: "POST",
+                    data: { reqId: id },
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log("hello detail");
+                        $('.table-body-req-detail').html("");
+                        if (response.lenght != 0) {
+                            $('.table-body-req-detail').append(`<tr><th>Item Code</td><td>Requested Quantity</td></tr>`)
+                        }
+                        for (const item of response) {
+                            $('.table-body-req-detail').append(`<tr><td>${item.itemCode}</td><td>${item.RequestedQty}</td></tr>`)
+                        }
+                        console.log(response);
+                    }
+                });
+            }
+
+            /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+            function closeDetail() {
+                document.getElementById("myDetail").style.width = "0";
+                document.getElementById("All").style.marginRight = "auto";
+                document.getElementById("Outstanding").style.marginRight = "auto";
+                document.getElementById("New").style.marginRight = "auto";
+            }
+
+            function showChangeStatus() {
+                document.getElementById("changeStatus").style.display = "block";
+                document.getElementById("originalStatus").style.display = "none";
+            }
+
+            document.getElementById("defaultOpen").click();
+
+            function openReq(evt, cityName) {
+                // Declare all variables
+                var i, tabcontent, tablinks;
+
+                // Get all elements with class="tabcontent" and hide them
+                tabcontent = document.getElementsByClassName("requisitioncontainer");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+
+                // Get all elements with class="tablinks" and remove the class "active"
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+
+                // Show the current tab, and add an "active" class to the button that opened the tab
+                document.getElementById(cityName).style.display = "block";
+                evt.currentTarget.className += " active";
+            }
+
+            function approve() {
+                var id = document.getElementById("reqid").innerHTML;
+                $('#myRemarkModal').modal();
+                console.log(id);
+                document.getElementById("requisitionId").value = id;
+                document.getElementById("action").value = "approve"
+            }
+            function reject() {
+                var id = document.getElementById("reqid").innerHTML;
+                $('#myRemarkModal').modal();
+                console.log(id);
+                document.getElementById("requisitionId").value = id;
+                document.getElementById("action").value = "reject"
+            }
+        </script>
+</body>
+

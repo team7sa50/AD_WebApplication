@@ -1,0 +1,71 @@
+﻿@model Team7_StationeryStore.Models.Employee
+@{
+    Employee emp = (Employee)ViewData["Employee"];
+ }
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+    <div class="app" style="padding-left:50px">
+        <div style="float:left;">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="https://lh3.googleusercontent.com/proxy/ZU9X5L9UIcuZdn6BpujR8nRwCNG-SrmT6pZBNYcCergNn9m60DPZd6cit61RlpGtHntGuemYbY6qvWP4-myJbWwsV0tIOdvzQugL4g" alt="Card image cap">
+                <div class="card-body">
+
+                    <div class="card" style="width: 20rem;">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Name:@emp.Name</li>
+                            <li class="list-group-item">Role:@emp.Role</li>
+                            <li class="list-group-item">Dept name:@emp.Departments.DeptName</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div align=center>
+                <img src="" class="img-rounded">
+
+            </div>
+        </div>
+    </div>
+    <div style="float:center;margin-left:100px;">
+        <div align=center>
+            <button type="button" class="btn btn-dark"><a href="#">More Notifications <span class="badge"></span></a><br></button>
+
+
+            <div id="Notification1" class="tabcontent">
+                <h3>Notification1:notification1</h3>
+            </div>
+
+            <div id="Notification2" class="tabcontent">
+                <h3>Notification2:notification2</h3>
+
+            </div>
+
+            <div id="Notification3" class="tabcontent">
+                <h3>Notification3:notification3</h3>
+            </div>
+
+
+            <h2>Stationery Store</h2>
+            <div class="list group">
+
+                <button type="button" class="btn btn-outline-primary" onclick="window.location.href = 'Emp_view_stationery_catalogue.cshtml'">view catalogue</button>
+                <button type="button" class="btn btn-outline-primary" onclick="window.location.href = 'emp_MakeRequestForStationery.cshtml'">Manage Cart</button>
+                <form method="POST">
+                    <button value="View" class="btn btn-outline-primary" formaction="/Department/viewRequisitionList/">View Requistion History</button>
+                </form>
+                <form method="POST">
+                    <button value="View" class="btn btn-outline-primary" formaction="/Department/viewPendingRequisition/">Pending Requisitions</button>
+                </form>
+                <br>
+            </div>
+        </div>
+    </div>
+</body>
