@@ -35,10 +35,13 @@ namespace Team7_StationeryStore.Controllers
 
         public IActionResult viewCatalogue()
         {
+            string userid = HttpContext.Session.GetString("userId");
             List<Inventory> stationeryCatalogue = invService.retrieveCatalogue();
             List<ItemCategory> categories = invService.retrieveCategories();
+            Employee emp = deptService.findEmployeeById(userid);
             ViewData["stationeryCatalgoue"] = stationeryCatalogue;
             ViewData["categories"] = categories;
+            ViewData["username"] = emp.Name;
             return View();
         }
 
@@ -63,10 +66,6 @@ namespace Team7_StationeryStore.Controllers
             return RedirectToAction("viewRequisitionList", "Department");
         }
 
-        /*public IActionResult AddToCart(string itemId,int qty) {
-            return RedirectToAction("");
-        }*/
-
         public IActionResult AddToCart(string itemId, int quantity)
         {
             string userid = HttpContext.Session.GetString("userId");
@@ -78,7 +77,10 @@ namespace Team7_StationeryStore.Controllers
         {
             string userid = HttpContext.Session.GetString("userId");
             List<EmployeeCart> employeeCarts = reqService.retrieveEmployeeCart(userid);
+            Employee emp = deptService.findEmployeeById(userid);
             ViewData["employeeCarts"] = employeeCarts;
+            ViewData["username"] = emp.Name;
+            ViewData["userid"] = userid;
             return View();
         }
         public void AddItem(string userid, string itemid, int qty)
@@ -108,7 +110,7 @@ namespace Team7_StationeryStore.Controllers
             }
         }
 
-        public IActionResult UpdateQty(string itemId, int newQty)
+        /*public IActionResult UpdateQty(string itemId, int newQty)
         {
             int newqty = newQty;
             string itemid = itemId;
@@ -131,9 +133,9 @@ namespace Team7_StationeryStore.Controllers
             }
             dbcontext.SaveChanges();
             return RedirectToAction("viewRequisition");
-        }
+        }*/
 
-        public void RemoveItem(string userid, string itemId)
+        public IActionResult RemoveItem(string userid, string itemId)
         {
             var cartItem = dbcontext.employeeCarts
                 .Where(x => x.EmployeeId == userid && x.InventoryId == itemId)
@@ -142,6 +144,25 @@ namespace Team7_StationeryStore.Controllers
             {
                 dbcontext.employeeCarts.Remove(cartItem);
             }
+           
+            dbcontext.SaveChanges();
+            return RedirectToAction("ViewCart");
+        }
+
+        public IActionResult RemoveAllItems()
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            var cartItem = dbcontext.employeeCarts
+                .Where(x => x.EmployeeId == userid)
+                .ToList();
+            if (cartItem != null)
+            {
+                foreach (var i in cartItem)
+                    dbcontext.employeeCarts.Remove(i);
+            }
+
+            dbcontext.SaveChanges();
+            return RedirectToAction("viewCatalogue");
         }
 
         public IActionResult viewRequisitionList() {
