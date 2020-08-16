@@ -35,6 +35,7 @@ namespace Team7_StationeryStore
             services.AddScoped<RequisitionService>();
             services.AddScoped<InventoryService>();
             services.AddScoped<DepartmentService>();
+            services.AddScoped<RetrievalService>();
             services.AddSession();
         }
 
