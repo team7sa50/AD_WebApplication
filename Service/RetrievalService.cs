@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Team7_StationeryStore.Database;
 using Team7_StationeryStore.Models;
@@ -66,6 +67,7 @@ namespace Team7_StationeryStore.Service
                 string item = rd.Inventory.description;
                 if (!reqPerIt.ContainsKey(item))
                 {
+                    reqPerIt.Add(item, new List<RequisitionDetail>());
                     reqPerIt[item].Add(rd);
                 }
                 else if (reqPerIt.ContainsKey(item))
