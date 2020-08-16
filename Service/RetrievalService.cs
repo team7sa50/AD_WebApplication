@@ -66,6 +66,7 @@ namespace Team7_StationeryStore.Service
                 string item = rd.Inventory.description;
                 if (!reqPerIt.ContainsKey(item))
                 {
+                    reqPerIt.Add(item, new List<RequisitionDetail>());
                     reqPerIt[item].Add(rd);
                 }
                 else if (reqPerIt.ContainsKey(item))
