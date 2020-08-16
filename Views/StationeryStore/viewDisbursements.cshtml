@@ -1,7 +1,350 @@
 ﻿
 @{
     ViewData["Title"] = "viewDisbursements";
+    List<Disbursement> disb = (List<Disbursement>)ViewData["disbursements"];
 }
 
-<h1>viewDisbursements</h1>
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="utf=8">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="~/css/viewDisbursements.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <script src="https://use.fontawesome.com/973befe495.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="requisitionmenu">
+        <button class="tablinks" onclick="openReq(event, 'Pending')" id="defaultOpen">Pending</button>
+        <button class="tablinks" onclick="openReq(event, 'Collected')">Collected</button>
+    </div>
+
+    <div id="maindisbursements">
+        <div class="requisitioncontainer" id="Pending">
+            <div class="requisitionfilter">
+                <form>
+                    <h1>Disbursements</h1>
+                    <fieldset>
+                        <div style="float:left;margin-right:20px;">
+                            <label for="CompiledOn">Compiled On</label>
+                            <input type="Date" name="EndDate">
+                        </div>
+                        <div style="float:left;">
+                            <label for="CollectDate">Collection Date</label>
+                            <input type="Date" name="CollectDate">
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div style="float:left;margin-right:20px;">
+                            <label for="Department">Department name</label>
+                            <select id="dept" name="Department">
+                                <option value="All" selected>All Departments</option>
+                                <option value="Library">Library Department</option>
+                                <option value="Math">Math Department</option>
+                                <option value="English">English Department</option>
+                                <option value="History">History Department</option>
+                            </select>
+                        </div>
+                        <div style="float:left;">
+                            <label for="Status">Status</label>
+                            <select id="status" name="Status">
+                                <option value="All" selected>All</option>
+                                <option value="Recieved">Recieved</option>
+                                <option value="Processing">Processing</option>
+                                <option value="Collection">Collection</option>
+                                <option value="Outstanding">Outstanding</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                        <input style="float:left;margin-right:20px;" type="submit" value="Filter">
+                    </fieldset>
+                </form>
+            </div>
+
+            <table class="requisitiontable">
+                <tr>
+                    <th>Collection Date</th>
+                    <th>Department</th>
+                    <th>Compiled On</th>
+                    <th>Prepared By</th>
+                    <th>Acknowledgement</th>
+                </tr>
+
+                @foreach (var d in disb)
+                {
+                    <tr onclick="viewDisDetail()">
+                        <td>@d.CollectionDate</td>
+                        <td>@d.Departments.DeptName</td>
+                        <td>@d.GeneratedDate</td>
+                        <td>Adam Smith</td>
+                        <td><button onclick="" style="color:#1f5f89"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></td>
+                    </tr>
+                }          
+            </table>
+        </div>
+    </div>
+
+    <div class="requisitioncontainer" id="Collected">
+        <div class="requisitionfilter">
+            <form>
+                <h1>Disbursements</h1>
+                <fieldset>
+                    <div style="float:left;margin-right:20px;">
+                        <label for="CompiledOn">Compiled On</label>
+                        <input type="Date" name="EndDate">
+                    </div>
+                    <div style="float:left;">
+                        <label for="CollectDate">Collection Date</label>
+                        <input type="Date" name="CollectDate">
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <div style="float:left;margin-right:20px;">
+                        <label for="Department">Department name</label>
+                        <select id="dept" name="Department">
+                            <option value="All" selected>All Departments</option>
+                            <option value="Library">Library Department</option>
+                            <option value="Math">Math Department</option>
+                            <option value="English">English Department</option>
+                            <option value="History">History Department</option>
+                        </select>
+                    </div>
+                    <div style="float:left;">
+                        <label for="Status">Status</label>
+                        <select id="status" name="Status">
+                            <option value="All" selected>All</option>
+                            <option value="Recieved">Recieved</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Collection">Collection</option>
+                            <option value="Outstanding">Outstanding</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <input style="float:left;margin-right:20px;" type="submit" value="Filter">
+                </fieldset>
+
+
+            </form>
+        </div>
+
+        <table class="requisitiontable">
+            <tr onclick="viewDisDetail()">
+                <th>Collection Date</th>
+                <th>Department</th>
+                <th>Compiled On</th>
+                <th>Prepared By</th>
+            </tr>
+
+            <tr onclick="viewDisDetail()">
+                <td>05/08/2020</td>
+                <td>ISS</td>
+                <td>03/08/2020</td>
+                <td>Adam Smith</td>
+
+            </tr>
+            <tr onclick="viewDisDetail()">
+                <td>05/08/2020</td>
+                <td>ISS</td>
+                <td>03/08/2020</td>
+                <td>Adam Smith</td>
+
+            </tr>
+
+            <tr onclick="viewDisDetail()">
+                <td>05/08/2020</td>
+                <td>ISS</td>
+                <td>03/08/2020</td>
+                <td>Adam Smith</td>
+
+            </tr>
+            <tr onclick="viewDisDetail()">
+                <td>05/08/2020</td>
+                <td>ISS</td>
+                <td>03/08/2020</td>
+                <td>Adam Smith</td>
+
+            </tr>
+
+            <tr onclick="viewDisDetail()">
+                <td>05/08/2020</td>
+                <td>ISS</td>
+                <td>03/08/2020</td>
+                <td>Adam Smith</td>
+
+            </tr>
+        </table>
+    </div>
+    </div>
+    </div>
+
+    <div id="myDetail" class="detail">
+        <a href="javascript:void(0)" id="detailclosebtn" onclick="closeDetail()">&times;</a>
+
+        <table class="detailRForm">
+
+            <tr>
+                <th style="font-size: 14px;">Request FASS01</th>
+            </tr>
+            <tr style="border-top: 1px solid gray;">
+                <th>Department</th>
+                <td>Arts and Social Science</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>03/08/2020</td>
+            </tr>
+            <tr>
+                <th>Recieved By</th>
+                <td>Chris Lee</td>
+            </tr>
+
+            <tr>
+                <th>Status</th>
+                <td>
+                    <p id="originalStatus">Recieved<button class="editbtn" onclick="showChangeStatus()"><i class="far fa-edit"></i></button></p>
+
+                    <form id="changeStatus">
+                        <select>
+                            <option value="Recieved">Recieved</option>
+                            <option value="Processing">Processing</option>
+                        </select>
+                        <input type="submit" value="Ok" style="font-size:11px"></input>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="bg-modal">
+        <div class="modal-contents">
+
+            <div class="close">+</div>
+            <img src="https://richardmiddleton.me/comic-100.png" alt="">
+            <div class="disbTitle">
+                <h1><span>Disbursement</span> Details</h1>
+                <hr>
+            </div>
+            <div class="changeDisb">
+                <form>
+                    <label for="CollectionDate"> Collection Date</label>
+                    <input type="Date" name="CollectionDate">
+                    <label for="CollectionPoint">Collection Point</label>
+                    <select name="CollectionPoint">
+                        <option value="Library">Library</option>
+                        <option value="Medicine">Medicine</option>
+                    </select>
+                    <label for="Rep">Representative Name</label>
+                    <p name="Rep">John Lau</p>
+
+                    <div class="modal-table">
+                        <table>
+                            <tr style="border-bottom: 1px solid gray;">
+                                <th>Item</th>
+                                <th>Requested</th>
+                                <th>Retrieved</th>
+                            </tr>
+
+                            <tr>
+                                <td>Clips Double 2"</td>
+                                <td>90</td>
+                                <td>
+                                    <form id="changeQty">
+                                        <input type="text" placeholder="9">
+                                    </form>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Clips Double 2"</td>
+                                <td>90</td>
+                                <td>
+                                    <form id="changeQty">
+                                        <input type="text" placeholder="9">
+                                    </form>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Clips Double 2"</td>
+                                <td>90</td>
+                                <td>
+                                    <input type="text" placeholder="9">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <input type="submit" value="Submit Changes">
+                </form>
+
+            </div>
+        </div>
+
+        <script>
+
+function viewDisDetail() {
+	document.getElementByClass("disbursementDetail").style.display="block";
+}
+
+function openDetail() {
+  document.getElementById("myDetail").style.width = "300px";
+  document.getElementById("All").style.marginRight = "250px";
+  document.getElementById("Outstanding").style.marginRight = "250px";
+  document.getElementById("New").style.marginRight = "250px";
+}
+
+/* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+function closeDetail() {
+  document.getElementById("myDetail").style.width = "0";
+    document.getElementById("All").style.marginRight = "auto";
+  document.getElementById("Outstanding").style.marginRight = "auto";
+  document.getElementById("New").style.marginRight = "auto";
+}
+
+function showQty(){
+	document.getElementById=("changeQty").style.display="block";
+	document.getElementById="editQtybtn".style.display="none";
+}
+
+function showChangeStatus(){
+	document.getElementById("changeStatus").style.display="block";
+	document.getElementById("originalStatus").style.display="none";
+}
+
+document.getElementById("defaultOpen").click();
+
+function openReq(evt, cityName) {
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("requisitioncontainer");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+function viewDisDetail() {
+	document.querySelector('.bg-modal').style.display = "flex";
+};
+
+document.querySelector('.close').addEventListener("click", function() {
+	document.querySelector('.bg-modal').style.display = "none";
+});
+        </script>
+</body>
