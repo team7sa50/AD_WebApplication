@@ -49,6 +49,7 @@ namespace Team7_StationeryStore.Database
         public DbSet<Retrieval> retrievals { get; set; }
         public DbSet<RetrievalDetails> retrievalDetails { get; set; }
         public DbSet<EmployeeAuthorize> employeeAuthorizes { get; set; }
+        public DbSet<Notification> notifications { get; set; }
 
     }
 }
