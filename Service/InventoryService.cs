@@ -107,6 +107,14 @@ namespace Team7_StationeryStore.Service
             dbcontext.SaveChanges();
             return response;
         }
+        public PurchaseOrder findPurchaseOrder(string poId)
+        {
+            return dbcontext.purchaseOrders.Where(x => x.Id == poId).FirstOrDefault();
+        }
+        public List<PurchaseOrderDetails> findPurchaseOrderDetails(string poId)
+        {
+            return dbcontext.purchaseOrderDetails.Where(x => x.PurchaseOrderId == poId).ToList();
+        }
 
         public void CreateAdjustmentVoucher(string userId, string invId,int qty,string reason) {
             AdjustmentVoucher newAdjustmentVoucher = new AdjustmentVoucher();

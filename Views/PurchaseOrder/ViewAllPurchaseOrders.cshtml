@@ -2,40 +2,49 @@
 @{
     ViewData["Title"] = "ViewAllPurchaseOrders";
     var lists = (List<PurchaseOrder>)ViewData["purchaseOrders"];
+    var username = ViewData["username"];
 }
+<head>
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
 
+<header>
+    <ul>
+        <li class="logo">Logic <span>Stationery</span></li>
+        <li> <button class="menubtn" href="#inventory">Inventory</li>
+        <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
+        <li><p class="userdetails">@username</p> <img src="~/lib/img/employeeicon.jpg"> </li>
+    </ul>
+</header>
 <h4>ViewAllPurchaseOrders</h4>
-<table class="requisitiontable" border="1">
-    <tr>
-        <th>Id</th>
-        <th>Date</th>
-        <th>Supplier</th>
-        <th>Status</th>
-        <th></th>
-        <th>Details</th>
-    </tr>
-    @foreach (var c in lists)
-    {
-    <tr>
-        <td>@c.Id</td>
-        <td>@c.date</td>
-        <td>@c.Supplier.name</td>
-        <td>@c.status</td>
-        <td>
-            <a onclick="updateStatus('@c.Id')"><u>Update</u></a>
-        </td>
-        <!--<td>
-            <form asp-controller="PurchaseOrder" asp-action="PurchaseOrderDetail" method="POST">
-                <input type="hidden" value="@c.Id" name="poId">
+<div align=center>
 
-                <input class="btn btn-outline-info btn-sm" type="submit" value="View">
-
-            </form>
-        </td>-->
-    </tr>
-    }
-</table>
-
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Id</th>
+            <th>Date</th>
+            <th>Supplier</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        @foreach (var c in lists)
+        {
+            <tr>
+                <td class="text-left"><a asp-controller="PurchaseOrder" asp-action="PurchaseOrderDetail" asp-route-poid="@c.Id">@c.Id</a></td>
+                <td class="text-left">@c.date</td>
+                <td class="text-left">@c.Supplier.name</td>
+                <td class="text-left">@c.status</td>
+                <td class="text-left">
+                    <a onclick="updateStatus('@c.Id')"><u>Update</u></a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
 <div class="modal fade" id="mypurchaseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
