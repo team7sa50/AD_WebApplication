@@ -106,21 +106,23 @@
                 <h4 class="modal-title" id="myModalLabel">#Item Code Item Name</h4>
             </div>
             <div class="modal-body">
-                <form asp-controller="Stationery" asp-action="CreateAdjustment" method="POST">
+                <form asp-controller="StationeryStore" asp-action="CreateAdjustment" method="POST">
                     <label for="quantity">Quantity:</label>
-                    <input type="number" id="quantity" name="quantity" min="1" max="50">
-                    <input type="text" name="reason"  />
+                    <input type="number" id="quantity" name="quantity" maxlength="2">
+                    <br />
+                    <label for="reason">Reason:</label>
+                    <input type="text"placeholder="Optional" style="height: 80px; width:100%;text-align:start" id="reason" name="reason" />
                     <input type="hidden" id="itemId" name="itemId">
-
+                    <br />
                     <input class="btn btn-primary btn-sm" type="submit" value="Submit">
-
+                    
                 </form>
             </div>
         </div>
     </div>
 </div>
 <script>
-    function addToCart(id, itemCode) {
+    function createAdjustment(id, itemCode) {
         $('#myInventoryModal').modal();
         console.log(id);
         console.log(itemCode);

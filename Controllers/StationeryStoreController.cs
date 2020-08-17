@@ -65,6 +65,20 @@ namespace Team7_StationeryStore.Controllers
             ViewData["reqPerDept"] = reqPerDept;
             return View();        
         }
+
+
+        public IActionResult CreateAdjustment(string itemId, int quantity, string reason) {
+            string userid = HttpContext.Session.GetString("userId");
+            invService.CreateAdjustmentVoucher(userid, itemId, quantity, reason);
+            return RedirectToAction("ViewInventory");
+        }
+
+        public IActionResult updateAdjustmentVoucher(string adjVoucherId,string action,string remarks) {
+            string userId = HttpContext.Session.GetString("userId");
+            ViewData["response"] = invService.UpdateAdjustmentVoucher(adjVoucherId, action, remarks);
+            return RedirectToAction("viewAdjustmentVouchers");
+        }
+        
         public IActionResult ViewInventory()
         {
             string userid = HttpContext.Session.GetString("userId");
@@ -83,7 +97,6 @@ namespace Team7_StationeryStore.Controllers
             const string fromPassword = "stationerystore";
             const string subject = "Testing";
             const string body = "Body";
-
             var smtp = new SmtpClient
             {
                 Host = "smtp.gmail.com",
@@ -103,7 +116,11 @@ namespace Team7_StationeryStore.Controllers
             }
 
         }
-
+        public IActionResult viewAdjustmentVouchers() {
+            ViewData["adjList"] = invService.findAdjustmentVoucherList(null);
+            ViewData["PendingAdjList"] = invService.findAdjustmentVoucherList(Status.PENDING);
+            return View();
+        }
 
     }
 }
