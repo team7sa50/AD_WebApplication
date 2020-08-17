@@ -8,6 +8,8 @@ using Team7_StationeryStore.Models;
 using Team7_StationeryStore.Database;
 using Microsoft.AspNetCore.Http;
 using Team7_StationeryStore.Service;
+using System.Net.Mail;
+using System.Net;
 
 namespace Team7_StationeryStore.Controllers
 {
@@ -32,6 +34,13 @@ namespace Team7_StationeryStore.Controllers
         {
             System.Diagnostics.Debug.WriteLine("Reached Stationery Store Controller");
             return RedirectToAction("viewRetrieval", "StationeryStore");
+        }
+        public IActionResult Home()
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["username"] = emp.Name;
+            return View();
         }
 
         public IActionResult viewRetrieval(List<string> req)
@@ -67,7 +76,33 @@ namespace Team7_StationeryStore.Controllers
             ViewData["username"] = emp.Name;
             return View();
         }
+        public void SendEmail()
+        {
+            var fromAddress = new MailAddress("stationerystoreteam7@gmail.com", "From Name");
+            var toAddress = new MailAddress("storeclerkteam7@gmail.com", "To Name");
+            const string fromPassword = "stationerystore";
+            const string subject = "Testing";
+            const string body = "Body";
 
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+            };
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = body
+            })
+            {
+                smtp.Send(message);
+            }
+
+        }
 
 
     }
