@@ -527,7 +527,7 @@ namespace Team7_StationeryStore.Database
                 employee15.DepartmentsId = regr.Id;
                 dbcontext.Add(employee15);
 
-              /*  Requisition requisition1 = new Requisition();
+                Requisition requisition1 = new Requisition();
                 requisition1.Id = EN.DeptCode+"_"+DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
                 requisition1.DepartmentId = EN.Id;
                 requisition1.EmployeeId = employee6.Id;
@@ -559,7 +559,7 @@ namespace Team7_StationeryStore.Database
                 requisition11.EmployeeId = employee6.Id;
                 requisition11.ApprovedEmployeeId = employee4.Id;
                 requisition11.DateSubmitted = DateTime.Now;
-                requisition11.status = ReqStatus.AWAITING_APPROVAL;
+                requisition11.status = ReqStatus.APPROVED;
                 requisition11.Remarks = "nothing";
                 dbcontext.Add(requisition11);
 
@@ -613,7 +613,7 @@ namespace Team7_StationeryStore.Database
 
                 dbcontext.SaveChanges();
 
-                Requisition rq1 = new Requisition();
+                /*Requisition rq1 = new Requisition();
                 rq1.Id = Comm.DeptCode + "_" + DateTime.Now;
                 rq1.ApprovedEmployee = employee10;
                 rq1.DepartmentId = Comm.Id;
