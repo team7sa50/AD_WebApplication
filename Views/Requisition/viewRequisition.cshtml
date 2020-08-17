@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <header>
+    <!--<header>
         <ul>
             <li class="logo">Logic <span>Stationery</span></li>
             <li> <button class="menubtn" href="#home"> Menu</button></li>
@@ -26,13 +26,15 @@
             <li><p class="userdetails">Adam Smith</p> <img src="employeeicon.jpg"> </li>
         </ul>
     </header>
+        -->
+
 
 
 
     <div class="requisitionmenu">
         <button class="tablinks" onclick="openReq(event, 'All')" id="defaultOpen">All</button>
-        <button class="tablinks" onclick="openReq(event, 'New')">New</button>
-        <button class="tablinks" onclick="openReq(event, 'Outstanding')">Outstanding</button>
+        <!-- <button class="tablinks" onclick="openReq(event, 'New')">New</button>
+     <button class="tablinks" onclick="openReq(event, 'Outstanding')">Outstanding</button>-->
     </div>
 
     <!--Tab for All Requisitions-->
@@ -78,7 +80,7 @@
 
                 </form>
             </div>
-            <form asp-controller="Requisition" asp-action="generateRetrievalList" method="POST">
+            <form asp-controller="StationeryStore" asp-action="viewRetrieval" method="POST">
 
                 <table class="requisitiontable">
                     <tr>
@@ -107,7 +109,7 @@
     </div>
 
     <!--Tab for New Requisitions-->
-
+    <!---->
     <div class="requisitioncontainer" id="New">
         <div class="requisitionfilter">
 
@@ -138,7 +140,7 @@
 
             </form>
         </div>
-        <form asp-controller="Requisition" asp-action="generateRetrievalList" method="POST">
+        <form asp-controller="StationeryStore" asp-action="viewRetrieval" method="POST">
 
             <table class="requisitiontable">
                 <tr>
@@ -196,7 +198,7 @@
 
             </form>
         </div>
-        <form asp-controller="Requisition" asp-action="generateRetrievalList" method="POST">
+        <form asp-controller="StationeryStore" asp-action="viewRetrieval" method="POST">
             <table class="requisitiontable">
                 <tr>
                     <th>Checkbox</th>

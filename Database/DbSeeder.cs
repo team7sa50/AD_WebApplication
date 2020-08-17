@@ -559,7 +559,7 @@ namespace Team7_StationeryStore.Database
                 requisition11.EmployeeId = employee6.Id;
                 requisition11.ApprovedEmployeeId = employee4.Id;
                 requisition11.DateSubmitted = DateTime.Now;
-                requisition11.status = ReqStatus.AWAITING_APPROVAL;
+                requisition11.status = ReqStatus.APPROVED;
                 requisition11.Remarks = "nothing";
                 dbcontext.Add(requisition11);
 
@@ -609,12 +609,8 @@ namespace Team7_StationeryStore.Database
                 requisition4.Remarks = "nothing";
                 dbcontext.Add(requisition4);
 
-
-
-                dbcontext.SaveChanges();
-
-                Requisition rq1 = new Requisition();
-                rq1.Id = Guid.NewGuid().ToString();
+/*                Requisition rq1 = new Requisition();
+                rq1.Id = Comm.DeptCode + "_" + DateTime.Now;
                 rq1.ApprovedEmployee = employee10;
                 rq1.DepartmentId = Comm.Id;
                 rq1.Employee = employee12;
@@ -645,7 +641,7 @@ namespace Team7_StationeryStore.Database
                 dbcontext.Add(rqd3);
 
                 Requisition rq2 = new Requisition();
-                rq2.Id = Guid.NewGuid().ToString();
+                rq2.Id = Comm.DeptCode + "_" + DateTime.Now;
                 rq2.ApprovedEmployee = employee10;
                 rq2.DepartmentId = Comm.Id;
                 rq2.Employee = employee12;
@@ -675,7 +671,7 @@ namespace Team7_StationeryStore.Database
                 dbcontext.Add(rqd6);
 
                 Requisition rq3 = new Requisition();
-                rq3.Id = Guid.NewGuid().ToString();
+                rq3.Id = EN.DeptCode + "_" + DateTime.Now;
                 rq3.ApprovedEmployee = employee4;
                 rq3.DepartmentId = EN.Id;
                 rq3.Employee = employee6;
@@ -686,6 +682,7 @@ namespace Team7_StationeryStore.Database
                 RequisitionDetail rqd7 = new RequisitionDetail();
                 rqd7.Id = Guid.NewGuid().ToString();
                 rqd7.Requisition = rq3;
+                rqd7.RequisitionId = rq3.Id;
                 rqd7.Inventory = item5;
                 rqd7.RequestedQty = 50;
                 dbcontext.Add(rqd7);
@@ -693,6 +690,7 @@ namespace Team7_StationeryStore.Database
                 RequisitionDetail rqd8 = new RequisitionDetail();
                 rqd8.Id = Guid.NewGuid().ToString();
                 rqd8.Requisition = rq3;
+                rqd8.RequisitionId = rq3.Id;
                 rqd8.Inventory = item4;
                 rqd8.RequestedQty = 50;
                 dbcontext.Add(rqd8);
@@ -700,10 +698,11 @@ namespace Team7_StationeryStore.Database
                 RequisitionDetail rqd9 = new RequisitionDetail();
                 rqd9.Id = Guid.NewGuid().ToString();
                 rqd9.Requisition = rq3;
+                rqd9.RequisitionId = rq3.Id;
                 rqd9.Inventory = item1;
                 rqd9.RequestedQty = 50;
-                dbcontext.Add(rqd8);
-
+                dbcontext.Add(rqd8);*/
+                
                 dbcontext.SaveChanges();
             }
         }

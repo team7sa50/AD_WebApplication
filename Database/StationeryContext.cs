@@ -43,11 +43,13 @@ namespace Team7_StationeryStore.Database
         public DbSet<Supplier> suppliers { get; set; }
         public DbSet<PurchaseOrder> purchaseOrders { get; set; }
         public DbSet<PurchaseOrderDetails> purchaseOrderDetails { get; set; }
+        public DbSet<PurchaseCart> purchaseCarts { get; set; }
         public DbSet<Requisition> requisitions { get; set; }
         public DbSet<RequisitionDetail> requisitionDetails { get; set; }
         public DbSet<Retrieval> retrievals { get; set; }
         public DbSet<RetrievalDetails> retrievalDetails { get; set; }
         public DbSet<EmployeeAuthorize> employeeAuthorizes { get; set; }
+        public DbSet<Notification> notifications { get; set; }
 
     }
 }

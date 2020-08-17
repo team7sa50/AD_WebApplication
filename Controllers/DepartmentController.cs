@@ -18,14 +18,16 @@ namespace Team7_StationeryStore.Controllers
         protected RequisitionService reqService;
         protected InventoryService invService;
         protected DepartmentService deptService;
+        protected DisbursementService disService;
 
 
-        public DepartmentController(RequisitionService reqService, InventoryService invService, DepartmentService deptService ,StationeryContext dbcontext)
+        public DepartmentController(RequisitionService reqService, InventoryService invService, DepartmentService deptService, DisbursementService disService, StationeryContext dbcontext)
         {
             this.deptService = deptService;
             this.invService = invService;
             this.reqService = reqService;
             this.dbcontext = dbcontext;
+            this.disService = disService;
         }
 
         public IActionResult Home()
@@ -172,10 +174,28 @@ namespace Team7_StationeryStore.Controllers
             Employee employee = deptService.findEmployeeById(userId);
             List<Requisition> Requisition = reqService.retrieveRequisitionByEmployee(employee);
             ViewData["Requisitions"] = Requisition;
+            ViewData["userid"] = userId;
+            Employee emp = deptService.findEmployeeById(userId);
+            ViewData["username"] = emp.Name;
             return View();
         }
+
+        public IActionResult ViewRequisitionDetail(string reqid)
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            List<RequisitionDetail> requisitionDetails = reqService.retrieveRequisitionDetailList(reqid);
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["requisitionDetail"] = requisitionDetails;
+            ViewData["username"] = emp.Name;
+            ViewData["userid"] = userid;
+            Requisition requisition = reqService.findRequisition(reqid);
+            ViewData["reqid"] = requisition.Id;
+            ViewData["reqstatus"] = requisition.status;
+            return View();
+        }
+
         //For Department Head
-        public IActionResult viewPendingRequisition() {
+        public IActionResult viewDeptartmentRequisition() {
             string deptId = HttpContext.Session.GetString("Department");
             List<Requisition> pendingRequisitions = reqService.findRequisitionsByDept(deptId, ReqStatus.AWAITING_APPROVAL);
             List<Requisition> allRequisitions = reqService.findRequisitionsByDept(deptId, null);
@@ -197,6 +217,8 @@ namespace Team7_StationeryStore.Controllers
             Requisition requisition = reqService.findRequisition(requisitionId);
             ViewData["Requisition"] = requisition;
             TempData["UserId"] = userId;
+            Employee emp = deptService.findEmployeeById(userId);
+            ViewData["username"] = emp.Name;
             return View();
         }
 
@@ -222,7 +244,19 @@ namespace Team7_StationeryStore.Controllers
             return RedirectToAction("viewPendingRequisition");
         }
 
+        public IActionResult viewDepartmentDisbursements() {
 
+            List<Disbursement> disbursements = disService.retrieveDisbursementByDept(HttpContext.Session.GetString("Department"));
+            ViewData["disbursements"] = disbursements;
+            return View();
+        }
+
+        [Route("Department/findDisbursementDetail/{disId}")]
+        public ActionResult findDisbursementDetail(String disId)
+        {
+            List<DisbursementDetailView> disbursementDetails = disService.retrieveDisbursmentDetailsView(disId);
+            return Content(JsonConvert.SerializeObject(disbursementDetails));
+        }
 
         public IActionResult delegateAuthority() {
             string userId = HttpContext.Session.GetString("userId");
@@ -246,6 +280,5 @@ namespace Team7_StationeryStore.Controllers
             return RedirectToAction("DelegateAuthority");
         }
 
-        
     }
 }

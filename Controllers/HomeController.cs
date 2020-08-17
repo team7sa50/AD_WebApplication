@@ -53,6 +53,10 @@ namespace Team7_StationeryStore.Controllers
                 /*return RedirectToAction("viewCatalogue", "Department");*/
                 return RedirectToAction("Home", "Department");
             }
+            if(user.Role == Role.STORE_CLERK)
+            {
+                return RedirectToAction("ViewRequisitions", "Requisition");
+            }
             else
             {
                 return RedirectToAction("Home", "StationeryStore", new { userid = user.Id });
