@@ -148,6 +148,20 @@ namespace Team7_StationeryStore.Controllers
             PurchaseOrder po = dbcontext.purchaseOrders.Where(x => x.Id == poId).FirstOrDefault();
             po.status = POStatus.DELIVERED;
             dbcontext.Update(po);
+            var items = (from c in dbcontext.purchaseOrderDetails
+                         where c.PurchaseOrderId == po.Id
+                         select new
+                         {
+                             Inventory = c.InventoryId,
+                             Quanity=c.quantity
+                         }
+                      );
+            foreach (var c in items)
+            {
+                Inventory i = dbcontext.inventories.Where(x => x.Id == c.Inventory).FirstOrDefault();
+                i.stock = i.stock + c.Quanity;
+                dbcontext.Update(i);
+            }
             dbcontext.SaveChanges();
             return RedirectToAction("ViewAllPurchaseOrders");
         }
