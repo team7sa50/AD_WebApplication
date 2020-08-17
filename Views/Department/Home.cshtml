@@ -61,13 +61,16 @@
                 <form method="POST">
                     <button value="View" class="btn btn-outline-primary" formaction="/Department/viewRequisitionList/">View Requistion History</button>
                 </form>
+                <form method="POST">
+                    <button value="View" class="btn btn-outline-primary" formaction="/Department/viewDepartmentDisbursements/">View Disbursements</button>
+                </form>
                 @if (emp.Role == Role.DEPT_HEAD)
-                 {
+                {
                     <form method="POST">
                         <button value="View" class="btn btn-outline-primary" formaction="/Department/viewDeptartmentRequisition/">Pending Requisitions</button>
                     </form>
 
-                 }
+                }
                 <br>
             </div>
         </div>
