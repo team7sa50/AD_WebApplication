@@ -46,8 +46,7 @@ namespace Team7_StationeryStore.Controllers
         }
         public IActionResult Home()
         {
-            string userid = HttpContext.Session.GetString("userId");
-            Employee emp = deptService.findEmployeeById(userid);
+            Employee emp = deptService.findEmployeeById(HttpContext.Session.GetString("userId"));
             ViewData["username"] = emp.Name;
             return View();
         }
@@ -106,12 +105,14 @@ namespace Team7_StationeryStore.Controllers
             {
                 System.Diagnostics.Debug.WriteLine("Creating disbursements");
                 Disbursement d = new Disbursement();
+                Employee emp = deptService.findEmployeeById(HttpContext.Session.GetString("userId"));
                 d.Id = Guid.NewGuid().ToString();
                 d.GeneratedDate = DateTime.Now;
                 d.CollectionDate = DateTime.Now.AddDays(1);
                 d.Departments = dept.Key;
                 d.DepartmentsId = dept.Key.Id;
                 d.status = DisbusementStatus.PENDING;
+                d.storeClerk = emp;
                 dbcontext.Add(d);
                 dbcontext.SaveChanges();
                 
