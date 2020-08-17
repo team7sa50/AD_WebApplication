@@ -270,7 +270,11 @@ body {
     padding-top: 40px;
     border-bottom: 2px solid #9c9c9c;
     display:flex;
+    justify-content:space-around;
 }
+    .requisitionmenu >div{
+        display:flex;
+    }
 
     .requisitionmenu button {
         height: 40px;

@@ -139,8 +139,11 @@ namespace Team7_StationeryStore.Controllers
         }
         public IActionResult ViewAllPurchaseOrders()
         {
+            string userid = HttpContext.Session.GetString("userId");
+            Employee user = dbcontext.employees.Where(x => x.Id == userid).FirstOrDefault();
             List<PurchaseOrder> purchaseOrders = dbcontext.purchaseOrders.ToList();
             ViewData["purchaseOrders"] = purchaseOrders;
+            ViewData["username"] = user.Name;
             return View();
         }
         public IActionResult UpdateStatus(string poId)
@@ -165,6 +168,18 @@ namespace Team7_StationeryStore.Controllers
             dbcontext.SaveChanges();
             return RedirectToAction("ViewAllPurchaseOrders");
         }
+        public IActionResult PurchaseOrderDetail(string poId)
+        {
+            List<PurchaseOrderDetails> purchaseOrderDetails = invService.findPurchaseOrderDetails(poId);
 
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["purchaseOrderDetail"] = purchaseOrderDetails;
+            ViewData["username"] = emp.Name;
+            ViewData["userid"] = userid;
+            PurchaseOrder po = invService.findPurchaseOrder(poId);
+            ViewData["po"] = po;
+            return View();
+        }
     }
 }
