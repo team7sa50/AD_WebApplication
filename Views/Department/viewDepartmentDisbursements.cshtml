@@ -1,0 +1,155 @@
+﻿@using Team7_StationeryStore.Models
+@{
+    ViewData["Title"] = "viewDisbursements";
+    var dlist = (List<Disbursement>)ViewData["disbursements"];
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf=8">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="~/css/viewReq.css">
+    <link rel="stylesheet" type="text/css" href="~/css/site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <script src="https://use.fontawesome.com/973befe495.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="requisitionmenu">
+        <button class="tablinks" onclick="openReq(event, 'All')" id="defaultOpen">All</button>
+    </div>
+
+    <!--Tab for All Requisitions-->
+    <div id="main">
+        <div class="requisitioncontainer" id="All">
+            <div class="requisitionfilter">
+
+                <form>
+                    <h1>Requisitions</h1>
+                    <div style="float:left;">
+                        <label for="Status">Status</label>
+                        <select id="status" name="Status">
+                            <option value="All" selected>All</option>
+                            <option value="Recieved">Recieved</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Collection">Collection</option>
+                            <option value="Outstanding">Outstanding</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <fieldset>
+                        <div style="float:left;margin-right:20px;">
+                            <label for="StartDate">Start date</label>
+                            <input type="Date" name="StartDate">
+                        </div>
+                        <div style="float:left;">
+                            <label for="EndDate">End date</label>
+                            <input type="Date" name="EndDate">
+                        </div>
+                        <input style="float:left;margin-right:20px;" type="submit" value="Filter">
+                    </fieldset>
+                </form>
+            </div>
+            <table class="requisitiontable">
+                <tr>
+                    <th>Id</th>
+                    <th>Processed Date</th>
+                    <th>Delivery Date</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+                @foreach (var d in dlist)
+                {
+                    <tr>
+                        <td>@d.Id</td>
+                        <td>@d.GeneratedDate.ToString("dd-MMM-yyyy")</td>
+                        <td>@d.CollectionDate.ToString("dd-MMM-yyyy")</td>
+                        <td>@d.status</td>
+                        <td>
+                            <a onclick="openDetail('@d.Id')"><u>View</u></a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+
+        <div id="myDetail" class="detail">
+            <a href="javascript:void(0)" id="detailclosebtn" onclick="closeDetail()">&times;</a>
+
+            <table class="detailRForm">
+
+                <tr>
+                    <th id="disid" style="font-size: 14px;"></th>
+                </tr>
+                <tr style="border-top: 1px solid gray;">
+                    <th>Department</th>
+                    <td id="dept"></td>
+                </tr>
+                <tbody class="table-body-req-detail"></tbody>
+            </table>
+        </div>
+        <script>
+            function openDetail(id) {
+                document.getElementById("disid").innerHTML = id;
+                console.log(status);
+
+                document.getElementById("myDetail").style.width = "350px";
+                document.getElementById("All").style.marginRight = "300px";
+                $.ajax({
+                    url: "/Department/findDisbursementDetail/id",
+                    method: "POST",
+                    data: { disId: id },
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log("hello detail");
+                        $('.table-body-req-detail').html("");
+                        if (response.lenght != 0) {
+                            $('.table-body-req-detail').append(`<tr><th>Item Code</td><td>Requested Quantity</td></tr>`)
+                        }
+                        for (const item of response) {
+                            $('.table-body-req-detail').append(`<tr><td>${item.itemCode}</td><td>${item.recievedQty}</td></tr>`)
+                        }
+                        console.log(response);
+                    }
+                });
+            }
+
+            /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+            function closeDetail() {
+                document.getElementById("myDetail").style.width = "0";
+                document.getElementById("All").style.marginRight = "auto";
+
+            }
+
+            function showChangeStatus() {
+                document.getElementById("changeStatus").style.display = "block";
+                document.getElementById("originalStatus").style.display = "none";
+            }
+
+            function openReq(evt, cityName) {
+                // Declare all variables
+                var i, tabcontent, tablinks;
+
+                // Get all elements with class="tabcontent" and hide them
+                tabcontent = document.getElementsByClassName("requisitioncontainer");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+
+                // Get all elements with class="tablinks" and remove the class "active"
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+
+                // Show the current tab, and add an "active" class to the button that opened the tab
+                document.getElementById(cityName).style.display = "block";
+                evt.currentTarget.className += " active";
+            }
+        </script>
+</body>
+</html>

@@ -224,7 +224,7 @@ namespace Team7_StationeryStore.Controllers
             return RedirectToAction("viewPendingRequisition");
         }
 
-        public IActionResult viewDisbursements() {
+        public IActionResult viewDepartmentDisbursements() {
 
             List<Disbursement> disbursements = disService.retrieveDisbursementByDept(HttpContext.Session.GetString("Department"));
             ViewData["disbursements"] = disbursements;
@@ -237,11 +237,6 @@ namespace Team7_StationeryStore.Controllers
             List<DisbursementDetailView> disbursementDetails = disService.retrieveDisbursmentDetailsView(disId);
             return Content(JsonConvert.SerializeObject(disbursementDetails));
         }
-
-/*        public IActionResult appointRepresentative() { 
-        
-            
-        }*/
 
         public IActionResult delegateAuthority() {
             string userId = HttpContext.Session.GetString("userId");
@@ -265,6 +260,5 @@ namespace Team7_StationeryStore.Controllers
             return RedirectToAction("DelegateAuthority");
         }
 
-        
     }
 }

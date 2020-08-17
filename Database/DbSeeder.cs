@@ -609,11 +609,7 @@ namespace Team7_StationeryStore.Database
                 requisition4.Remarks = "nothing";
                 dbcontext.Add(requisition4);
 
-
-
-                dbcontext.SaveChanges();
-
-                /*Requisition rq1 = new Requisition();
+/*                Requisition rq1 = new Requisition();
                 rq1.Id = Comm.DeptCode + "_" + DateTime.Now;
                 rq1.ApprovedEmployee = employee10;
                 rq1.DepartmentId = Comm.Id;
@@ -705,8 +701,8 @@ namespace Team7_StationeryStore.Database
                 rqd9.RequisitionId = rq3.Id;
                 rqd9.Inventory = item1;
                 rqd9.RequestedQty = 50;
-                dbcontext.Add(rqd8);
-                */
+                dbcontext.Add(rqd8);*/
+                
                 dbcontext.SaveChanges();
             }
         }
