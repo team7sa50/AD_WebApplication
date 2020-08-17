@@ -19,7 +19,7 @@ namespace Team7_StationeryStore.Service
                protected InventoryService inventoryService;*/
 
         public NotificationService(StationeryContext dbcontext, 
-                                    DepartmentService deptService,
+                                    DepartmentService deptService
                                     /*RequisitionService requisitionService, 
                                     DisbursementService disbursementService,
                                     InventoryService inventoryService*/)
