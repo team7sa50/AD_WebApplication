@@ -35,11 +35,11 @@
                     <fieldset>
                         <div style="float:left;margin-right:20px;">
                             <label for="CompiledOn">Compiled On</label>
-                            <input type="Date" name="EndDate">
+                            <input type="Date" name="EndDate" id="dateCompiledPending">
                         </div>
                         <div style="float:left;">
                             <label for="CollectDate">Collection Date</label>
-                            <input type="Date" name="CollectDate">
+                            <input type="Date" name="CollectDate" id="dateCollectionPending">
                         </div>
                     </fieldset>
 
@@ -53,7 +53,7 @@
                                     <option value="@d.DeptName">@d.DeptName</option>
                                 }
                             </select>
-                        </div>                  
+                        </div>
                     </fieldset>
                 </form>
             </div>
@@ -70,9 +70,9 @@
                 @foreach (var d in disb)
                 {
                 <tr onclick="viewDisDetail()">
-                <td>@d.CollectionDate</td>
+                <td>@d.CollectionDate.ToShortDateString()</td>
                 <td>@d.Departments.DeptName</td>
-                <td>@d.GeneratedDate</td>
+                <td>@d.GeneratedDate.ToShortDateString()</td>
                 <td>Adam Smith</td>
                 <td><button onclick="" style="color:#1f5f89"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></td>
             </tr>
@@ -240,7 +240,7 @@
 
             </div>
         </div>
-
+    </div>
 <script>
 
  function tableToJson(table) {
@@ -292,24 +292,23 @@ $('#deptPending').change('keyup', function(){
     };    
 })
 
-    var comTable = document.getElementById('Completedtable')
-    var comTableJSON = JSON.stringify(tableToJson(comTable))
+ $('#dateCollectionPending').change('keyup', function(){
+    var value=$(this).val()
+    var inputDate = new Date(value)
+    console.log(inputDate)
+    var dataByDate = searchTableByCollDate(inputDate, tableJson)
+    buildTable(dataByDate, "pendingUnfiltered")
+    $(this).value = ""
+})
 
-    $('#deptCompleted').change('keyup', function () {
-    /*get the value selected*/ 
-    var value = $(this).val()
-    /* search the html table for the matching dept name */ 
-    if (value.length < 2){
-    console.log("All dept selected");
-        var data1 = getAll(comTableJSON);
-        buildTable(data1, "completedUnfiltered");
-    }
-    else if (value.length > 1){
-        console.log(value + " selected");
-        var data2 = searchTable(value, comTableJSON);
-        buildTable(data2, "completedUnfiltered");
-    };    
-    })
+$('#dateCompiledPending').change('keyup', function(){
+    var value=$(this).val()
+    var inputDate = new Date(value)
+    console.log(inputDate)
+    var dataByDate = searchTableByComDate(inputDate, tableJson)
+    buildTable(dataByDate, "pendingUnfiltered")
+    $(this).value = ""
+})
 
 function searchTable(value, data){
     
@@ -328,6 +327,40 @@ function searchTable(value, data){
     return filteredData
 }
 
+function searchTableByCollDate(inputDate, data){
+    var obj = JSON.parse(data)
+    console.log("Date input:", inputDate)
+    var filteredData = []
+    for (var i = 0; i < obj.length; i++){
+        var name = obj[i].collectiondate
+        var rowDate = new Date(name)
+        console.log('Collection date from JSON:', rowDate)
+        if (rowDate.toDateString() == inputDate.toDateString()) 
+        {
+            console.log("found a record with matching date")
+            filteredData.push(obj[i])
+        }
+    }
+    return filteredData
+}
+
+function searchTableByComDate(inputDate, data){
+    var obj = JSON.parse(data)
+    console.log("Date input:", inputDate)
+    var filteredData = []
+    for (var i = 0; i < obj.length; i++){
+        var name = obj[i].collectiondate
+        var rowDate = new Date(name)
+        
+        if (rowDate.toDateString() == inputDate.toDateString()) 
+        {
+            console.log("found a record with matching date")
+            filteredData.push(obj[i])
+        }
+    }
+    return filteredData
+    }
+
 function getAll(alldata){
     var obj = JSON.parse(alldata)
     var filteredData = []
@@ -336,6 +369,25 @@ function getAll(alldata){
     }
     return filteredData
 }
+
+var comTable = document.getElementById('Completedtable')
+var comTableJSON = JSON.stringify(tableToJson(comTable))
+
+$('#deptCompleted').change('keyup', function () {
+    /*get the value selected*/ 
+    var value = $(this).val()
+    /* search the html table for the matching dept name */ 
+    if (value.length < 2){
+    console.log("All dept selected");
+        var data1 = getAll(comTableJSON);
+        buildTable(data1, "completedUnfiltered");
+    }
+    else if (value.length > 1){
+        console.log(value + " selected");
+        var data2 = searchTable(value, comTableJSON);
+        buildTable(data2, "completedUnfiltered");
+    };    
+})
 
 function buildTable(data, tableBodyId){
     var tableOld = document.getElementById(tableBodyId)
