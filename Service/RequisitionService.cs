@@ -60,6 +60,12 @@ namespace Team7_StationeryStore.Service
 
         }
 
+        public List<RequisitionDetail> retrieveRequisitionDetailList(string requisitionId)
+        {
+
+            return dbcontext.requisitionDetails.Where(x => x.RequisitionId == requisitionId).ToList();
+        }
+
         public Requisition findRequisition(string requisitionId) { 
             return dbcontext.requisitions.Where(x => x.Id == requisitionId).FirstOrDefault();
         }

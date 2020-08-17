@@ -1,9 +1,7 @@
 ﻿@using Team7_StationeryStore.Models;
 
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
+    ViewData["Title"] = "ViewInventory";
     var lists = (List<Inventory>)ViewData["stationeryCatalgoue"];
     var categories = (List<ItemCategory>)ViewData["categories"];
     var userid = TempData["userid"];
@@ -11,7 +9,7 @@
 }
 
 
-
+<h5>ViewInventory</h5>
 <head>
 
     <title></title>
@@ -23,22 +21,51 @@
 
 </head>
 
-<header>
-    <ul>
-        <li class="logo">Logic <span>Stationery</span></li>
-        <li> <button class="menubtn" href="#inventory">Inventory</li>
-        <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
-        <li><p class="userdetails">@username</p> <img src="~/lib/img/employeeicon.jpg"> </li>
-    </ul>
-</header>
 
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Logic University</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-<h2 style="text-align:center">Stationeries available in Logic University Stationery Store</h2>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+        </ul>
+
+        <span class="navbar-text" style="margin-right:50px">
+            @username
+        </span>
+        <form asp-controller="Stationery" asp-action="ViewCart" method="POST" class="form-inline my-2 my-lg-0">
+            <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="View Cart">
+        </form>
+
+    </div>
+</nav>
+<br>
+
+<h2 style="text-align:center">Inventory List</h2>
 
 <div class="container">
-    <div>
-        <a asp-controller="Department" asp-action="ViewCart" style="margin-left:900px;font-size:30px">View Cart</a>
-    </div>
     <div align=center>
         <div>
             <table class="table table-bordered table-striped">
@@ -46,6 +73,7 @@
                     <tr>
                         <th>Item Code</th>
                         <th>Descripion</th>
+                        <th>Stock</th>
                         <th>&nbsp;</th>
                     </tr>
                 </thead>
@@ -57,7 +85,8 @@
 
                             <td class="text-center">@i.itemCode</td>
                             <td class="text-left">@i.description</td>
-                            <td class="text-right"><button class="btn btn-secondary" onclick="addToCart('@i.Id','@i.itemCode')">Add to Cart</button></td>
+                            <td>@i.stock</td>
+                            <td class="text-right"><button class="btn btn-secondary" onclick="createAdjustment('@i.Id','@i.itemCode')">Create Adjustment Vouncher</button></td>
 
                         </tr>
                     }
@@ -69,22 +98,22 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myInventoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
 
                 <h4 class="modal-title" id="myModalLabel">#Item Code Item Name</h4>
-                <p id="myModalLabel" />
             </div>
             <div class="modal-body">
-                <form asp-controller="Department" asp-action="AddToCart" method="POST">
-                    <label for="quantity">Quantity Needed:</label>
+                <form asp-controller="Stationery" asp-action="CreateAdjustment" method="POST">
+                    <label for="quantity">Quantity:</label>
                     <input type="number" id="quantity" name="quantity" min="1" max="50">
+                    <input type="text" name="reason"  />
                     <input type="hidden" id="itemId" name="itemId">
 
                     <input class="btn btn-primary btn-sm" type="submit" value="Submit">
-                    
+
                 </form>
             </div>
         </div>
@@ -92,13 +121,15 @@
 </div>
 <script>
     function addToCart(id, itemCode) {
-        $('#myModal').modal();
+        $('#myInventoryModal').modal();
         console.log(id);
         console.log(itemCode);
         document.getElementById("itemId").value = id;
         document.getElementById("myModalLabel").innerHTML = itemCode;
+
     }
 </script>
+
 
 
 

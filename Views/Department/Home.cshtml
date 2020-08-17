@@ -13,6 +13,15 @@
 </head>
 <body>
 
+    <header>
+        <ul>
+            <li class="logo">Logic <span>Stationery</span></li>
+            <li> <button class="menubtn" href="#inventory">Inventory</li>
+            <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
+            <li><p class="userdetails">@emp.Name</p> <img src="~/lib/img/employeeicon.jpg"> </li>
+        </ul>
+    </header>
+
     <div class="app" style="padding-left:50px">
         <div style="float:left;">
             <div class="card" style="width: 18rem;">
@@ -56,14 +65,13 @@
             <h2>Stationery Store</h2>
             <div class="list group">
 
-                <button type="button" class="btn btn-outline-primary" onclick="window.location.href = 'Emp_view_stationery_catalogue.cshtml'">view catalogue</button>
-                <button type="button" class="btn btn-outline-primary" onclick="window.location.href = 'emp_MakeRequestForStationery.cshtml'">Manage Cart</button>
-                <form method="POST">
-                    <button value="View" class="btn btn-outline-primary" formaction="/Department/viewRequisitionList/">View Requistion History</button>
-                </form>
-                <form method="POST">
-                    <button value="View" class="btn btn-outline-primary" formaction="/Department/viewDepartmentDisbursements/">View Disbursements</button>
-                </form>
+                <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="viewCatalogue">VIEW CATALOGUE</a>
+                <br />
+
+
+                <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="viewRequisitionList">VIEW REQUISITION HISTORY</a>
+                <br />
+               
                 @if (emp.Role == Role.DEPT_HEAD)
                 {
                     <form method="POST">
