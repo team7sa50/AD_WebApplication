@@ -16,6 +16,7 @@ namespace Team7_StationeryStore.Controllers
         protected StationeryContext dbcontext;
         protected RetrievalService rservice;
         protected RequisitionService requisitionService;
+        protected InventoryService InventoryService;
 
         public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService)
         {
@@ -52,8 +53,18 @@ namespace Team7_StationeryStore.Controllers
             ViewData["reqPerDept"] = reqPerDept;
             return View();        
         }
-       
 
+        public IActionResult submitAdjustmentVoucher(string invId,int qty,string reason) {
+            string userid = HttpContext.Session.GetString("userId");
+            InventoryService.CreateAdjustmentVoucher(userid, invId, qty, reason);
+            return RedirectToAction("viewInventoryList");
+        }
+
+        public IActionResult updateAdjustmentVoucher(string adjVoucherId,string action,string remarks) {
+            string userId = HttpContext.Session.GetString("userId");
+            ViewData["response"] = InventoryService.UpdateAdjustmentVoucher(adjVoucherId, action, remarks);
+            return RedirectToAction("");
+        }
         
     }
 }
