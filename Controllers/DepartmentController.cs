@@ -174,8 +174,26 @@ namespace Team7_StationeryStore.Controllers
             Employee employee = deptService.findEmployeeById(userId);
             List<Requisition> Requisition = reqService.retrieveRequisitionByEmployee(employee);
             ViewData["Requisitions"] = Requisition;
+            ViewData["userid"] = userId;
+            Employee emp = deptService.findEmployeeById(userId);
+            ViewData["username"] = emp.Name;
             return View();
         }
+
+        public IActionResult ViewRequisitionDetail(string reqid)
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            List<RequisitionDetail> requisitionDetails = reqService.retrieveRequisitionDetailList(reqid);
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["requisitionDetail"] = requisitionDetails;
+            ViewData["username"] = emp.Name;
+            ViewData["userid"] = userid;
+            Requisition requisition = reqService.findRequisition(reqid);
+            ViewData["reqid"] = requisition.Id;
+            ViewData["reqstatus"] = requisition.status;
+            return View();
+        }
+
         //For Department Head
         public IActionResult viewDeptartmentRequisition() {
             string deptId = HttpContext.Session.GetString("Department");
@@ -199,6 +217,8 @@ namespace Team7_StationeryStore.Controllers
             Requisition requisition = reqService.findRequisition(requisitionId);
             ViewData["Requisition"] = requisition;
             TempData["UserId"] = userId;
+            Employee emp = deptService.findEmployeeById(userId);
+            ViewData["username"] = emp.Name;
             return View();
         }
 

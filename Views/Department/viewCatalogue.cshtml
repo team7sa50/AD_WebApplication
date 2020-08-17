@@ -23,51 +23,22 @@
 
 </head>
 
+<header>
+    <ul>
+        <li class="logo">Logic <span>Stationery</span></li>
+        <li> <button class="menubtn" href="#inventory">Inventory</li>
+        <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
+        <li><p class="userdetails">@username</p> <img src="~/lib/img/employeeicon.jpg"> </li>
+    </ul>
+</header>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Logic University</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dropdown
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-        </ul>
-
-        <span class="navbar-text" style="margin-right:50px">
-            @username
-        </span>
-        <form asp-controller="Department" asp-action="ViewCart" method="POST" class="form-inline my-2 my-lg-0">
-            <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="View Cart">
-        </form>
-
-    </div>
-</nav>
-<br>
 
 <h2 style="text-align:center">Stationeries available in Logic University Stationery Store</h2>
 
 <div class="container">
+    <div>
+        <a asp-controller="Department" asp-action="ViewCart" style="margin-left:900px;font-size:30px">View Cart</a>
+    </div>
     <div align=center>
         <div>
             <table class="table table-bordered table-striped">

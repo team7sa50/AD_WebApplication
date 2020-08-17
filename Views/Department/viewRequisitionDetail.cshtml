@@ -1,9 +1,10 @@
-﻿
-@{
-    ViewData["Title"] = "ViewCart";
-    var lists = (List<EmployeeCart>)ViewData["employeeCarts"];
+﻿@{
+    ViewData["Title"] = "viewRequisition";
+    var lists = (List<RequisitionDetail>)ViewData["requisitionDetail"];
     var username = ViewData["username"];
     var userid = ViewData["userid"];
+    var reqid = ViewData["reqid"];
+    var reqstatus = ViewData["reqstatus"];
 }
 
 <head>
@@ -23,55 +24,55 @@
     </ul>
 </header>
 
-<h2 style="text-align:center">Your Cart</h2>
+<h2 style="text-align:center">Your Requisition Detail</h2>
+<br />
+<br />
 
 <div class="container">
-    <div>
-        
-        <a asp-controller="Department" asp-action="viewCatalogue" style="margin-left:850px;font-size:30px">View Catalogue</a>
-    </div>
     <div align=center>
+        <div>
+            <h5 style="text-align:left;float:left;text-emphasis-color:blue">
+                Requistion Form ID:
+                @reqid
+
+            </h5>
+            <h5 style="text-align:right;float:right;text-emphasis-color:blue">
+                Status:
+                @reqstatus
+            </h5>
+
+        </div>
         <div>
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Item Code</th>
                         <th>Descripion</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
+                        <th>Quantity</th>
+
                     </tr>
                 </thead>
 
                 <tbody>
+
                     @foreach (var i in lists)
                     {
                         <tr>
 
                             <td class="text-center">@i.Inventory.itemCode</td>
                             <td class="text-left">@i.Inventory.ItemCategory.name</td>
-                            <td class="text-right">@i.Qty</td>
-                            <td>
-                                <form method="POST">
-                                    <button value="Add To Cart" formaction="/Department/RemoveItem/?userid=@userid&&itemId=@i.InventoryId" class="btn btn-secondary">Remove</button>
-                                </form>
-                            </td>
+                            <td class="text-right">@i.RequestedQty</td>
+
                         </tr>
                     }
+
                 </tbody>
-
-
-
             </table>
-            <div class="text-center">
-                <a class="btn btn-primary" asp-controller="Department" asp-action="RaiseRequisition">Submit Requisition</a>
-                <a class="btn btn-primary" asp-controller="Department" asp-action="RemoveAllItems">Cancel</a>
 
-
-
-            </div>
         </div>
     </div>
 </div>
+
 
 
 
