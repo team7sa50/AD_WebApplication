@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "viewDisbursements";
     List<Disbursement> disb = (List<Disbursement>)ViewData["disbursements"];
     List<Departments> departments = (List<Departments>)ViewData["departments"];
@@ -89,11 +88,11 @@
                 <fieldset>
                     <div style="float:left;margin-right:20px;">
                         <label for="CompiledOn">Compiled On</label>
-                        <input type="Date" name="EndDate">
+                        <input type="Date" name="EndDate" id="completedCompiledDate">
                     </div>
                     <div style="float:left;">
                         <label for="CollectDate">Collection Date</label>
-                        <input type="Date" name="CollectDate">
+                        <input type="Date" name="CollectDate" id="completedCollDate">
                     </div>
                 </fieldset>
 
@@ -109,8 +108,6 @@
                         </select>
                     </div>
                 </fieldset>
-
-
             </form>
         </div>
 
@@ -124,55 +121,15 @@
             <tbody id="completedUnfiltered">
         @foreach (var d in completedDisbursement)
         {
-    <tr onclick="viewDisDetail()">
-        <td>@d.CollectionDate</td>
-        <td>@d.Departments.DeptName</td>
-        <td>@d.GeneratedDate</td>
-        <td>Adam Smith</td>
-        <td><button onclick="" style="color:#1f5f89"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></td>
-    </tr>
+            <tr onclick="viewDisDetail()">
+                <td>@d.CollectionDate</td>
+                <td>@d.Departments.DeptName</td>
+                <td>@d.GeneratedDate</td>
+                <td>Adam Smith</td>
+                <td><button onclick="" style="color:#1f5f89"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></td>
+            </tr>
         }
         </tbody>          
-        </table>
-    </div>
-    </div>
-    </div>
-
-    <div id="myDetail" class="detail">
-        <a href="javascript:void(0)" id="detailclosebtn" onclick="closeDetail()">&times;</a>
-
-        <table class="detailRForm">
-
-            <tr>
-                <th style="font-size: 14px;">Request FASS01</th>
-            </tr>
-            <tr style="border-top: 1px solid gray;">
-                <th>Department</th>
-                <td>Arts and Social Science</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>03/08/2020</td>
-            </tr>
-            <tr>
-                <th>Recieved By</th>
-                <td>Chris Lee</td>
-            </tr>
-
-            <tr>
-                <th>Status</th>
-                <td>
-                    <p id="originalStatus">Recieved<button class="editbtn" onclick="showChangeStatus()"><i class="far fa-edit"></i></button></p>
-
-                    <form id="changeStatus">
-                        <select>
-                            <option value="Recieved">Recieved</option>
-                            <option value="Processing">Processing</option>
-                        </select>
-                        <input type="submit" value="Ok" style="font-size:11px"></input>
-                    </form>
-                </td>
-            </tr>
         </table>
     </div>
 
@@ -241,8 +198,8 @@
             </div>
         </div>
     </div>
-<script>
 
+<script>
  function tableToJson(table) {
     console.log("converting table to JSON")
     var data = [];
@@ -273,7 +230,6 @@
 var pretable = document.getElementById('Pendingtable')
 var tableJson = JSON.stringify(tableToJson(pretable))
 
-  
 $('#deptPending').change('keyup', function(){
     /*get the value selected*/ 
     var value = $(this).val()
@@ -353,13 +309,11 @@ function searchTableByComDate(inputDate, data){
         var rowDate = new Date(name)
         
         if (rowDate.toDateString() == inputDate.toDateString()) 
-        {
-            console.log("found a record with matching date")
-            filteredData.push(obj[i])
-        }
+        {   console.log("found a record with matching date")
+            filteredData.push(obj[i])}
     }
     return filteredData
-    }
+}
 
 function getAll(alldata){
     var obj = JSON.parse(alldata)
@@ -389,6 +343,24 @@ $('#deptCompleted').change('keyup', function () {
     };    
 })
 
+$('#completedCompiledDate').change('keyup', function(){
+    var value=$(this).val()
+    var inputDate = new Date(value)
+    console.log(inputDate)
+    var dataByDate = searchTableByComDate(inputDate, comtableJson)
+    buildTable(dataByDate, "pendingUnfiltered")
+    $(this).value = ""
+})
+
+$('#completedCollDate').change('keyup', function(){
+    var value=$(this).val()
+    var inputDate = new Date(value)
+    console.log(inputDate)
+    var dataByDate = searchTableByComDate(inputDate, comtableJson)
+    buildTable(dataByDate, "pendingUnfiltered")
+    $(this).value = ""
+})
+
 function buildTable(data, tableBodyId){
     var tableOld = document.getElementById(tableBodyId)
     tableOld.innerHTML = ""
@@ -407,31 +379,6 @@ function buildTable(data, tableBodyId){
 
 function viewDisDetail() {
 	document.getElementByClass("disbursementDetail").style.display="block";
-}
-
-function openDetail() {
-  document.getElementById("myDetail").style.width = "300px";
-  document.getElementById("All").style.marginRight = "250px";
-  document.getElementById("Outstanding").style.marginRight = "250px";
-  document.getElementById("New").style.marginRight = "250px";
-}
-
-/* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
-function closeDetail() {
-  document.getElementById("myDetail").style.width = "0";
-    document.getElementById("All").style.marginRight = "auto";
-  document.getElementById("Outstanding").style.marginRight = "auto";
-  document.getElementById("New").style.marginRight = "auto";
-}
-
-function showQty(){
-	document.getElementById=("changeQty").style.display="block";
-	document.getElementById="editQtybtn".style.display="none";
-}
-
-function showChangeStatus(){
-	document.getElementById("changeStatus").style.display="block";
-	document.getElementById("originalStatus").style.display="none";
 }
 
 document.getElementById("defaultOpen").click();
@@ -465,3 +412,4 @@ document.querySelector('.close').addEventListener("click", function() {
 });
         </script>
 </body>
+</html>
