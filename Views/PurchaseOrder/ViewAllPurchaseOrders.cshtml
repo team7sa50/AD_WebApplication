@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewData["Title"] = "ViewAllPurchaseOrders";
+    var lists = (List<PurchaseOrder>)ViewData["purchaseOrders"];
+}
+
+<h4>ViewAllPurchaseOrders</h4>
+<table class="requisitiontable" border="1">
+    <tr>
+        <th>Id</th>
+        <th>Date</th>
+        <th>Supplier</th>
+        <th>Status</th>
+        <th></th>
+        <th>Details</th>
+    </tr>
+    @foreach (var c in lists)
+    {
+    <tr>
+        <td>@c.Id</td>
+        <td>@c.date</td>
+        <td>@c.Supplier.name</td>
+        <td>@c.status</td>
+        <td>
+            <a onclick="updateStatus('@c.Id')"><u>Update</u></a>
+        </td>
+        <!--<td>
+            <form asp-controller="PurchaseOrder" asp-action="PurchaseOrderDetail" method="POST">
+                <input type="hidden" value="@c.Id" name="poId">
+
+                <input class="btn btn-outline-info btn-sm" type="submit" value="View">
+
+            </form>
+        </td>-->
+    </tr>
+    }
+</table>
+
+<div class="modal fade" id="mypurchaseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <form asp-controller="PurchaseOrder" asp-action="UpdateStatus" method="POST">
+                    <label for="quantity">Receiving Orders From Suppliers?</label>
+                    <input type="hidden" id="poId" name="poId">
+
+                    <input class="btn btn-primary btn-sm" type="submit" value="Ok">
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function updateStatus(id) {
+        $('#mypurchaseModal').modal();
+        document.getElementById("poId").value = id;
+    }
+</script>

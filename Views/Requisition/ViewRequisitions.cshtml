@@ -1,0 +1,226 @@
+﻿@using Team7_StationeryStore.Models;
+
+@{
+    var lists = (List<Requisition>)ViewData["requisitions"];
+    var departments = (List<Departments>)ViewData["departments"];
+    var outstandingRe = (List<Requisition>)ViewData["outsandingReq"];
+}
+
+    <head>
+        <meta charset="utf=8">
+        <title>Home</title>
+        <link rel="stylesheet" type="text/css" href="~/css/viewReq.css">
+        <link rel="stylesheet" type="text/css" href="~/css/site.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+        <script src="https://use.fontawesome.com/973befe495.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
+
+        <link href="https://code.jquery.com/jquery-3.3.1.js" />
+
+    </head>
+
+    <body>
+
+        <div class="requisitionmenu">
+            <button class="tablinks" onclick="openReq(event, 'All')" id="defaultOpen">All</button>
+            <!-- <button class="tablinks" onclick="openReq(event, 'New')">New</button>
+    <button class="tablinks" onclick="openReq(event, 'Outstanding')">Outstanding</button>-->
+            <div  class="btn-container">
+                <form asp-controller="PurchaseOrder" asp-action="SelectSupplier" method="POST">
+                    <input type="submit" value="Create Purchase Order" class="btn btn-outline-info"/>
+                </form>
+                <form asp-controller="PurchaseOrder" asp-action="ViewAllPurchaseOrders" method="POST">
+                    <input type="submit" value="View All Purchase Orders"  class="btn btn-outline-info"/>
+                </form>
+            </div>
+        </div>
+       
+            <!--Tab for All Requisitions-->
+            <div id="main">
+                <div class="requisitioncontainer" id="All">
+                    <div class="requisitionfilter">
+
+                        <form asp-controller="Requisition" asp-action="ViewRequisitionsByFilter" method="POST">
+                            <h1>Requisitions</h1>
+                            <fieldset>
+                                <div style="float:left;margin-right:20px;">
+                                    <label for="Department">Department name</label>
+                                    <select id="dept" name="Department">
+                                        <option value="all">All</option>
+                                        @foreach (var d in departments)
+                                        {
+                                            <option value="@d.Id">@d.DeptName</option>
+                                        }
+                                    </select>
+                                </div>
+                                <!--<div style="float:left;">
+                                    <label for="Status">Status</label>
+                                    <select id="status" name="Status">
+                                        <option value="Approved">Approved</option>
+                                        <option value="Processing">Processing</option>
+                                        <option value="Collection">Collection</option>
+                                        <option value="Outstanding">Outstanding</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <div style="float:left;margin-right:20px;">
+                                    <label for="StartDate">Start date</label>
+                                    <input type="Date" name="StartDate">
+                                </div>
+                                <div style="float:left;">
+                                    <label for="EndDate">End date</label>
+                                    <input type="Date" name="EndDate">
+                                </div>
+                            -->
+                                <input style="float:left;margin-right:20px;" type="submit" value="Filter">
+
+                            </fieldset>
+
+                        </form>
+                    </div>
+                    <form asp-controller="StationeryStore" asp-action="viewRetrieval" method="POST">
+
+                        <table class="requisitiontable table" id="dt-multi-checkbox" cellspacing="0" width="100%">
+                            <tr>
+                                <th>Checkbox</th>
+                                <th>Id</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                            </tr>
+                            @foreach (var c in lists)
+                            {
+                                <tr>
+                                    <td><input type=checkbox value="@c.Id" name="req"></td>
+                                    <td>@c.Id</td>
+                                    <td>@c.DateSubmitted</td>
+                                    <td>@c.status</td>
+                                    <td>
+                                        <a onclick="openDetail('@c.Id','@c.Department.DeptCode')"><u>View</u></a>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                        <input id="genretrieval" type="submit" value="Generate Retrieval List" style="font-size:11px"></input>
+                    </form>
+                </div>
+            </div>
+
+
+            <div id="myDetail" class="detail">
+                <a href="javascript:void(0)" id="detailclosebtn" onclick="closeDetail()">&times;</a>
+
+                <table class="detailRForm">
+
+                    <tr>
+                        <th id="reqid" style="font-size: 14px;"></th>
+                    </tr>
+                    <tr style="border-top: 1px solid gray;">
+                        <th>Department</th>
+                        <td id="dept"></td>
+                    </tr>
+
+                    <!--<tr>
+                    <th>Status</th>
+                    <td>
+                        <p id="originalStatus">Recieved<button class="editbtn" onclick="showChangeStatus()"><i class="far fa-edit"></i></button></p>
+
+                        <form id="changeStatus">
+                            <select>
+                                <option value="Recieved">Recieved</option>
+                                <option value="Processing">Processing</option>
+                            </select>
+                            <input type="submit" value="Ok" style="font-size:11px"></input>
+                        </form>
+                    </td>
+                </tr>
+                -->
+                </table>
+                <table>
+                    <tbody class="table-body-req-detail"></tbody>
+                </table>
+            </div>
+
+
+            <script>
+                function openDetail(id, department) {
+                    document.getElementById("dept").innerHTML = department;
+                    document.getElementById("reqid").innerHTML = id;
+                    console.log(department, id);
+                    document.getElementById("myDetail").style.width = "300px";
+                    document.getElementById("All").style.marginRight = "250px";
+                    document.getElementById("Outstanding").style.marginRight = "250px";
+                    document.getElementById("New").style.marginRight = "250px";
+                    $.ajax({
+                        url: "/Requisition/GetRequisitionDetail/id",
+                        method: "POST",
+                        data: { reqId: id },
+                        dataType: 'json',
+                        success: function (response) {
+                            console.log("hello detail");
+                            $('.table-body-req-detail').html("");
+                            if (response.length != 0) {
+                                $('.table-body-req-detail').append(`<tr><th>Item</td><td>Required Quantity</td></tr>`)
+                            }
+                            for (const item of response) {
+                                $('.table-body-req-detail').append(`<tr><td>${item.itemCode}</td><td>${item.RequestedQty}</td></tr>`)
+                            }
+                            console.log(response);
+                        }
+                    });
+                }
+
+                /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+                function closeDetail() {
+                    document.getElementById("myDetail").style.width = "0";
+                    document.getElementById("All").style.marginRight = "auto";
+                    document.getElementById("Outstanding").style.marginRight = "auto";
+                    document.getElementById("New").style.marginRight = "auto";
+                }
+
+                function showChangeStatus() {
+                    document.getElementById("changeStatus").style.display = "block";
+                    document.getElementById("originalStatus").style.display = "none";
+                }
+
+                document.getElementById("defaultOpen").click();
+
+                function openReq(evt, cityName) {
+                    // Declare all variables
+                    var i, tabcontent, tablinks;
+
+                    // Get all elements with class="tabcontent" and hide them
+                    tabcontent = document.getElementsByClassName("requisitioncontainer");
+                    for (i = 0; i < tabcontent.length; i++) {
+                        tabcontent[i].style.display = "none";
+                    }
+
+                    // Get all elements with class="tablinks" and remove the class "active"
+                    tablinks = document.getElementsByClassName("tablinks");
+                    for (i = 0; i < tablinks.length; i++) {
+                        tablinks[i].className = tablinks[i].className.replace(" active", "");
+                    }
+
+                    // Show the current tab, and add an "active" class to the button that opened the tab
+                    document.getElementById(cityName).style.display = "block";
+                    evt.currentTarget.className += " active";
+                }
+
+                $(document).ready(function () {
+                    $('#dt-multi-checkbox').dataTable({
+
+                        columnDefs: [{
+                            orderable: false,
+                            className: 'select-checkbox',
+                            targets: 0
+                        }],
+                        select: {
+                            style: 'multi',
+                            selector: 'td:first-child'
+                        }
+                    });
+                });
+            </script>
+    </body>

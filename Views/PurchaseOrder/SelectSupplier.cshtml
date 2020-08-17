@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewData["Title"] = "SelectSupplier";
+    var suppliers = (List<Supplier>)ViewData["suppliers"];
+    var username = ViewData["username"];
+    var userid = ViewData["userid"];
+
+}
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="~/css/custom.css">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Logic University</a>
+    <span class="navbar-text" style="margin-right:50px">
+        @username
+    </span>
+       
+</nav>
+<br>
+<h1>SelectSupplier</h1>
+<form asp-controller="PurchaseOrder" asp-action="PurchaseOrder" method="POST" class="form-inline my-2 my-lg-0">
+
+    <select name="supplier" id="suppliers">
+
+        @foreach (var c in suppliers)
+        {
+            <option value="@c.Id"> @c.name</option>
+
+        }
+    </select>
+    <input class="btn btn btn-outline-info my-2 my-sm-0" type="submit" value="Enter">
+</form>
