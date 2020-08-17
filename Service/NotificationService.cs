@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,20 +13,20 @@ namespace Team7_StationeryStore.Service
     public class NotificationService
     {
         protected StationeryContext dbcontext;
-/*        protected DepartmentService deptService;
-        protected RequisitionService requisitionService;
-        protected DisbursementService disbursementService;
-        protected InventoryService inventoryService;*/
+        protected DepartmentService deptService;
+        /*        protected RequisitionService requisitionService;
+               protected DisbursementService disbursementService;
+               protected InventoryService inventoryService;*/
 
-        public NotificationService(StationeryContext dbcontext/*, 
-                                    DepartmentService deptService,
-                                    RequisitionService requisitionService, 
+        public NotificationService(StationeryContext dbcontext, 
+                                    DepartmentService deptService
+                                    /*RequisitionService requisitionService, 
                                     DisbursementService disbursementService,
                                     InventoryService inventoryService*/)
         {
-            this.dbcontext = dbcontext;
-/*            this.deptService = deptService;
-            this.requisitionService = requisitionService;
+           this.dbcontext = dbcontext;
+           this.deptService = deptService;
+            /* this.requisitionService = requisitionService;
             this.disbursementService = disbursementService;
             this.inventoryService = inventoryService;*/
         }
@@ -40,6 +41,7 @@ namespace Team7_StationeryStore.Service
                     RequisitionNotif requisitionNotif = new RequisitionNotif();
                     subjectEmail = "New Requisition: " + requisition.Id;
                     requisitionNotif.Requisition = requisition;
+                    requisitionNotif.Sender = requisition.Employee;
                     requisitionNotif.ReceiverId = requisition.ApprovedEmployeeId;
                     requisitionNotif.SenderId = requisition.EmployeeId;
                     sender = requisition.Employee;
@@ -49,17 +51,25 @@ namespace Team7_StationeryStore.Service
                 case NotificationType.DISBURSEMENT:
                     DisbursementNotif disbursementNotif = new DisbursementNotif();
                     subjectEmail = "New Disbursement: " + disbursement.Id;
-
+                    disbursementNotif.Disbursement = disbursement;
+                    reciever = disbursement.Departments.Employees.Where(x => x.Role == Role.DEPT_REP).FirstOrDefault();
+                    sender = disbursement.storeClerk;
+                    disbursementNotif.Receiver = reciever;
+                    disbursementNotif.ReceiverId = reciever.Id;
+                    disbursementNotif.Sender = sender;
+                    disbursementNotif.SenderId = sender.Id;
                     dbcontext.Add(disbursementNotif);
                     break;
                 case NotificationType.ADJUSTMENTVOUCHER:
                     AdjustmentVoucherNotif adjustmentVoucherNotif = new AdjustmentVoucherNotif();
                     subjectEmail = "New AdjustmentVoucher: " + adjustment.Id;
                     adjustmentVoucherNotif.AdjustmentVoucher = adjustment;
-                    adjustmentVoucherNotif.ReceiverId = adjustment.appEmEmployeeId;
-                    adjustmentVoucherNotif.SenderId = adjustment.EmEmployeeId;
                     sender = adjustment.EmEmployee;
                     reciever = adjustment.appEmEmployee;
+                    adjustmentVoucherNotif.ReceiverId = reciever.Id;
+                    adjustmentVoucherNotif.SenderId =sender.Id;
+                    adjustmentVoucherNotif.Receiver = reciever;
+                    adjustmentVoucherNotif.Sender = sender;
                     dbcontext.Add(adjustmentVoucherNotif);
                     break;
             }

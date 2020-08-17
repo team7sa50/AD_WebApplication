@@ -86,5 +86,9 @@ namespace Team7_StationeryStore.Service
             return dbcontext.employees.Where(x => x.DepartmentsId == department.Id && x.Role == Role.DEPT_HEAD).FirstOrDefault();
 
         }
+
+        public Employee findDeptRepresentative(string deptId) {
+            return dbcontext.employees.Where(x => x.DepartmentsId == deptId && x.Role == Role.DEPT_REP).FirstOrDefault();
+        }
     }
 }
