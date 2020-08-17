@@ -50,6 +50,8 @@ namespace Team7_StationeryStore.Database
         public DbSet<RetrievalDetails> retrievalDetails { get; set; }
         public DbSet<EmployeeAuthorize> employeeAuthorizes { get; set; }
         public DbSet<Notification> notifications { get; set; }
-
+        public DbSet<AdjustmentVoucherNotif> adjustmentVoucherNotifs { get; set; }
+        public DbSet<DisbursementNotif> disbursementNotifs { get; set; }
+        public DbSet<RequisitionNotif> requisitionNotifs { get; set; }
     }
 }
