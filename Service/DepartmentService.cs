@@ -28,7 +28,7 @@ namespace Team7_StationeryStore.Service
         public List<Employee> findDepartmentEmployeeList(string userId)
         {
             Employee emp = findEmployeeById(userId);
-            return dbcontext.employees.Where(x => (x.Role == Role.EMPLOYEE || x.Role == Role.DEPT_REP)
+            return dbcontext.employees.Where(x => (x.Role != Role.DEPT_HEAD)
                                         && x.DepartmentsId == emp.DepartmentsId).ToList();
 
         }

@@ -25,6 +25,14 @@ namespace Team7_StationeryStore.Service
             return dbcontext.requisitions.Where(x => !x.status.Equals(ReqStatus.AWAITING_APPROVAL) && !x.status.Equals(ReqStatus.REJECTED)).ToList();
 
         }
+        public List<Requisition> findAllRequisitionsFromFilter(string departmentId)
+        {
+            if(departmentId == "all")
+            {
+                return dbcontext.requisitions.ToList();
+            }
+            return dbcontext.requisitions.Where(x => x.DepartmentId == departmentId).ToList();
+        }
         public List<Requisition> findOustandingRequisitions()
         {
             return dbcontext.requisitions.Where(x => x.status.Equals(ReqStatus.OUTSTAND)).ToList();
@@ -50,6 +58,12 @@ namespace Team7_StationeryStore.Service
         {
             return dbcontext.requisitions.Where(x => x.EmployeeId == e.Id).ToList();
 
+        }
+
+        public List<RequisitionDetail> retrieveRequisitionDetailList(string requisitionId)
+        {
+
+            return dbcontext.requisitionDetails.Where(x => x.RequisitionId == requisitionId).ToList();
         }
 
         public Requisition findRequisition(string requisitionId) { 
@@ -104,6 +118,7 @@ namespace Team7_StationeryStore.Service
                 Inventory inv = dbcontext.inventories.Where(x => x.Id == i.Id).FirstOrDefault();
                 RequisitionDetail requisitionDetail = new RequisitionDetail();
                 requisitionDetail.Id= Guid.NewGuid().ToString();
+                requisitionDetail.RequisitionId = newRequisition.Id;
                 requisitionDetail.Inventory = i.Inventory;
                 requisitionDetail.RequestedQty = i.Qty;
                 dbcontext.Add(requisitionDetail);

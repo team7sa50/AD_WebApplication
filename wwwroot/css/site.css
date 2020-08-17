@@ -156,6 +156,17 @@ body {
         cursor: pointer;
         box-sizing: border-box;
     }
+    .logincontainer input[type=password] {
+        border: 1px solid gray;
+        padding: 6px 10px;
+        margin-bottom: 4px;
+        width: 100%;
+        font-size: 10px;
+        height: 30px;
+        text-decoration: none;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
 
     .logincontainer input[type=submit] {
         background-color: #5080FB;

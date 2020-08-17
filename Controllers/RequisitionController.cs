@@ -36,7 +36,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["requisitions"] = requisitions;
             return View();
         }
-        public IActionResult viewRequisition()
+        public IActionResult ViewRequisitions()
         {
             List<Departments> departments = deptService.findAllDepartments();
             List<Requisition> requisitions = reqService.findAllRequisitionsFromStationery();
@@ -46,17 +46,24 @@ namespace Team7_StationeryStore.Controllers
             ViewData["requisitions"] = requisitions;
             return View();
         }
+        public IActionResult ViewRequisitionsByFilter(string Department)
+        {
+            List<Departments> departments = deptService.findAllDepartments();
+            List<Requisition> requisitions = reqService.findAllRequisitionsFromFilter(Department);
+            List<Requisition> oustandingReq = reqService.findOustandingRequisitions();
+            ViewData["outsandingReq"] = oustandingReq;
+            ViewData["departments"] = departments;
+            ViewData["requisitions"] = requisitions;
+            return View("ViewRequisitions");
+        }
+
         [Route("Requisition/GetRequisitionDetail/{reqId}")]
         public ActionResult GetRequisitionDetail(String reqId)
         {
             List<RequisitionDetailView> requisitionDetails = reqService.findRequisitionDetail(reqId);
             return Content(JsonConvert.SerializeObject(requisitionDetails));
         }
-        public IActionResult generateRetrievalList(List<string> req)
-        {
-            ViewData["req"] = req;
-            return View();
-        }
+
 
     }
 }

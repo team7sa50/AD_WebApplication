@@ -18,15 +18,6 @@
 </head>
 
 <body>
-    <header>
-        <ul>
-            <li class="logo">Logic <span>Stationery</span></li>
-            <li> <button class="menubtn" href="#home"> Menu</button></li>
-            <li> <button class="menubtn" href="#inventory">Inventory</button></li>
-            <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
-            <li><p class="userdetails">Adam Smith</p> <img src="employeeicon.jpg"> </li>
-        </ul>
-    </header>
 
     <div class="requisitionmenu">
         <button class="tablinks" onclick="openReq(event, 'All')">All</button>
@@ -80,10 +71,7 @@
                         <td>@c.DateSubmitted</td>
                         <td>@c.status</td>
                         <td>
-                            @if (c.status == ReqStatus.AWAITING_APPROVAL)
-                            {
-                                <a onclick="openDetail('@c.Id', '@c.Department.DeptCode')"><u>View</u></a>
-                            }
+                            <a onclick="openDetail('@c.Id', '@c.Department.DeptCode','@c.status')"><u>View</u></a>
                         </td>
                     </tr>
                 }
@@ -137,7 +125,7 @@
                             <td>@c.DateSubmitted</td>
                             <td>@c.status</td>
                             <td>
-                                <a onclick="openDetail('@c.Id', '@c.Department.DeptCode')"><u>View</u></a>
+                                <a onclick="openDetail('@c.Id', '@c.Department.DeptCode','@c.status')"><u>View</u></a>
                             </td>
                         </tr>
                     }
@@ -159,8 +147,8 @@
                 </tr>
                 <tbody class="table-body-req-detail"></tbody>
                 <tr>
-                    <td><button class="btn btn-success" onclick="approve()">Approve</button></td>
-                    <td><button class="btn btn-danger" onclick="reject()">Reject</button></td>
+                    <td><button id="approvebtn"class="btn btn-success" onclick="approve()">Approve</button></td>
+                    <td><button id="rejectbtn"class="btn btn-danger" onclick="reject()">Reject</button></td>
                 </tr>
             </table>
         </div>
@@ -187,9 +175,16 @@
         </div>
 
         <script>
-            function openDetail(id, department) {
+            function openDetail(id, department,status) {
                 document.getElementById("dept").innerHTML = department;
                 document.getElementById("reqid").innerHTML = id;
+                console.log(status);
+                document.getElementById("approvebtn").disabled = true;
+                document.getElementById("rejectbtn").disabled = true;
+                if (status == "AWAITING_APPROVAL") {
+                    document.getElementById("approvebtn").disabled = false;
+                    document.getElementById("rejectbtn").disabled = false;
+                }
 
                 document.getElementById("myDetail").style.width = "350px";
                 document.getElementById("All").style.marginRight = "300px";
@@ -266,3 +261,4 @@
         </script>
 </body>
 
+</html>
