@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Team7_StationeryStore.Database;
 using Team7_StationeryStore.Models;
@@ -83,6 +84,50 @@ namespace Team7_StationeryStore.Service
             dbcontext.purchaseCarts.RemoveRange(cartList);
             dbcontext.SaveChanges();
         }
+
+        public Inventory retrieveInventory(string invId) {
+            return dbcontext.inventories.Where(x => x.Id == invId).FirstOrDefault();
+        }
+
+        public AdjustmentVoucher findAdjustmentVoucher(string id) {
+            return dbcontext.adjustmentVouchers.Where(x => x.Id == id).FirstOrDefault();
+        }
+
+        public string UpdateAdjustmentVoucher(string id,string action,string remarks) {
+
+            AdjustmentVoucher adjustmentVoucher = findAdjustmentVoucher(id);
+            string response = "Adjustment Voucher: "+ adjustmentVoucher.Id;
+            if (adjustmentVoucher == null){response += " unable to locate";}
+            if (action == "approve") { adjustmentVoucher.status = Status.APPROVED; response+= " approved"; }
+            if (action == "reject") { adjustmentVoucher.status = Status.REJECTED; response+= " rejected"; }
+            adjustmentVoucher.remarks = remarks;
+            dbcontext.Update(adjustmentVoucher);
+            dbcontext.SaveChanges();
+            return response;
+        }
+
+
+        public void CreateAdjustmentVoucher(string userId, string invId,int qty,string reason) {
+            AdjustmentVoucher newAdjustmentVoucher = new AdjustmentVoucher();
+            newAdjustmentVoucher.InventoryId = invId;
+            newAdjustmentVoucher.EmEmployeeId = userId;
+            newAdjustmentVoucher.appEmEmployeeId = setAdjustmentVoucherApprover(userId,invId,qty).Id;
+            newAdjustmentVoucher.reason = reason;
+            dbcontext.Add(newAdjustmentVoucher);
+            dbcontext.SaveChanges();
+        }
+
+        public Employee setAdjustmentVoucherApprover(string userId,string invId,int qty) {
+            Inventory inventory = retrieveInventory(invId);
+            List<Employee> employees = deptService.findDepartmentEmployeeList(userId);
+            float dicrepancyCost = inventory.price * qty;
+            if (dicrepancyCost < 250)
+            {
+                return employees.Where(x => x.Role == Role.STORE_SUPERVISOR).FirstOrDefault();
+            }
+            else { return employees.Where(x => x.Role == Role.STORE_MANAGER).FirstOrDefault(); }
+        }
+
 
     }
 }

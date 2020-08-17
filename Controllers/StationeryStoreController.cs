@@ -56,6 +56,20 @@ namespace Team7_StationeryStore.Controllers
             ViewData["reqPerDept"] = reqPerDept;
             return View();        
         }
+
+
+        public IActionResult submitAdjustmentVoucher(string invId,int qty,string reason) {
+            string userid = HttpContext.Session.GetString("userId");
+            invService.CreateAdjustmentVoucher(userid, invId, qty, reason);
+            return RedirectToAction("viewInventoryList");
+        }
+
+        public IActionResult updateAdjustmentVoucher(string adjVoucherId,string action,string remarks) {
+            string userId = HttpContext.Session.GetString("userId");
+            ViewData["response"] = invService.UpdateAdjustmentVoucher(adjVoucherId, action, remarks);
+            return RedirectToAction("");
+        }
+        
         public IActionResult ViewInventory()
         {
             string userid = HttpContext.Session.GetString("userId");
@@ -67,8 +81,6 @@ namespace Team7_StationeryStore.Controllers
             ViewData["username"] = emp.Name;
             return View();
         }
-
-
 
     }
 }
