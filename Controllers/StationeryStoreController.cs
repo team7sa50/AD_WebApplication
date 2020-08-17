@@ -27,6 +27,15 @@ namespace Team7_StationeryStore.Controllers
             return RedirectToAction("viewRetrieval", "StationeryStore");
         }
         
+        [HttpPost]
+        public JsonResult getDisbursementsByDepartment(string id)
+        {
+            List<Disbursement> disbursements = (from d in dbcontext.disbursements
+                                               where d.Departments.Id == id
+                                               select d).ToList();
+            return Json(new { data = disbursements });
+
+        }
 
         public IActionResult viewRetrieval()
         {
@@ -47,9 +56,12 @@ namespace Team7_StationeryStore.Controllers
        
         public IActionResult viewDisbursements()
         {
+            List<Departments> departments = (from d in dbcontext.departments
+                                             select d).ToList();
+            ViewData["departments"] = departments;
             //On click of button, transfer retrieved requests here
-            List<Requisition> selectedReq = (from x in dbcontext.requisitions
-                                             select x).ToList();
+            List < Requisition > selectedReq = (from x in dbcontext.requisitions
+                                                select x).ToList();
             List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);
             
             //Convert request to disbursement 
@@ -100,9 +112,15 @@ namespace Team7_StationeryStore.Controllers
             //get all disbursements and display 
 
             List<Disbursement> dibs = (from d in dbcontext.disbursements
+                                       where d.status == DisbusementStatus.PENDING
                                        select d).ToList();
             System.Diagnostics.Debug.WriteLine("Total disbursements Count:" + dibs.Count);
             ViewData["disbursements"] = dibs;
+
+            List<Disbursement> dibCompleted = (from d in dbcontext.disbursements
+                                               where d.status == DisbusementStatus.COMPLETED
+                                               select d).ToList();
+            ViewData["completedDisb"] = dibCompleted;
             return View();
         }
 
