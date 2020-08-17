@@ -107,9 +107,9 @@ namespace Team7_StationeryStore.Service
             Employee emp = deptService.findEmployeeById(userId);
             Requisition newRequisition = new Requisition(emp.Departments.DeptCode);
             newRequisition.status = ReqStatus.AWAITING_APPROVAL;
-/*            Employee approver = deptService.setApprover(userId);*/
-            newRequisition.ApprovedEmployee = deptService.setApprover(userId);
-            newRequisition.ApprovedEmployeeId = deptService.setApprover(userId).Id;
+            Employee approver = deptService.setApprover(userId);
+            newRequisition.ApprovedEmployee = approver;
+            newRequisition.ApprovedEmployeeId = approver.Id;
             newRequisition.Employee = emp;
             newRequisition.EmployeeId = emp.Id;
             newRequisition.DepartmentId = emp.Departments.Id;

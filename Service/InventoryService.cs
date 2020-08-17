@@ -106,12 +106,17 @@ namespace Team7_StationeryStore.Service
             return response;
         }
 
-
         public void CreateAdjustmentVoucher(string userId, string invId,int qty,string reason) {
             AdjustmentVoucher newAdjustmentVoucher = new AdjustmentVoucher();
+            Inventory inventory = retrieveInventory(invId);
+            Employee appemployee = setAdjustmentVoucherApprover(userId, invId, qty);
+            Employee employee = deptService.findEmployeeById(userId);
+            newAdjustmentVoucher.Inventory = inventory;
             newAdjustmentVoucher.InventoryId = invId;
-            newAdjustmentVoucher.EmEmployeeId = userId;
-            newAdjustmentVoucher.appEmEmployeeId = setAdjustmentVoucherApprover(userId,invId,qty).Id;
+            newAdjustmentVoucher.EmEmployee = employee;
+            newAdjustmentVoucher.EmEmployeeId = employee.Id;
+            newAdjustmentVoucher.appEmEmployee = appemployee;
+            newAdjustmentVoucher.appEmEmployeeId = appemployee.Id;
             newAdjustmentVoucher.reason = reason;
             dbcontext.Add(newAdjustmentVoucher);
             dbcontext.SaveChanges();
@@ -120,7 +125,7 @@ namespace Team7_StationeryStore.Service
         public Employee setAdjustmentVoucherApprover(string userId,string invId,int qty) {
             Inventory inventory = retrieveInventory(invId);
             List<Employee> employees = deptService.findDepartmentEmployeeList(userId);
-            float dicrepancyCost = inventory.price * qty;
+            float dicrepancyCost = inventory.price * Math.Abs(qty);
             if (dicrepancyCost < 250)
             {
                 return employees.Where(x => x.Role == Role.STORE_SUPERVISOR).FirstOrDefault();
@@ -128,6 +133,11 @@ namespace Team7_StationeryStore.Service
             else { return employees.Where(x => x.Role == Role.STORE_MANAGER).FirstOrDefault(); }
         }
 
-
+        public List<AdjustmentVoucher> findAdjustmentVoucherList(Status? status) {
+            if (status != null) {
+                return dbcontext.adjustmentVouchers.Where(x => x.status == status).ToList();
+            }
+            return dbcontext.adjustmentVouchers.ToList();
+        }
     }
 }

@@ -58,16 +58,16 @@ namespace Team7_StationeryStore.Controllers
         }
 
 
-        public IActionResult submitAdjustmentVoucher(string invId,int qty,string reason) {
+        public IActionResult CreateAdjustment(string itemId, int quantity, string reason) {
             string userid = HttpContext.Session.GetString("userId");
-            invService.CreateAdjustmentVoucher(userid, invId, qty, reason);
-            return RedirectToAction("viewInventoryList");
+            invService.CreateAdjustmentVoucher(userid, itemId, quantity, reason);
+            return RedirectToAction("ViewInventory");
         }
 
         public IActionResult updateAdjustmentVoucher(string adjVoucherId,string action,string remarks) {
             string userId = HttpContext.Session.GetString("userId");
             ViewData["response"] = invService.UpdateAdjustmentVoucher(adjVoucherId, action, remarks);
-            return RedirectToAction("");
+            return RedirectToAction("viewAdjustmentVouchers");
         }
         
         public IActionResult ViewInventory()
@@ -82,5 +82,11 @@ namespace Team7_StationeryStore.Controllers
             return View();
         }
 
+        public IActionResult viewAdjustmentVouchers() {
+            ViewData["adjList"] = invService.findAdjustmentVoucherList(null);
+            ViewData["PendingAdjList"] = invService.findAdjustmentVoucherList(Status.PENDING);
+            return View();
+        }
+        
     }
 }
