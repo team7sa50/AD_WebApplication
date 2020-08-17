@@ -16,12 +16,16 @@ namespace Team7_StationeryStore.Controllers
         protected StationeryContext dbcontext;
         protected RetrievalService rservice;
         protected RequisitionService requisitionService;
+        protected InventoryService invService;
+        protected DepartmentService deptService;
 
-        public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService)
+        public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService,InventoryService invService,DepartmentService deptService)
         {
             this.dbcontext = dbcontext;
             this.rservice = rservice;
             this.requisitionService = requisitionService;
+            this.invService = invService;
+            this.deptService = deptService;
         }
 
         public IActionResult Index()
@@ -52,8 +56,19 @@ namespace Team7_StationeryStore.Controllers
             ViewData["reqPerDept"] = reqPerDept;
             return View();        
         }
-       
+        public IActionResult ViewInventory()
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            List<Inventory> stationeryCatalogue = invService.retrieveCatalogue();
+            List<ItemCategory> categories = invService.retrieveCategories();
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["stationeryCatalgoue"] = stationeryCatalogue;
+            ViewData["categories"] = categories;
+            ViewData["username"] = emp.Name;
+            return View();
+        }
 
-        
+
+
     }
 }

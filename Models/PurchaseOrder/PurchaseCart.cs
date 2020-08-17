@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Team7_StationeryStore.Models
 {
-    public class PurchaseOrderDetails
+    public class PurchaseCart
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; set; }
-        public string PurchaseOrderId { get; set; }
+        public string EmployeeId { get; set; }
         public string InventoryId { get; set; }
-        public int quantity { get; set; }
-        public virtual PurchaseOrder PurchaseOrder { get; set; }
+        public int Qty { get; set; }
         public virtual Inventory Inventory { get; set; }
+        public virtual Employee Employee { get; set; }
     }
 }

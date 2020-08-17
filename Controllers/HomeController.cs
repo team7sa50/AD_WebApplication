@@ -55,7 +55,7 @@ namespace Team7_StationeryStore.Controllers
             }
             if(user.Role == Role.STORE_CLERK)
             {
-                return RedirectToAction("viewRequisition", "Requisition");
+                return RedirectToAction("ViewRequisitions", "Requisition");
             }
             else
             {
