@@ -302,11 +302,11 @@ namespace Team7_StationeryStore.Controllers
             Employee emp = deptService.findEmployeeById(userid);
 
             Requisition req = reqService.findRequisition(reqId);
-            List<RequisitionDetailView> requisitionDetails = reqService.findRequisitionDetail(reqId);
+            List<RequisitionDetail> requisitionDetails = reqService.retrieveRequisitionDetailList(reqId);
             ViewData["requisition"] = req;
             ViewData["username"] = emp.Name;
             ViewData["requisitionDetail"] = requisitionDetails;
-            return View("viewNewRequisition");
+            return View();
         }
 
     }
