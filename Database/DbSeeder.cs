@@ -619,6 +619,7 @@ namespace Team7_StationeryStore.Database
                 requisition4.Remarks = "nothing";
                 dbcontext.Add(requisition4);
 
+
 /*                Requisition rq1 = new Requisition();
                 rq1.Id = Comm.DeptCode + "_" + DateTime.Now;
                 rq1.ApprovedEmployee = employee10;

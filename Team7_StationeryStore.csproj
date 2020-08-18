@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Notification\AdjustmentVoucherNotif.cs" />
+    <Compile Remove="Models\Notification\DisbursementNotif.cs" />
+    <Compile Remove="Models\Notification\RequisitionNotif.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.7" />
