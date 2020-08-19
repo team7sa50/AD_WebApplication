@@ -242,7 +242,7 @@ namespace Team7_StationeryStore.Controllers
             requisition.Remarks = remarks;
             dbcontext.Update(requisition);
             dbcontext.SaveChanges();
-            return RedirectToAction("viewPendingRequisition");
+            return RedirectToAction("viewDeptartmentRequisition");
         }
 
         public IActionResult viewDepartmentDisbursements() {
