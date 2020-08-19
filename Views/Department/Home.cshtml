@@ -121,7 +121,7 @@
             method: "POST",
             data: { reqId: id },
             success: function () {
-                window.location.href = "/Department/viewNewRequisition";
+                window.location.href = "/Department/viewNewRequisition?reqId="+id;
             }
         });
     }
