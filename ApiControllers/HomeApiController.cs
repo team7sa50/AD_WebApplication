@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Team7_StationeryStore.Database;
 using Team7_StationeryStore.Models;
+using Team7_StationeryStore.Service;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,11 +18,12 @@ namespace Team7_StationeryStore.Controllers
 
     public class HomeApiController : Controller
     {
-
         protected StationeryContext dbcontext;
-        public HomeApiController(StationeryContext dbcontext)
+        protected DepartmentService deptService;
+        public HomeApiController(StationeryContext dbcontext, DepartmentService deptService)
         {
             this.dbcontext = dbcontext;
+            this.deptService = deptService;
         }
 
         // GET: api/<controller>
@@ -41,9 +43,10 @@ namespace Team7_StationeryStore.Controllers
             }
             else
             {
-                Employee empInfo = dbcontext.employees
-                                .Where(x => x.Email == value.Email)
-                                .FirstOrDefault();
+                /*                Employee empInfo = dbcontext.employees
+                                                .Where(x => x.Email == value.Email)
+                                                .FirstOrDefault();*/
+                Employee empInfo = deptService.findEmployeeById(value.Id);
                 using (MD5 md5Hash = MD5.Create())
                 {
                     string Hash_Password = MD5Hash.GetMd5Hash(md5Hash, value.Password);
