@@ -20,6 +20,7 @@ namespace Team7_StationeryStore
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
         }
 
         public IConfiguration Configuration { get; }
@@ -39,6 +40,7 @@ namespace Team7_StationeryStore
             services.AddScoped<DisbursementService>();
             services.AddScoped<NotificationService>();
             services.AddSession();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -19,15 +19,18 @@ namespace Team7_StationeryStore.Service
 
         public List<RequisitionDetail> getRequisitionDetail(List<Requisition> selectedReq)
         {
+            System.Diagnostics.Debug.WriteLine("Reached Get Req Service");
             List<RequisitionDetail> selectedReqDetail = new List<RequisitionDetail>();
-
             foreach (Requisition r in selectedReq)
             {
+                System.Diagnostics.Debug.WriteLine("Outer Loop Count: " + r.Id);
                 List<RequisitionDetail> rds = (from x in dbcontext.requisitionDetails
-                                               where x.Requisition == r
+                                               where x.Requisition.Id == r.Id
                                                select x).ToList();
+                
                 foreach (RequisitionDetail rd in rds)
                 {
+                    System.Diagnostics.Debug.WriteLine("Service Count: " + 1);
                     selectedReqDetail.Add(rd);
                 }
             }
