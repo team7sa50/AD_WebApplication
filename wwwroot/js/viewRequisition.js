@@ -20,14 +20,16 @@ function openDetail(id, department) {
 
             var xo = document.createElement('p');
             xo.innerHTML = jsonObject.DateSubmitted;
-            document.getElementById('reqDate').appendChild(p);
+            document.getElementById('reqDate').appendChild(xo);
 
             var titleDetail = document.createElement('h1');
             titleDetail.innerHTML = jsonObject.Id;
-            document.getElementById('reqId');
+            var reId = document.getElementById('reqId');
+            reId.appendChild(titleDetail);
 
-            reqId.innerHTML = ` ${jsonObject.status} < button class="editbtn" onclick = "showChangeStatus()" > <i class="far fa-edit"></i></button >`;
-            
+            var os = document.getElementById('originalStatus');
+            os.innerHTML = ` ${jsonObject.status} < button class="editbtn" onclick = "showChangeStatus()" > <i class="far fa-edit"></i></button >`;
+
 
         }
     });

@@ -1,33 +1,46 @@
-﻿<!DOCTYPE html>
+﻿@using Team7_StationeryStore.Models;
+@model SharedViewModel;
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Team7_StationeryStore</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.css" />
 </head>
 <body>
-    
-
+    <header>
+        <ul>
+            <li class="logo">Logic <span>Stationery</span></li>
+            <li> <button class="menubtn" href="#home"> Menu</button></li>
+            <li>
+                <form asp-controller="StationeryStore" asp-action="ViewInventory" method="POST">
+                    <input type="submit" value="Inventory" class="menubtn" />
+                </form>
+            </li>
+            <li>
+                <form asp-controller="PurchaseOrder" asp-action="ViewAllPurchaseOrders" method="POST">
+                    <input type="submit" value="Purchase Orders" class="menubtn" />
+                </form>
+            </li>
+            <li>
+                <p class="userdetails"</p>
+                <img src="~/lib/img/employeeicon.jpg" />
+            </li>
+        </ul>
+    </header>
     <div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-    <footer class="border-top footer text-muted" style="position:fixed;bottom:0; width:100%">
-        <div class="container" style="text-align:center">
-            &copy; 2020 - Team7_StationeryStore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.js"></script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>
 
 
-
+men
