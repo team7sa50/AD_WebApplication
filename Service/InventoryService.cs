@@ -13,11 +13,13 @@ namespace Team7_StationeryStore.Service
     {
         protected StationeryContext dbcontext;
         protected DepartmentService deptService;
+        protected NotificationService notificationService;
 
-        public InventoryService(StationeryContext dbcontext,DepartmentService deptService)
+        public InventoryService(StationeryContext dbcontext,DepartmentService deptService, NotificationService notificationService)
         {
             this.dbcontext = dbcontext;
             this.deptService = deptService;
+            this.notificationService = notificationService;
         }
         public List<Inventory> retrieveCatalogue()
         {
@@ -105,6 +107,14 @@ namespace Team7_StationeryStore.Service
             dbcontext.SaveChanges();
             return response;
         }
+        public PurchaseOrder findPurchaseOrder(string poId)
+        {
+            return dbcontext.purchaseOrders.Where(x => x.Id == poId).FirstOrDefault();
+        }
+        public List<PurchaseOrderDetails> findPurchaseOrderDetails(string poId)
+        {
+            return dbcontext.purchaseOrderDetails.Where(x => x.PurchaseOrderId == poId).ToList();
+        }
 
         public void CreateAdjustmentVoucher(string userId, string invId,int qty,string reason) {
             AdjustmentVoucher newAdjustmentVoucher = new AdjustmentVoucher();
@@ -120,12 +130,13 @@ namespace Team7_StationeryStore.Service
             newAdjustmentVoucher.reason = reason;
             dbcontext.Add(newAdjustmentVoucher);
             dbcontext.SaveChanges();
+            notificationService.sendNotification(NotificationType.ADJUSTMENTVOUCHER,null,null,newAdjustmentVoucher);
         }
 
         public Employee setAdjustmentVoucherApprover(string userId,string invId,int qty) {
             Inventory inventory = retrieveInventory(invId);
             List<Employee> employees = deptService.findDepartmentEmployeeList(userId);
-            float dicrepancyCost = inventory.price * Math.Abs(qty);
+            double dicrepancyCost = inventory.price * Math.Abs(qty);
             if (dicrepancyCost < 250)
             {
                 return employees.Where(x => x.Role == Role.STORE_SUPERVISOR).FirstOrDefault();

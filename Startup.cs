@@ -38,6 +38,7 @@ namespace Team7_StationeryStore
             services.AddScoped<DepartmentService>();
             services.AddScoped<RetrievalService>();
             services.AddScoped<DisbursementService>();
+            services.AddScoped<NotificationService>();
             services.AddSession();
 
         }

@@ -114,6 +114,7 @@ namespace Team7_StationeryStore.Database
                 item1.location = "bin01";
                 item1.reorderLevel = 50;
                 item1.reorderQty = 30;
+                item1.price = 1;
                 dbcontext.Add(item1);
 
                 Inventory item2 = new Inventory();
@@ -126,6 +127,7 @@ namespace Team7_StationeryStore.Database
                 item2.location = "bin01";
                 item2.reorderLevel = 50;
                 item2.reorderQty = 30;
+                item2.price = 10;
                 dbcontext.Add(item2);
 
                 Inventory item3 = new Inventory();
@@ -138,6 +140,7 @@ namespace Team7_StationeryStore.Database
                 item3.location = "bin01";
                 item3.reorderLevel = 50;
                 item3.reorderQty = 30;
+                item3.price = 2;
                 dbcontext.Add(item3);
 
                 Inventory item4 = new Inventory();
@@ -150,6 +153,7 @@ namespace Team7_StationeryStore.Database
                 item4.location = "bin01";
                 item4.reorderLevel = 50;
                 item4.reorderQty = 30;
+                item4.price = 3;
                 dbcontext.Add(item4);
 
                 Inventory item5 = new Inventory();
@@ -162,6 +166,7 @@ namespace Team7_StationeryStore.Database
                 item5.location = "bin01";
                 item5.reorderLevel = 50;
                 item5.reorderQty = 30;
+                item5.price = 1.5;
                 dbcontext.Add(item5);
 
                 Inventory item6 = new Inventory();
@@ -174,6 +179,7 @@ namespace Team7_StationeryStore.Database
                 item6.location = "bin01";
                 item6.reorderLevel = 50;
                 item6.reorderQty = 30;
+                item6.price = 0.5;
                 dbcontext.Add(item6);
 
                 Inventory item7 = new Inventory();
@@ -186,6 +192,7 @@ namespace Team7_StationeryStore.Database
                 item7.location = "bin02";
                 item7.reorderLevel = 600;
                 item7.reorderQty = 400;
+                item7.price = 0.7;
                 dbcontext.Add(item7);
 
                 Inventory item8 = new Inventory();
@@ -198,6 +205,7 @@ namespace Team7_StationeryStore.Database
                 item8.location = "bin02";
                 item8.reorderLevel = 600;
                 item8.reorderQty = 400;
+                item8.price = 0.9;
                 dbcontext.Add(item8);
 
                 Inventory item9 = new Inventory();
@@ -210,6 +218,7 @@ namespace Team7_StationeryStore.Database
                 item9.location = "bin02";
                 item9.reorderLevel = 600;
                 item9.reorderQty = 400;
+                item9.price = 0.8;
                 dbcontext.Add(item9);
 
                 Inventory item10 = new Inventory();
@@ -222,6 +231,7 @@ namespace Team7_StationeryStore.Database
                 item10.location = "bin02";
                 item10.reorderLevel = 600;
                 item10.reorderQty = 400;
+                item10.price = 1.1;
                 dbcontext.Add(item10);
 
                 Supplier supplier1 = new Supplier();

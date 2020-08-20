@@ -14,11 +14,13 @@ namespace Team7_StationeryStore.Service
     {
         protected StationeryContext dbcontext;
         protected DepartmentService deptService;
+        protected NotificationService notificationService;
 
-        public RequisitionService(StationeryContext dbcontext, DepartmentService deptService)
+        public RequisitionService(StationeryContext dbcontext, DepartmentService deptService, NotificationService notificationService)
         {
             this.dbcontext = dbcontext;
             this.deptService = deptService;
+            this.notificationService = notificationService;
         }
         public List<Requisition> findAllRequisitionsFromStationery()
         {
@@ -126,6 +128,10 @@ namespace Team7_StationeryStore.Service
             dbcontext.Add(newRequisition);
             dbcontext.employeeCarts.RemoveRange(cartList);
             dbcontext.SaveChanges();
+
+            notificationService.sendNotification(NotificationType.REQUISITION, newRequisition,null,null);
+
+
         }
 
         public List<Requisition> getRequisitionsByIds(List<string> req)

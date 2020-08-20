@@ -15,25 +15,26 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Logic University</a>
-    <span class="navbar-text" style="margin-right:50px">
-        @username
-    </span>
-       
-</nav>
-<br>
+<header>
+    <ul>
+        <li class="logo">Logic <span>Stationery</span></li>
+        <li> <button class="menubtn" href="#inventory">Inventory</li>
+        <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
+        <li><p class="userdetails">@username</p> <img src="~/lib/img/employeeicon.jpg"> </li>
+    </ul>
+</header>
 <h1>SelectSupplier</h1>
-<form asp-controller="PurchaseOrder" asp-action="PurchaseOrder" method="POST" class="form-inline my-2 my-lg-0">
+<div>
+    <form asp-controller="PurchaseOrder" asp-action="PurchaseOrder" method="POST" class="form-inline my-2 my-lg-0">
 
-    <select name="supplier" id="suppliers">
+        <select name="supplier" id="suppliers">
 
-        @foreach (var c in suppliers)
-        {
-            <option value="@c.Id"> @c.name</option>
+            @foreach (var c in suppliers)
+            {
+                <option value="@c.Id"> @c.name</option>
 
-        }
-    </select>
-    <input class="btn btn btn-outline-info my-2 my-sm-0" type="submit" value="Enter">
-</form>
+            }
+        </select>
+        <input class="btn btn btn-outline-info my-2 my-sm-0" type="submit" value="Enter">
+    </form>
+</div>

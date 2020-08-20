@@ -87,11 +87,8 @@ namespace Team7_StationeryStore.Service
 
         }
 
-        public List<CollectionPoint> findAllCollectionPts()
-        {
-            List<CollectionPoint> collectionPoint = (from cp in dbcontext.collectionPoints
-                                                     select cp).ToList();
-            return collectionPoint;
+        public Employee findDeptRepresentative(string deptId) {
+            return dbcontext.employees.Where(x => x.DepartmentsId == deptId && x.Role == Role.DEPT_REP).FirstOrDefault();
         }
     }
 }
