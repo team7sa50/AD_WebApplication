@@ -94,19 +94,7 @@ namespace Team7_StationeryStore.Service
         public AdjustmentVoucher findAdjustmentVoucher(string id) {
             return dbcontext.adjustmentVouchers.Where(x => x.Id == id).FirstOrDefault();
         }
-
-        public string UpdateAdjustmentVoucher(string id,string action,string remarks) {
-
-            AdjustmentVoucher adjustmentVoucher = findAdjustmentVoucher(id);
-            string response = "Adjustment Voucher: "+ adjustmentVoucher.Id;
-            if (adjustmentVoucher == null){response += " unable to locate";}
-            if (action == "approve") { adjustmentVoucher.status = Status.APPROVED; response+= " approved"; }
-            if (action == "reject") { adjustmentVoucher.status = Status.REJECTED; response+= " rejected"; }
-            adjustmentVoucher.remarks = remarks;
-            dbcontext.Update(adjustmentVoucher);
-            dbcontext.SaveChanges();
-            return response;
-        }
+       
         public PurchaseOrder findPurchaseOrder(string poId)
         {
             return dbcontext.purchaseOrders.Where(x => x.Id == poId).FirstOrDefault();
@@ -143,12 +131,51 @@ namespace Team7_StationeryStore.Service
             }
             else { return employees.Where(x => x.Role == Role.STORE_MANAGER).FirstOrDefault(); }
         }
+        public string UpdateAdjustmentVoucher(string id, string action, string remarks)
+        {
+            AdjustmentVoucher adjustmentVoucher = findAdjustmentVoucher(id);
+            string response = "Adjustment Voucher: [" + adjustmentVoucher.Id + "] request for " + action;
+            if (adjustmentVoucher == null) { response += " has failed to locate"; }
+            if (action == "approve") {
+                bool res = updateInventory(adjustmentVoucher.InventoryId, adjustmentVoucher.qty);
+                switch (res) {
+                    case true:
+                        response += " is sucessed.";
+                        adjustmentVoucher.status = Status.APPROVED;
+                        break;
+                    case false:
+                        response += " is denied as there is stock is less than the amount to be deducted.";
+                        break;
+                }   
+            }
+            if (action == "reject") { adjustmentVoucher.status = Status.REJECTED; response += " is sucessed."; }
+            adjustmentVoucher.remarks = remarks;
+            dbcontext.Update(adjustmentVoucher);
+            dbcontext.SaveChanges();
+            return response;
+        }
 
         public List<AdjustmentVoucher> findAdjustmentVoucherList(Status? status) {
             if (status != null) {
                 return dbcontext.adjustmentVouchers.Where(x => x.status == status).ToList();
             }
             return dbcontext.adjustmentVouchers.ToList();
+        }
+
+        public bool updateInventory(string invId,int qty) {
+            bool editable = true;
+            Inventory inv = retrieveInventory(invId);
+            // To validate if the quantity to be deduct from the stock is sufficient.
+            if (qty < 0 && Math.Abs(qty) > inv.stock)
+            {
+                editable = false;
+            }
+            else {
+                inv.stock += qty;
+                dbcontext.inventories.Update(inv);
+                dbcontext.SaveChanges();
+            }
+            return editable;
         }
     }
 }

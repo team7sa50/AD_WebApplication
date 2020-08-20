@@ -39,6 +39,13 @@ namespace Team7_StationeryStore.Controllers
             System.Diagnostics.Debug.WriteLine("List Employee Method reached");
             return View();
         }
+        public IActionResult Home()
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["username"] = emp.Name;
+            return View();
+        }
 
         [HttpPost]
         public JsonResult GetEmployeeTest(string id)
@@ -76,10 +83,14 @@ namespace Team7_StationeryStore.Controllers
             return Json(disbursements);
         }
 
-        public IActionResult Home()
+        public IActionResult ViewInventory()
         {
             string userid = HttpContext.Session.GetString("userId");
+            List<Inventory> stationeryCatalogue = invService.retrieveCatalogue();
+            List<ItemCategory> categories = invService.retrieveCategories();
             Employee emp = deptService.findEmployeeById(userid);
+            ViewData["stationeryCatalgoue"] = stationeryCatalogue;
+            ViewData["categories"] = categories;
             ViewData["username"] = emp.Name;
             return View();
         }
@@ -147,17 +158,7 @@ namespace Team7_StationeryStore.Controllers
             return RedirectToAction("viewAdjustmentVouchers");
         }
         
-        public IActionResult ViewInventory()
-        {
-            string userid = HttpContext.Session.GetString("userId");
-            List<Inventory> stationeryCatalogue = invService.retrieveCatalogue();
-            List<ItemCategory> categories = invService.retrieveCategories();
-            Employee emp = deptService.findEmployeeById(userid);
-            ViewData["stationeryCatalgoue"] = stationeryCatalogue;
-            ViewData["categories"] = categories;
-            ViewData["username"] = emp.Name;
-            return View();
-        }
+/* X-> sendemail can be called from notifcationService, what is the purpose that is here*/
         public void SendEmail()
         {
             var fromAddress = new MailAddress("stationerystoreteam7@gmail.com", "From Name");
@@ -184,7 +185,6 @@ namespace Team7_StationeryStore.Controllers
             }
 
         }
-
 
         public IActionResult viewAdjustmentVouchers() {
             ViewData["adjList"] = invService.findAdjustmentVoucherList(null);
