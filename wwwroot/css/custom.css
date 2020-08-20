@@ -26,3 +26,35 @@ for details on configuring this project to bundle and minify static web assets. 
     flex-direction:row;
 }
 
+.notification {
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+}
+
+    .notification .badge {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        padding: 5px 10px;
+        border-radius: 50%;
+        background: red;
+        color: white;
+    }
+#myDIV {
+    padding: 10px;
+    margin: 10px;
+    width: 200px;
+    height: 200px;
+    background-color: white;
+    border: 1px solid black;
+    display:none;
+    position:absolute;
+}
+
+    #myDIV div {
+        width: 80%;
+        height: fit-content;
+        padding: 5%;
+        border-bottom: 1px solid;
+    }

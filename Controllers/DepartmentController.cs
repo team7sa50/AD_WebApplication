@@ -19,15 +19,16 @@ namespace Team7_StationeryStore.Controllers
         protected InventoryService invService;
         protected DepartmentService deptService;
         protected DisbursementService disService;
+        protected NotificationService notiService;
 
-
-        public DepartmentController(RequisitionService reqService, InventoryService invService, DepartmentService deptService, DisbursementService disService, StationeryContext dbcontext)
+        public DepartmentController(RequisitionService reqService, InventoryService invService, DepartmentService deptService, DisbursementService disService,NotificationService notiService, StationeryContext dbcontext)
         {
             this.deptService = deptService;
             this.invService = invService;
             this.reqService = reqService;
             this.dbcontext = dbcontext;
             this.disService = disService;
+            this.notiService = notiService;
         }
 
         public IActionResult Home()
@@ -241,7 +242,7 @@ namespace Team7_StationeryStore.Controllers
             requisition.Remarks = remarks;
             dbcontext.Update(requisition);
             dbcontext.SaveChanges();
-            return RedirectToAction("viewPendingRequisition");
+            return RedirectToAction("viewDeptartmentRequisition");
         }
 
         public IActionResult viewDepartmentDisbursements() {
@@ -278,6 +279,34 @@ namespace Team7_StationeryStore.Controllers
             }
             deptService.createEmployeeAuthorization(Name, SD, ED);
             return RedirectToAction("DelegateAuthority");
+        }
+        [HttpPost]
+        public ActionResult getLatestNotifications()
+        {
+            string emp = HttpContext.Session.GetString("userId");
+            List<Notification> notifications = notiService.retrieveLatestNotifications(emp);
+            List<NotifcationString> strings = new List<NotifcationString>();
+            foreach (var not in notifications)
+            {
+                NotifcationString s = new NotifcationString();
+                s.Name = not.Sender.Name;
+                s.reqId = not.typeId;
+                s.date = not.date.ToString("MM / dd / yyyy h:mm");
+                strings.Add(s);
+            }
+            return Content(JsonConvert.SerializeObject(strings));
+        }
+        public IActionResult viewNewRequisition(String reqId)
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+
+            Requisition req = reqService.findRequisition(reqId);
+            List<RequisitionDetail> requisitionDetails = reqService.retrieveRequisitionDetailList(reqId);
+            ViewData["requisition"] = req;
+            ViewData["username"] = emp.Name;
+            ViewData["requisitionDetail"] = requisitionDetails;
+            return View();
         }
 
     }

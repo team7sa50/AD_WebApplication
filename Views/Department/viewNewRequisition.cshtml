@@ -1,11 +1,9 @@
 ﻿@using Team7_StationeryStore.Models;
 @{
     ViewData["Title"] = "viewRequisition";
+    var requisition = (Requisition)ViewData["requisition"];
     var lists = (List<RequisitionDetail>)ViewData["requisitionDetail"];
     var username = ViewData["username"];
-    var userid = ViewData["userid"];
-    var reqid = ViewData["reqid"];
-    var reqstatus = ViewData["reqstatus"];
 }
 
 <head>
@@ -34,15 +32,16 @@
         <div>
             <h5 style="text-align:left;float:left;text-emphasis-color:blue">
                 Requistion Form ID:
-                @reqid
+                @requisition.Id
 
             </h5>
             <h5 style="text-align:right;float:right;text-emphasis-color:blue">
                 Status:
-                @reqstatus
+                @requisition.status
             </h5>
 
         </div>
+
         <div>
             <table class="table table-bordered table-striped">
                 <thead>
@@ -69,11 +68,49 @@
 
                 </tbody>
             </table>
+            <div>
 
+                <button id="approvebtn" class="btn btn-success" onclick="approve('@requisition.Id')">Approve</button>
+                <button id="rejectbtn" class="btn btn-danger" onclick="reject('@requisition.Id')">Reject</button>
+
+            </div>
         </div>
     </div>
 </div>
+<div class="modal fade" id="myRemarkModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
 
+                <h4 class="modal-title" id="myModalLabel"> Add Remarks</h4>
+                <p id="myModalLabel" />
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Department" asp-action="updateRequisition" method="POST">
+                    <input type="text" name="remarks" placeholder="Optional" id="remarks" style="height: 80px; width:100%;text-align:start">
+                    <input type="hidden" id="requisitionId" name="requisitionId">
+                    <input type="hidden" id="action" name="action">
+                    <br />
+                    <input type="submit" class="btn btn-outline-primary" value="Submit" style="margin-top: 20px">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function approve(id) {
+        $('#myRemarkModal1').modal();
+        console.log(id);
+        document.getElementById("requisitionId").value = id;
+        document.getElementById("action").value = "approve";
+    }
+    function reject(id) {
+        $('#myRemarkModal1').modal();
+        console.log(id);
+        document.getElementById("requisitionId").value = id;
+        document.getElementById("action").value = "reject";
+    }
+</script>
 
 
 
