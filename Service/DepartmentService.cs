@@ -86,5 +86,12 @@ namespace Team7_StationeryStore.Service
             return dbcontext.employees.Where(x => x.DepartmentsId == department.Id && x.Role == Role.DEPT_HEAD).FirstOrDefault();
 
         }
+
+        public List<CollectionPoint> findAllCollectionPts()
+        {
+            List<CollectionPoint> collectionPoint = (from cp in dbcontext.collectionPoints
+                                                     select cp).ToList();
+            return collectionPoint;
+        }
     }
 }

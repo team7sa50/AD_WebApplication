@@ -128,5 +128,16 @@ namespace Team7_StationeryStore.Service
             dbcontext.SaveChanges();
         }
 
+        public List<Requisition> getRequisitionsByIds(List<string> req)
+        {
+            List<Requisition> selectedReq = new List<Requisition>();
+            foreach (string value in req)
+            {
+                Requisition r = findRequisition(value);
+                selectedReq.Add(r);
+            }
+            return selectedReq; 
+        }
+
     }
 }
