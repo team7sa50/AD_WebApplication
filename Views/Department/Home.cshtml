@@ -1,7 +1,7 @@
 ﻿@model Team7_StationeryStore.Models.Employee
 @{
     Employee emp = (Employee)ViewData["Employee"];
- }
+}
 <!DOCTYPE html>
 <head>
     <meta charset="utf-8">
@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
+    <link rel="stylesheet" href="~/css/custom.css" />
 </head>
 <body>
 
@@ -18,14 +18,35 @@
             <li class="logo">Logic <span>Stationery</span></li>
             <li> <button class="menubtn" href="#inventory">Inventory</li>
             <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
-            <li><p class="userdetails">@emp.Name</p> <img src="~/lib/img/employeeicon.jpg"> </li>
-        </ul>
-    </header>
+            <li>
+                <p class="userdetails">@emp.Name</p> <img src="~/lib/img/employeeicon.jpg">
+                <button onclick="myFunction()"><img src="~/lib/img/notification.png" /></button>
+            </li>
 
+        </ul>
+
+
+
+    </header>
+    <div class="noti-container">
+        <div id="myDIV">
+
+@*            @for (int i = 0; i < 5; i++)
+            {
+                <form method="POST">
+                    <input type="hidden" id="reqvalue+@i" name="reqid" />
+                    <button value="View" id="req+@i" class="btn btn-outline-primary " formaction="/Department/viewNewRequisition/"></button>
+                </form>
+            }*@
+
+            <table>
+                <tbody class="table-body-noti-detail"></tbody>
+            </table>
+        </div>
+    </div>
     <div class="app" style="padding-left:50px">
         <div style="float:left;">
             <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="https://lh3.googleusercontent.com/proxy/ZU9X5L9UIcuZdn6BpujR8nRwCNG-SrmT6pZBNYcCergNn9m60DPZd6cit61RlpGtHntGuemYbY6qvWP4-myJbWwsV0tIOdvzQugL4g" alt="Card image cap">
                 <div class="card-body">
 
                     <div class="card" style="width: 20rem;">
@@ -45,23 +66,6 @@
     </div>
     <div style="float:center;margin-left:100px;">
         <div align=center>
-            <button type="button" class="btn btn-dark"><a href="#">More Notifications <span class="badge"></span></a><br></button>
-
-
-            <div id="Notification1" class="tabcontent">
-                <h3>Notification1:notification1</h3>
-            </div>
-
-            <div id="Notification2" class="tabcontent">
-                <h3>Notification2:notification2</h3>
-
-            </div>
-
-            <div id="Notification3" class="tabcontent">
-                <h3>Notification3:notification3</h3>
-            </div>
-
-
             <h2>Stationery Store</h2>
             <div class="list group">
 
@@ -71,7 +75,7 @@
 
                 <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="viewRequisitionList">VIEW REQUISITION HISTORY</a>
                 <br />
-               
+
                 @if (emp.Role == Role.DEPT_HEAD)
                 {
                     <form method="POST">
@@ -84,3 +88,75 @@
         </div>
     </div>
 </body>
+
+<script>
+    function myFunction() {
+        console.log("hello myfunction");
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+        $.ajax({
+            url: "/Department/getLatestNotifications",
+            method: "POST",
+            dataType: 'json',
+            success: function (response) {
+                $('.table-body-noti-detail').html("");
+                var today = new Date();                var count = response.length;
+                console.log("count is" + count);
+                for (const item of response) {
+                    $('.table-body-noti-detail').append(`<tr><td><button onclick="clickDetail('${item.reqId}')">${item.Name} sends new requisition at ${item.date}</button></td></tr>`)
+                 }
+            }
+        });
+    }
+</script>
+<script>
+    function clickDetail(id) {
+        console.log("detail id" + id);
+        $.ajax({
+            url: "/Department/viewNewRequisition",
+            method: "POST",
+            data: { reqId: id },
+            success: function () {
+                window.location.href = "/Department/viewNewRequisition?reqId="+id;
+            }
+        });
+    }
+</script>
+
+<script>
+    function clickMe() {
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+        $.ajax({
+            url: "/Department/getLatestNotifications",
+            method: "POST",
+            dataType: 'json',
+            success: function (response) {
+                $('.table-body-noti-detail').html("");
+                var today = new Date();
+                var count = response.length;
+                // $('.table-body-noti-detail').append(`<tr><td>${response[0].Name}"sends new requisition at"${response[0].date}</td></tr>`)
+                //document.getElementById("req1").innerHTML = response[0].Name + "sends a new requisition at" + response[0].date;
+                //document.getElementById("reqvalue").value = response[0].reqId;
+                //console.log(response[0].reqId);
+                // for (const item of response) {
+                //     $('.table-body-noti-detail').append(`<tr><button onclick="clickDetail(`${item.reqId}`)"><td>${item.Name} sends new requisition at ${item.date}</td></button></tr>`)
+                // }
+                //for (var i = 0; i < count; i++) {
+                //    document.getElementById("req+" + i).innerHTML = response[i].Name + "sends a new requisition at" + response[i].date;
+                //   document.getElementById("reqvalue+" + i).value = response[i].reqId;
+                //  console.log(response[i]);
+            }
+        }
+        });
+    }
+</script>
+

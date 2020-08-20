@@ -38,9 +38,10 @@ namespace Team7_StationeryStore.Service
             string subjectEmail = "";
             switch (notificationType) {
                 case NotificationType.REQUISITION:
-                    RequisitionNotif requisitionNotif = new RequisitionNotif();
+                    Notification requisitionNotif = new Notification();
                     subjectEmail = "New Requisition: " + requisition.Id;
-                    requisitionNotif.Requisition = requisition;
+                    requisitionNotif.typeId = requisition.Id;
+                    requisitionNotif.type = NotificationType.REQUISITION;
                     requisitionNotif.Sender = requisition.Employee;
                     requisitionNotif.ReceiverId = requisition.ApprovedEmployeeId;
                     requisitionNotif.SenderId = requisition.EmployeeId;
@@ -49,9 +50,10 @@ namespace Team7_StationeryStore.Service
                     dbcontext.Add(requisitionNotif);
                     break;
                 case NotificationType.DISBURSEMENT:
-                    DisbursementNotif disbursementNotif = new DisbursementNotif();
+                    Notification disbursementNotif = new Notification();
                     subjectEmail = "New Disbursement: " + disbursement.Id;
-                    disbursementNotif.Disbursement = disbursement;
+                    disbursementNotif.typeId = disbursement.Id;
+                    disbursementNotif.type = NotificationType.DISBURSEMENT;
                     reciever = disbursement.Departments.Employees.Where(x => x.Role == Role.DEPT_REP).FirstOrDefault();
                     sender = disbursement.storeClerk;
                     disbursementNotif.Receiver = reciever;
@@ -61,9 +63,10 @@ namespace Team7_StationeryStore.Service
                     dbcontext.Add(disbursementNotif);
                     break;
                 case NotificationType.ADJUSTMENTVOUCHER:
-                    AdjustmentVoucherNotif adjustmentVoucherNotif = new AdjustmentVoucherNotif();
+                    Notification adjustmentVoucherNotif = new Notification();
                     subjectEmail = "New AdjustmentVoucher: " + adjustment.Id;
-                    adjustmentVoucherNotif.AdjustmentVoucher = adjustment;
+                    adjustmentVoucherNotif.typeId = adjustment.Id;
+                    adjustmentVoucherNotif.type = NotificationType.ADJUSTMENTVOUCHER;
                     sender = adjustment.EmEmployee;
                     reciever = adjustment.appEmEmployee;
                     adjustmentVoucherNotif.ReceiverId = reciever.Id;
@@ -75,10 +78,14 @@ namespace Team7_StationeryStore.Service
             }
             
             dbcontext.SaveChanges();
-            SendEmail(sender, reciever, subjectEmail);
+         //   SendEmail(sender, reciever, subjectEmail);
         }
 
-
+        public List<Notification> retrieveLatestNotifications(string receiverId)
+        {
+        
+            return dbcontext.notifications.Where(x => x.ReceiverId == receiverId && x.type== NotificationType.REQUISITION).OrderByDescending(x=>x.date).ToList();
+        }
         public void SendEmail(Employee sender, Employee reciever, string subjectEmail)
         {
             /*            var fromAddress = new MailAddress(sender.Email, "From "+sender.Name);
