@@ -25,12 +25,15 @@
             <button class="tablinks" onclick="openReq(event, 'All')" id="defaultOpen">All</button>
             <!-- <button class="tablinks" onclick="openReq(event, 'New')">New</button>
     <button class="tablinks" onclick="openReq(event, 'Outstanding')">Outstanding</button>-->
-            <div  class="btn-container">
+            <div class="btn-container">
                 <form asp-controller="PurchaseOrder" asp-action="SelectSupplier" method="POST">
-                    <input type="submit" value="Create Purchase Order" class="btn btn-outline-info"/>
+                    <input type="submit" value="Create Purchase Order" class="btn btn-outline-info" />
                 </form>
                 <form asp-controller="PurchaseOrder" asp-action="ViewAllPurchaseOrders" method="POST">
-                    <input type="submit" value="View All Purchase Orders"  class="btn btn-outline-info"/>
+                    <input type="submit" value="View All Purchase Orders" class="btn btn-outline-info" />
+                </form>
+                <form asp-controller="StationeryStore" asp-action="Export" method="POST">
+                    <input type="submit" value="Export" class="btn btn-outline-info" />
                 </form>
             </div>
         </div>

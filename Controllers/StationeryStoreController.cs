@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Team7_StationeryStore.Service;
 using System.Net.Mail;
 using System.Net;
+using System.Text;
 
 namespace Team7_StationeryStore.Controllers
 {
@@ -34,6 +35,32 @@ namespace Team7_StationeryStore.Controllers
         {
             System.Diagnostics.Debug.WriteLine("Reached Stationery Store Controller");
             return RedirectToAction("viewRetrieval", "StationeryStore");
+        }
+
+        [HttpPost]
+        public IActionResult Export(){
+            List<Employee> employees = (from er in dbcontext.employees
+                                 select er).ToList();
+
+            List<object> emps = new List<object>();
+            int k = 0;
+            foreach(Employee e in employees){
+                k++;
+                emps.Add(new string[6] { e.Id, e.Name , e.Email, e.Password, e.Role.ToString(), e.DepartmentsId});
+            }
+            emps.Insert(0, new string[6] {"emp_id", "name", "email", "password", "role", "departmentId"});
+            StringBuilder sb = new StringBuilder(); 
+
+            for (int i = 0; i < emps.Count; i++)
+			{
+                string[] employe = (string[])emps[i];
+
+                for(int j=0; j< employe.Length;j++){
+                sb.Append(employe[j] +',');
+                }
+                sb.Append("\r\n");
+			}
+            return File(Encoding.UTF8.GetBytes(sb.ToString()),"text/csv", "Grid.csv");
         }
         
         [HttpPost]
