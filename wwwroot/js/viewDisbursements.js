@@ -1,4 +1,4 @@
-﻿
+﻿    
 function tableToJson(table) {
     console.log("converting table to JSON");
     var data = [];
@@ -205,15 +205,19 @@ function viewDisDetail(e) {
         data: { 'id': e },
         dataType: "json",
         success: function (response) {
-            var jsonObject = JSON.parse(response);
+            var jsonObject = JSON.parse(response.disbursementJson);
             var collDate = new Date(jsonObject.CollectionDate);
             var collDateString = collDate.toISOString().substr(0, 10);
             $("#collDateSpec").val(collDateString);
             $("#collPtSpec").val(jsonObject.Departments.CollectionPoint.Location);
             var p = document.createElement('p');
-            p.innerHTML = jsonObject.Departments.Representative + '<br>';
+            var deptrep = JSON.parse(response.rep);
+            console.log("name is" + deptrep);
+
+            p.innerHTML = deptrep.Name + '<br>';
             document.getElementById('repSpec').appendChild(p);
             var items = jsonObject.DisbursementDetails;
+            console.log("items is" + items);
             var tabledisQty = document.getElementById('disbDetailsQty');
             for (var i = 0; i < items.length; i++) {
                 var distributedQty = parseInt(items[i].RequisitionDetail.DistributedQty);

@@ -47,11 +47,16 @@ namespace Team7_StationeryStore.Controllers
             }
             ViewData["userId"] = user.Id;
             HttpContext.Session.SetString("userId", user.Id);
-            HttpContext.Session.SetString("Department", user.DepartmentsId); 
+            HttpContext.Session.SetString("Department", user.DepartmentsId);
+            SharedViewModel sm = new SharedViewModel() { Name = user.Name };
             if (user.Role == Role.DEPT_HEAD || user.Role == Role.DEPT_REP || user.Role == Role.EMPLOYEE)
             {
                 /*return RedirectToAction("viewCatalogue", "Department");*/
                 return RedirectToAction("Home", "Department");
+            }
+            if(user.Role == Role.STORE_MANAGER || user.Role== Role.DEPT_REP)
+            {
+                return RedirectToAction("HomeManagerSupervisor", "StationeryStore");
             }
             if(user.Role == Role.STORE_CLERK)
             {

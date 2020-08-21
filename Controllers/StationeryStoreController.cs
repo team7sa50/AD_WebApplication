@@ -11,6 +11,10 @@ using Team7_StationeryStore.Service;
 using System.Net.Mail;
 using System.Net;
 using Newtonsoft.Json;
+using System.Text;
+using Team7_StationeryStore.Analytics;
+using Team7_StationeryStore.Analytics.ML.Objects;
+using Team7_StationeryStore.Analytics.ML;
 
 namespace Team7_StationeryStore.Controllers
 {
@@ -22,8 +26,9 @@ namespace Team7_StationeryStore.Controllers
         protected InventoryService invService;
         protected DepartmentService deptService;
         protected DisbursementService disbService;
-
-        public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService,InventoryService invService,DepartmentService deptService, DisbursementService disbService)
+        protected Trainer trainer;
+        protected Predictor predictor;
+        public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService,InventoryService invService,DepartmentService deptService, DisbursementService disbService, Trainer trainer, Predictor predictor)
         {
             this.dbcontext = dbcontext;
             this.rservice = rservice;
@@ -31,7 +36,8 @@ namespace Team7_StationeryStore.Controllers
             this.invService = invService;
             this.deptService = deptService;
             this.disbService = disbService;
-            
+            this.trainer = trainer;
+            this.predictor = predictor;
         }
 
         public IActionResult Index()
@@ -48,13 +54,82 @@ namespace Team7_StationeryStore.Controllers
         }
 
         [HttpPost]
+        public IActionResult Export(){
+            List<Employee> employees = (from er in dbcontext.employees
+                                 select er).ToList();
+
+            List<object> emps = new List<object>();
+            int k = 0;
+            foreach(Employee e in employees){
+                k++;
+                emps.Add(new string[6] { e.Id, e.Name , e.Email, e.Password, e.Role.ToString(), e.DepartmentsId});
+            }
+            emps.Insert(0, new string[6] {"emp_id", "name", "email", "password", "role", "departmentId"});
+            StringBuilder sb = new StringBuilder(); 
+
+            for (int i = 0; i < emps.Count; i++)
+			{
+                string[] employe = (string[])emps[i];
+
+                for(int j=0; j< employe.Length;j++){
+                sb.Append(employe[j] +',');
+                }
+                sb.Append("\r\n");
+			}
+            return File(Encoding.UTF8.GetBytes(sb.ToString()),"text/csv", "Grid.csv");
+        }
+
+        [HttpPost]
+        public IActionResult StartAnalytics()
+        {
+            string traindata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\sampledata.csv";
+            string testdata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\testdata.csv";
+            System.Diagnostics.Debug.WriteLine("Starting Training");
+            trainer.Train(traindata, testdata);           
+            System.Diagnostics.Debug.WriteLine("Finished Training");
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult AnalyzeResults(int requestedQty, int stockQty, string dateT)
+        {
+            string month = dateT.Substring(5, 2);
+            string year = dateT.Substring(0, 4);
+            System.Diagnostics.Debug.WriteLine("Month: " + month);
+            System.Diagnostics.Debug.WriteLine("Year" + year);
+            RequestModel rrn = new RequestModel()
+            {
+                RequestedQty = requestedQty.ToString(),
+                InventoryQty = stockQty.ToString(),
+                Month = month,
+                Year = year
+            };
+            string inputJson = JsonConvert.SerializeObject(rrn, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            System.Diagnostics.Debug.WriteLine("Results:" + inputJson);
+            CarInventoryPrediction cp = predictor.Predict(inputJson);
+            string results = JsonConvert.SerializeObject(cp, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });           
+            return Json(results);
+        }
+
+        [HttpPost]
         public JsonResult GetEmployeeTest(string id)
         {
             Disbursement d = disbService.findDisbursementById(id);
             Employee deptRep = deptService.findDeptRepresentative(d.DepartmentsId);
-
             string disbursementJson = JsonConvert.SerializeObject(d, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-            return Json(disbursementJson);
+            string rep = JsonConvert.SerializeObject(deptRep);
+            var result = new { disbursementJson, rep };
+            return Json(result);
+        }
+        public IActionResult viewAnalysis()
+        {
+            return View();
+        }
+        public JsonResult GetDataToAnalyze()
+        {
+            List<Inventory> inventories = invService.retrieveCatalogue();
+            string model = JsonConvert.SerializeObject(inventories, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            return Json(model);
         }
 
         [HttpPost]
@@ -164,6 +239,12 @@ namespace Team7_StationeryStore.Controllers
         public IActionResult viewAdjustmentVouchers() {
             ViewData["adjList"] = invService.findAdjustmentVoucherList(null);
             ViewData["PendingAdjList"] = invService.findAdjustmentVoucherList(Status.PENDING);
+            return View();
+        }
+        public IActionResult HomeManagerSupervisor()
+        {
+            Employee employee = dbcontext.employees.Where(x => x.Id == HttpContext.Session.GetString("userId")).FirstOrDefault();
+            ViewData["user"] = employee;
             return View();
         }
     }

@@ -78,7 +78,7 @@ namespace Team7_StationeryStore.Service
             }
             
             dbcontext.SaveChanges();
-         //   SendEmail(sender, reciever, subjectEmail);
+            SendEmail(sender, reciever, subjectEmail);
         }
 
         public List<Notification> retrieveLatestNotifications(string receiverId)

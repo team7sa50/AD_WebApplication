@@ -176,6 +176,9 @@ namespace Team7_StationeryStore.Service
                 dbcontext.SaveChanges();
             }
             return editable;
+        public List<Inventory> getAllInventories()
+        {
+            return dbcontext.inventories.ToList();
         }
     }
 }

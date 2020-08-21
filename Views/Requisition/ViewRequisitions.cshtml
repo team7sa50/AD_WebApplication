@@ -33,10 +33,11 @@
                 <form asp-controller="PurchaseOrder" asp-action="ViewAllPurchaseOrders" method="POST">
                     <input type="submit" value="View All Purchase Orders" class="btn btn-outline-info" />
                 </form>
+                <form asp-controller="StationeryStore" asp-action="StartAnalytics" method="POST">
+                    <input type="submit" value="Analytics" class="btn btn-outline-info" />
+                </form>
             </div>
-            <form asp-controller="StationeryStore" asp-action="ViewInventory" method="POST">
-                <input type="submit" value="View Inventories" class="btn btn-outline-info" />
-            </form>
+
         </div>
        
             <!--Tab for All Requisitions-->
@@ -146,6 +147,42 @@
 
             </div>
 <script>
+
+function openDetail(id, department) {
+    console.log(department, id);
+    document.getElementById("myDetail").style.width = "300px";
+    document.getElementById("All").style.marginRight = "250px";
+
+    $.ajax({
+        url: "/Requisition/GetRequisitionDetail/",
+        method: "POST",
+        data: { reqId: id },
+        dataType: 'json',
+        success: function (response) {
+            console.log("hello detail");
+            var jsonObject = JSON.parse(response);
+            console.log(response);
+            var p = document.createElement('p');
+            p.innerHTML = jsonObject.Department.DeptName;
+            console.log(jsonObject.Department.DeptName);
+            document.getElementById('reqDeptName').appendChild(p);
+
+            var xo = document.createElement('p');
+            xo.innerHTML = jsonObject.DateSubmitted;
+            console.log(jsonObject.DateSubmitted);
+            document.getElementById('reqDate').appendChild(xo);
+
+            var titleDetail = document.createElement('h5');
+            titleDetail.innerHTML = jsonObject.Id;
+            var reId = document.getElementById('reqId');
+            reId.appendChild(titleDetail);
+
+            var os = document.getElementById('originalStatus');
+            os.innerHTML = ` ${jsonObject.status} < button class="editbtn" onclick = "showChangeStatus()" > <i class="far fa-edit"></i></button >`;
+        }
+    });
+}
+
 var pretable = document.getElementById('AllReqTable');
 var tableJson = JSON.stringify(tableToJson(pretable));
 console.log("running Javascript....");

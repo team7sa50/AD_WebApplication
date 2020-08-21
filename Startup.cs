@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Team7_StationeryStore.Models;
 using Team7_StationeryStore.Database;
 using Team7_StationeryStore.Service;
+using Team7_StationeryStore.Analytics;
+using Team7_StationeryStore.Analytics.ML;
 
 namespace Team7_StationeryStore
 {
@@ -40,6 +42,8 @@ namespace Team7_StationeryStore
             services.AddScoped<DisbursementService>();
             services.AddScoped<NotificationService>();
             services.AddSession();
+            services.AddScoped<Trainer>();
+            services.AddScoped<Predictor>();
 
         }
 

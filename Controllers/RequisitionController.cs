@@ -44,8 +44,11 @@ namespace Team7_StationeryStore.Controllers
             List<string> statuses = new List<string>();
             foreach (var e in Enum.GetValues(typeof(ReqStatus)))
             {
-                Console.WriteLine("Enum: " + e.ToString());
-                statuses.Add(e.ToString());
+                if (e.ToString() == "APPROVED" || e.ToString() == "OUTSTAND")
+                {
+                    Console.WriteLine("Enum: " + e.ToString());
+                    statuses.Add(e.ToString());
+                }
             }
             ViewData["status"] = statuses;
             ViewData["outsandingReq"] = oustandingReq;

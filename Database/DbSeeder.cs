@@ -536,7 +536,7 @@ namespace Team7_StationeryStore.Database
                 employee15.Role = Role.EMPLOYEE;
                 employee15.DepartmentsId = regr.Id;
                 dbcontext.Add(employee15);
-
+                
                 Requisition requisition1 = new Requisition();
                 requisition1.Id = EN.DeptCode+"_"+DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
                 requisition1.DepartmentId = EN.Id;
@@ -563,6 +563,7 @@ namespace Team7_StationeryStore.Database
                 requisition1Detail2.DistributedQty = 0;
                 dbcontext.Add(requisition1Detail2);
 //----------------------------------------------------------------------------------------------------------------------------------> Keith
+                /*
                 Requisition requisition11 = new Requisition();
                 requisition11.Id = EN.DeptCode + "_" + DateTime.Now;
                 requisition11.DepartmentId = EN.Id;
@@ -587,7 +588,7 @@ namespace Team7_StationeryStore.Database
                 requisition1Detail2.InventoryId = item2.Id;
                 requisition1Detail2.RequestedQty = 20;
                 requisition1Detail2.DistributedQty = 0;
-                dbcontext.Add(requisition1Detail2);
+                dbcontext.Add(requisition1Detail2);*/
 //----------------------------------------------------------------------------------------------------------------------------------> Keith
                 Requisition requisition2 = new Requisition();
                 requisition2.Id = CS.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
@@ -598,6 +599,24 @@ namespace Team7_StationeryStore.Database
                 requisition2.status = ReqStatus.OUTSTAND;
                 requisition2.Remarks = "nothing";
                 dbcontext.Add(requisition2);
+
+                RequisitionDetail requisition2Detail = new RequisitionDetail();
+                requisition2Detail.Id = Guid.NewGuid().ToString();
+                requisition2Detail.RequisitionId = requisition2.Id;
+                requisition2Detail.InventoryId = item2.Id;
+                requisition2Detail.RequestedQty = 20;
+                requisition2Detail.DistributedQty = 0;
+                dbcontext.Add(requisition2Detail);
+
+                RequisitionDetail requisition2Detail2 = new RequisitionDetail();
+                requisition2Detail2.Id = Guid.NewGuid().ToString();
+                requisition2Detail2.RequisitionId = requisition2.Id;
+                requisition2Detail2.InventoryId = item3.Id;
+                requisition2Detail2.RequestedQty = 20;
+                requisition2Detail2.DistributedQty = 0;
+                dbcontext.Add(requisition2Detail2);
+
+                /*
 
                 Requisition requisition3 = new Requisition();
                 requisition3.Id = regr.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
@@ -618,15 +637,15 @@ namespace Team7_StationeryStore.Database
                 requisition4.status = ReqStatus.PROCESSING;
                 requisition4.Remarks = "nothing";
                 dbcontext.Add(requisition4);
-
-               /* Requisition rq1 = new Requisition();
-                rq1.Id = Comm.DeptCode + "_" + DateTime.Now;
+                /*
+                Requisition rq1 = new Requisition();
+                rq1.Id = Comm.DeptCode + "_" + DateTime.Now.AddDays(1);
                 rq1.ApprovedEmployee = employee10;
                 rq1.DepartmentId = Comm.Id;
                 rq1.Employee = employee12;
                 rq1.DateSubmitted = DateTime.Today;
                 rq1.status = ReqStatus.APPROVED;
-                dbcontext.Add(rq1);
+                dbcontext.Add(rq1);*/
 
                 RequisitionDetail rqd1 = new RequisitionDetail();
                 rqd1.Id = Guid.NewGuid().ToString();
@@ -671,7 +690,7 @@ namespace Team7_StationeryStore.Database
                 dbcontext.Add(rqd6);
 
                 Requisition rq3 = new Requisition();
-                rq3.Id = EN.DeptCode + "_" + DateTime.Now.AddDays(1);
+                rq3.Id = EN.DeptCode + "_" + DateTime.Now.AddDays(2);
                 rq3.ApprovedEmployee = employee4;
                 rq3.DepartmentId = EN.Id;
                 rq3.Employee = employee6;
@@ -702,9 +721,7 @@ namespace Team7_StationeryStore.Database
                 rqd9.Inventory = item1;
                 rqd9.RequestedQty = 50;
                 dbcontext.Add(rqd8);
-                
-                dbcontext.SaveChanges();*/
-
+               
                 Disbursement disb1 = new Disbursement();
                 disb1.Id = Guid.NewGuid().ToString();
                 disb1.Departments = Comm;
