@@ -51,6 +51,8 @@ namespace Team7_StationeryStore.Controllers
         public JsonResult GetEmployeeTest(string id)
         {
             Disbursement d = disbService.findDisbursementById(id);
+            Employee deptRep = deptService.findDeptRepresentative(d.DepartmentsId);
+
             string disbursementJson = JsonConvert.SerializeObject(d, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
             return Json(disbursementJson);
         }
@@ -157,34 +159,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["response"] = invService.UpdateAdjustmentVoucher(adjVoucherId, action, remarks);
             return RedirectToAction("viewAdjustmentVouchers");
         }
-        
-/* X-> sendemail can be called from notifcationService, what is the purpose that is here*/
-        public void SendEmail()
-        {
-            var fromAddress = new MailAddress("stationerystoreteam7@gmail.com", "From Name");
-            var toAddress = new MailAddress("storeclerkteam7@gmail.com", "To Name");
-            const string fromPassword = "stationerystore";
-            const string subject = "Testing";
-            const string body = "Body";
-            var smtp = new SmtpClient
-            {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
-            };
-            using (var message = new MailMessage(fromAddress, toAddress)
-            {
-                Subject = subject,
-                Body = body
-            })
-            {
-                smtp.Send(message);
-            }
-
-        }
+       
 
         public IActionResult viewAdjustmentVouchers() {
             ViewData["adjList"] = invService.findAdjustmentVoucherList(null);

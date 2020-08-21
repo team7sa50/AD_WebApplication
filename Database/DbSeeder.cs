@@ -610,7 +610,7 @@ namespace Team7_StationeryStore.Database
                 dbcontext.Add(requisition3);
 
                 Requisition requisition4 = new Requisition();
-                requisition4.Id = regr.DeptCode + "_" + DateTime.Now;
+                requisition4.Id = regr.DeptCode + "/" + DateTime.Now;
                 requisition4.DepartmentId = regr.Id;
                 requisition4.EmployeeId = employee15.Id;
                 requisition4.ApprovedEmployeeId = employee13.Id;
@@ -619,7 +619,7 @@ namespace Team7_StationeryStore.Database
                 requisition4.Remarks = "nothing";
                 dbcontext.Add(requisition4);
 
-                Requisition rq1 = new Requisition();
+               /* Requisition rq1 = new Requisition();
                 rq1.Id = Comm.DeptCode + "_" + DateTime.Now;
                 rq1.ApprovedEmployee = employee10;
                 rq1.DepartmentId = Comm.Id;
@@ -703,7 +703,7 @@ namespace Team7_StationeryStore.Database
                 rqd9.RequestedQty = 50;
                 dbcontext.Add(rqd8);
                 
-                dbcontext.SaveChanges();
+                dbcontext.SaveChanges();*/
 
                 Disbursement disb1 = new Disbursement();
                 disb1.Id = Guid.NewGuid().ToString();

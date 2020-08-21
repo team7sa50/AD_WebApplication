@@ -46,7 +46,7 @@ namespace Team7_StationeryStore.Controllers
             Employee emp = deptService.findEmployeeById(userid);
             ViewData["stationeryCatalgoue"] = stationeryCatalogue;
             ViewData["categories"] = categories;
-            ViewData["username"] = emp.Name;
+            ViewData["user"] = emp;
             return View();
         }
 
@@ -64,11 +64,6 @@ namespace Team7_StationeryStore.Controllers
             ViewData["stationeryCatalgoue"] = items;
             ViewData["userid"] = userid;
             return View("viewCatalogue");
-        }
-
-        public IActionResult RaiseRequisition() {
-            reqService.CreateRequisition(HttpContext.Session.GetString("userId"));
-            return RedirectToAction("viewRequisitionList", "Department");
         }
 
         public IActionResult AddToCart(string itemId, int quantity)
@@ -115,30 +110,6 @@ namespace Team7_StationeryStore.Controllers
             }
         }
 
-        /*public IActionResult UpdateQty(string itemId, int newQty)
-            int newqty = newQty;
-            string itemid = itemId;
-            string user = HttpContext.Session.GetString("userid");
-
-            var cartItem = dbcontext.employeeCarts
-                .Where(x => x.EmployeeId == user && x.InventoryId == itemid)
-                .FirstOrDefault();
-
-            if (cartItem != null)
-            {
-                if (newqty > 0)
-                {
-                    cartItem.Qty = newqty;
-                }
-                else
-                {
-                    RemoveItem(user, itemid);
-                }
-            }
-            dbcontext.SaveChanges();
-            return RedirectToAction("viewRequisition");
-        }*/
-
         public IActionResult RemoveItem(string userid, string itemId)
         {
             var cartItem = dbcontext.employeeCarts
@@ -168,7 +139,13 @@ namespace Team7_StationeryStore.Controllers
             dbcontext.SaveChanges();
             return RedirectToAction("viewCatalogue");
         }
-        
+
+        public IActionResult RaiseRequisition()
+        {
+            reqService.CreateRequisition(HttpContext.Session.GetString("userId"));
+            return RedirectToAction("viewRequisitionList", "Department");
+        }
+
         //For Employee
         public IActionResult viewRequisitionList() {
             string userId = HttpContext.Session.GetString("userId");
@@ -195,13 +172,16 @@ namespace Team7_StationeryStore.Controllers
             return View();
         }
 
-        //For Department Head
-        public IActionResult viewDeptartmentRequisition() {
+        //For Department Head / Authorize Employee
+        public IActionResult viewDepartmentRequisition() {
             string deptId = HttpContext.Session.GetString("Department");
+            string userId = HttpContext.Session.GetString("userId");
             List<Requisition> pendingRequisitions = reqService.findRequisitionsByDept(deptId, ReqStatus.AWAITING_APPROVAL);
             List<Requisition> allRequisitions = reqService.findRequisitionsByDept(deptId, null);
+            bool IsAuthorized = deptService.IsAuthorizer(userId);
             ViewData["PendingRequisitions"] = pendingRequisitions;
             ViewData["AllRequisitions"] = allRequisitions;
+            ViewData["Authorizer"] = IsAuthorized;
             return View();
         }
 
@@ -226,22 +206,8 @@ namespace Team7_StationeryStore.Controllers
         public IActionResult updateRequisition(string requisitionId, string remarks,string action)
         {
             string userId = HttpContext.Session.GetString("userId");
-            Requisition requisition = dbcontext.requisitions.Where(x => x.Id == requisitionId).FirstOrDefault();
-            if (requisition == null)
-            {
-                ViewData["ErrorMsg"] = "Failed to locate requisition";
-                return RedirectToAction("ViewPendingRequisition");
-            }
-            if (requisition.EmployeeId == userId)
-            {
-                ViewData["ErrorMsg"] = "Cannot self-approve requisition";
-                return RedirectToAction("ViewPendingRequisition");
-            }
-            if(action == "approve") { requisition.status = ReqStatus.APPROVED; }
-            if(action == "reject") { requisition.status = ReqStatus.REJECTED; }
-            requisition.Remarks = remarks;
-            dbcontext.Update(requisition);
-            dbcontext.SaveChanges();
+            if(action == "approve") { reqService.updateRequisition(userId, requisitionId, ReqStatus.APPROVED, remarks); }
+            if(action == "reject") { reqService.updateRequisition(userId, requisitionId, ReqStatus.REJECTED, remarks); }
             return RedirectToAction("viewDeptartmentRequisition");
         }
 
@@ -278,7 +244,7 @@ namespace Team7_StationeryStore.Controllers
                 return RedirectToAction("DelegateAuthority");
             }
             deptService.createEmployeeAuthorization(Name, SD, ED);
-            return RedirectToAction("DelegateAuthority");
+            return RedirectToAction("Home");
         }
         [HttpPost]
         public ActionResult getLatestNotifications()

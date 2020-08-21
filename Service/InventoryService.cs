@@ -172,7 +172,7 @@ namespace Team7_StationeryStore.Service
             }
             else {
                 inv.stock += qty;
-                dbcontext.inventories.Update(inv);
+                dbcontext.Update(inv);
                 dbcontext.SaveChanges();
             }
             return editable;
