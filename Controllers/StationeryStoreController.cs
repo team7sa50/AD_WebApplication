@@ -44,8 +44,21 @@ namespace Team7_StationeryStore.Controllers
         public JsonResult GetEmployeeTest(string id)
         {
             Disbursement d = disbService.findDisbursementById(id);
+            Employee deptRep = deptService.findDeptRepresentative(d.DepartmentsId);
             string disbursementJson = JsonConvert.SerializeObject(d, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-            return Json(disbursementJson);
+            string rep = JsonConvert.SerializeObject(deptRep);
+            var result = new { disbursementJson, rep };
+            return Json(result);
+        }
+        public IActionResult viewAnalysis()
+        {
+            return View();
+        }
+        public JsonResult GetDataToAnalyze()
+        {
+            List<Inventory> inventories = invService.retrieveCatalogue();
+            string model = JsonConvert.SerializeObject(inventories, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            return Json(model);
         }
 
         [HttpPost]

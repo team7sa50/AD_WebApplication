@@ -37,7 +37,12 @@ namespace Team7_StationeryStore.Controllers
             ViewData["Employee"] = employee;
             return View();
         }
-
+        public IActionResult HomeManagerSupervisor()
+        {
+            Employee employee = dbcontext.employees.Where(x => x.Id == HttpContext.Session.GetString("userId")).FirstOrDefault();
+            ViewData["user"] = employee;
+            return View();
+        }
         public IActionResult viewCatalogue()
         {
             string userid = HttpContext.Session.GetString("userId");
