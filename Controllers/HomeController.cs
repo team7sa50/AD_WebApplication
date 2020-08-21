@@ -56,7 +56,7 @@ namespace Team7_StationeryStore.Controllers
             }
             if(user.Role == Role.STORE_MANAGER || user.Role== Role.DEPT_REP)
             {
-                return RedirectToAction("HomeManagerSupervisor", "Department");
+                return RedirectToAction("HomeManagerSupervisor", "StationeryStore");
             }
             if(user.Role == Role.STORE_CLERK)
             {

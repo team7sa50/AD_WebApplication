@@ -150,5 +150,9 @@ namespace Team7_StationeryStore.Service
             }
             return dbcontext.adjustmentVouchers.ToList();
         }
+        public List<Inventory> getAllInventories()
+        {
+            return dbcontext.inventories.ToList();
+        }
     }
 }
