@@ -33,10 +33,11 @@
                 <form asp-controller="PurchaseOrder" asp-action="ViewAllPurchaseOrders" method="POST">
                     <input type="submit" value="View All Purchase Orders" class="btn btn-outline-info" />
                 </form>
+                <form asp-controller="StationeryStore" asp-action="StartAnalytics" method="POST">
+                    <input type="submit" value="Analytics" class="btn btn-outline-info" />
+                </form>
             </div>
-            <form asp-controller="StationeryStore" asp-action="ViewInventory" method="POST">
-                <input type="submit" value="View Inventories" class="btn btn-outline-info" />
-            </form>
+
         </div>
        
             <!--Tab for All Requisitions-->

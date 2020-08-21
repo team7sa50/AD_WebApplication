@@ -619,6 +619,7 @@ namespace Team7_StationeryStore.Database
                 requisition4.Remarks = "nothing";
                 dbcontext.Add(requisition4);
 
+                /*
                 Requisition rq1 = new Requisition();
                 rq1.Id = Comm.DeptCode + "_" + DateTime.Now;
                 rq1.ApprovedEmployee = employee10;
@@ -626,7 +627,7 @@ namespace Team7_StationeryStore.Database
                 rq1.Employee = employee12;
                 rq1.DateSubmitted = DateTime.Today;
                 rq1.status = ReqStatus.APPROVED;
-                dbcontext.Add(rq1);
+                dbcontext.Add(rq1);*/
 
                 RequisitionDetail rqd1 = new RequisitionDetail();
                 rqd1.Id = Guid.NewGuid().ToString();
