@@ -72,11 +72,14 @@ namespace Team7_StationeryStore.Service
             return dbcontext.requisitions.Where(x => x.Id == requisitionId).FirstOrDefault();
         }
 
-        public void updateStatus(string requisitionId, ReqStatus status) {
-
+        public void updateRequisition(string? userId,string requisitionId, ReqStatus? status, string? remarks) {
             Requisition requisition = findRequisition(requisitionId);
-            requisition.status = status;
-
+            // When authorization period expired, the default approver will be dept head.
+            requisition.ApprovedEmployeeId = userId;
+            requisition.Remarks = remarks;
+            requisition.status = (ReqStatus)status;
+            dbcontext.Update(requisition);
+            dbcontext.SaveChanges();
         }
         public List<RequisitionDetailView> findRequisitionDetail(string requisitionId)
         {

@@ -71,17 +71,21 @@
 
                 <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="viewCatalogue">VIEW CATALOGUE</a>
                 <br />
-
-
-                <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="viewRequisitionList">VIEW REQUISITION HISTORY</a>
-                <br />
+                @if (emp.Role != Role.DEPT_HEAD)
+                {
+                    <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="viewRequisitionList">VIEW MY REQUISITION HISTORY</a>
+                    <br />
+                }
 
                 @if (emp.Role == Role.DEPT_HEAD)
                 {
-                    <form method="POST">
-                        <button value="View" class="btn btn-outline-primary" formaction="/Department/viewDeptartmentRequisition/">Pending Requisitions</button>
-                    </form>
-
+                    <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="viewDepartmentRequisition">VIEW DEPARTMENT REQUISITION</a>
+                    <br />
+                    <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="delegateAuthority">DELEGATE AUTHORITY</a>
+                    @*                    <form method="POST">
+                <button value="View" class="btn btn-outline-primary" formaction="/Department/viewDeptartmentRequisition/">View Pending Requisitions</button>
+            </form>
+                    *@
                 }
                 <br>
             </div>
@@ -104,7 +108,8 @@
             dataType: 'json',
             success: function (response) {
                 $('.table-body-noti-detail').html("");
-                var today = new Date();                var count = response.length;
+                var today = new Date();
+                var count = response.length;
                 console.log("count is" + count);
                 for (const item of response) {
                     $('.table-body-noti-detail').append(`<tr><td><button onclick="clickDetail('${item.reqId}')">${item.Name} sends new requisition at ${item.date}</button></td></tr>`)

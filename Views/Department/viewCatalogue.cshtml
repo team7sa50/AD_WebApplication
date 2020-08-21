@@ -6,8 +6,7 @@
 @{
     var lists = (List<Inventory>)ViewData["stationeryCatalgoue"];
     var categories = (List<ItemCategory>)ViewData["categories"];
-    var userid = TempData["userid"];
-    var username = ViewData["username"];
+    var user = (Employee)ViewData["user"];
 }
 
 
@@ -19,7 +18,11 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
+    <style>
+        .currSign:before {
+            content: '$';
+        }
+    </style>
 
 </head>
 
@@ -28,7 +31,7 @@
         <li class="logo">Logic <span>Stationery</span></li>
         <li> <button class="menubtn" href="#inventory">Inventory</li>
         <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
-        <li><p class="userdetails">@username</p> <img src="~/lib/img/employeeicon.jpg"> </li>
+        <li><p class="userdetails">@user.Name</p> <img src="~/lib/img/employeeicon.jpg"> </li>
     </ul>
 </header>
 
@@ -46,21 +49,26 @@
                     <tr>
                         <th>Item Code</th>
                         <th>Descripion</th>
+                        <th>Unit of Measurement</th>
+                        <th>Price</th>
                         <th>&nbsp;</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     @foreach (var i in lists)
-                    {
+                     {
                         <tr>
 
                             <td class="text-center">@i.itemCode</td>
                             <td class="text-left">@i.description</td>
-                            <td class="text-right"><button class="btn btn-secondary" onclick="addToCart('@i.Id','@i.itemCode')">Add to Cart</button></td>
-
+                            <td class="text-center">@i.measurementUnit</td>
+                            <td class="text-center myDIV">@i.price.ToString("0.00")</td>
+                            @if (user.Role != Role.DEPT_HEAD) {
+                                <td class="text-right"><button class="btn btn-secondary" onclick="addToCart('@i.Id','@i.itemCode')">Add to Cart</button></td>
+                             }
                         </tr>
-                    }
+                     }
                 </tbody>
 
 
@@ -84,7 +92,7 @@
                     <input type="hidden" id="itemId" name="itemId">
 
                     <input class="btn btn-primary btn-sm" type="submit" value="Submit">
-                    
+
                 </form>
             </div>
         </div>
@@ -98,6 +106,14 @@
         document.getElementById("itemId").value = id;
         document.getElementById("myModalLabel").innerHTML = itemCode;
     }
+
+    let x = document.querySelectorAll(".myDIV");
+    for (let i = 0, len = x.length; i < len; i++) {
+        let num = Number(x[i].innerHTML)
+            .toLocaleString('en');
+        x[i].innerHTML = num;
+        x[i].classList.add("currSign");
+    } 
 </script>
 
 

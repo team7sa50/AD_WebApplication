@@ -67,6 +67,7 @@ namespace Team7_StationeryStore.Service
             newAuthorize.startDate = startDate;
             newAuthorize.endDate = endDate;
             newAuthorize.DepartmentsId = employee.DepartmentsId;
+            newAuthorize.EmployeeName = employee.Name;
             dbcontext.employeeAuthorizes.Add(newAuthorize);
             dbcontext.SaveChanges();
         }
@@ -79,7 +80,8 @@ namespace Team7_StationeryStore.Service
                                                 .Where(x => DateTime.Now >= x.startDate
                                                         && DateTime.Now <= x.endDate
                                                         && x.DepartmentsId == department.Id).FirstOrDefault();
-            if (employeeAuthorize != null)
+
+            if (employeeAuthorize != null && employeeAuthorize.EmployeeId != userId)
             {
                 return findEmployeeById(employeeAuthorize.EmployeeId);
             }
@@ -98,5 +100,13 @@ namespace Team7_StationeryStore.Service
             return collectionPoint;
         }
 
+        public bool IsAuthorizer(string userId) {
+            Employee approver = setApprover(userId);
+            if (approver.Id != userId)
+            {
+                return false;
+            }
+            else return true;
+        }
     }
 }
