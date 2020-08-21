@@ -26,6 +26,7 @@ namespace Team7_StationeryStore.Controllers
         protected InventoryService invService;
         protected DepartmentService deptService;
         protected DisbursementService disbService;
+        protected NotificationService notifService;
         protected Trainer trainer;
         protected Predictor predictor;
         public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService,InventoryService invService,DepartmentService deptService, DisbursementService disbService, Trainer trainer, Predictor predictor)
@@ -174,7 +175,6 @@ namespace Team7_StationeryStore.Controllers
 
         public IActionResult viewRetrieval(List<string> req)
         {
-
             List<Requisition> selectedReq = requisitionService.getRequisitionsByIds(req);
             System.Diagnostics.Debug.WriteLine("Selected Requests: " + selectedReq.Count);
             /*List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);
@@ -247,5 +247,18 @@ namespace Team7_StationeryStore.Controllers
             ViewData["user"] = employee;
             return View();
         }
+
+        public IActionResult sendDisbursement(string disId) {
+            Disbursement dis = disbService.findDisbursementById(disId);
+            Employee deptRep = deptService.findDeptRepresentative(dis.Departments.Id);
+            List<Requisition> requisitions = dis.Requisitions.ToList();
+            foreach(var r in requisitions)
+            {
+                requisitionService.updateRequisition(null, r.Id, ReqStatus.COLLECTION, null);
+            }
+            notifService.sendNotification(NotificationType.DISBURSEMENT, null, dis, null);
+            return Json(new { msg = "Sent to Dept Rep: {0}",deptRep.Name });
+        }
+
     }
 }

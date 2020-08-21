@@ -15,7 +15,7 @@ namespace Team7_StationeryStore.Service
         protected DepartmentService deptService;
         protected NotificationService notificationService;
 
-        public InventoryService(StationeryContext dbcontext,DepartmentService deptService, NotificationService notificationService)
+        public InventoryService(StationeryContext dbcontext, DepartmentService deptService, NotificationService notificationService)
         {
             this.dbcontext = dbcontext;
             this.deptService = deptService;
@@ -60,7 +60,7 @@ namespace Team7_StationeryStore.Service
         {
             return dbcontext.purchaseCarts.Where(x => x.EmployeeId == userId).ToList();
         }
-        public void CreatePurchaseOrder(string userId,string supplierId)
+        public void CreatePurchaseOrder(string userId, string supplierId)
         {
             List<PurchaseCart> cartList = dbcontext.purchaseCarts.Where(x => x.EmployeeId == userId).ToList();
             Employee emp = deptService.findEmployeeById(userId);
@@ -94,7 +94,7 @@ namespace Team7_StationeryStore.Service
         public AdjustmentVoucher findAdjustmentVoucher(string id) {
             return dbcontext.adjustmentVouchers.Where(x => x.Id == id).FirstOrDefault();
         }
-       
+
         public PurchaseOrder findPurchaseOrder(string poId)
         {
             return dbcontext.purchaseOrders.Where(x => x.Id == poId).FirstOrDefault();
@@ -104,7 +104,7 @@ namespace Team7_StationeryStore.Service
             return dbcontext.purchaseOrderDetails.Where(x => x.PurchaseOrderId == poId).ToList();
         }
 
-        public void CreateAdjustmentVoucher(string userId, string invId,int qty,string reason) {
+        public void CreateAdjustmentVoucher(string userId, string invId, int qty, string reason) {
             AdjustmentVoucher newAdjustmentVoucher = new AdjustmentVoucher();
             Inventory inventory = retrieveInventory(invId);
             Employee appemployee = setAdjustmentVoucherApprover(userId, invId, qty);
@@ -118,10 +118,10 @@ namespace Team7_StationeryStore.Service
             newAdjustmentVoucher.reason = reason;
             dbcontext.Add(newAdjustmentVoucher);
             dbcontext.SaveChanges();
-            notificationService.sendNotification(NotificationType.ADJUSTMENTVOUCHER,null,null,newAdjustmentVoucher);
+            notificationService.sendNotification(NotificationType.ADJUSTMENTVOUCHER, null, null, newAdjustmentVoucher);
         }
 
-        public Employee setAdjustmentVoucherApprover(string userId,string invId,int qty) {
+        public Employee setAdjustmentVoucherApprover(string userId, string invId, int qty) {
             Inventory inventory = retrieveInventory(invId);
             List<Employee> employees = deptService.findDepartmentEmployeeList(userId);
             double dicrepancyCost = inventory.price * Math.Abs(qty);
@@ -146,7 +146,7 @@ namespace Team7_StationeryStore.Service
                     case false:
                         response += " is denied as there is stock is less than the amount to be deducted.";
                         break;
-                }   
+                }
             }
             if (action == "reject") { adjustmentVoucher.status = Status.REJECTED; response += " is sucessed."; }
             adjustmentVoucher.remarks = remarks;
@@ -162,7 +162,7 @@ namespace Team7_StationeryStore.Service
             return dbcontext.adjustmentVouchers.ToList();
         }
 
-        public bool updateInventory(string invId,int qty) {
+        public bool updateInventory(string invId, int qty) {
             bool editable = true;
             Inventory inv = retrieveInventory(invId);
             // To validate if the quantity to be deduct from the stock is sufficient.
@@ -176,9 +176,10 @@ namespace Team7_StationeryStore.Service
                 dbcontext.SaveChanges();
             }
             return editable;
+        }
         public List<Inventory> getAllInventories()
         {
             return dbcontext.inventories.ToList();
         }
-    }
+    } 
 }
