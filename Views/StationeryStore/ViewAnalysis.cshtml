@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewData["Title"] = "ViewAnalysis";
+    var data = (List<PurchaseOrderQuantity>)ViewData["dict"];
+    var category = ViewData["category"];
+
+}
+
+<h1>ViewAnalysis</h1>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<div id="chart_div"></div>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['bar'] });
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+            ['Month', '@category'],
+            @foreach(var item in data)
+             {
+            @:['@(item.Month)', '@(item.quantity)'],
+            }
+
+        ]);
+
+        var options = {
+            chart: {
+                title: 'Company Performance',
+                subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+            },
+            bars: 'vertical', // Required for Material Bar Charts.
+            hAxis: { format: 'decimal' },
+            height: 400,
+            colors: ['#1b9e77', '#d95f02',]
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('chart_div'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+
+    }
+</script>
+

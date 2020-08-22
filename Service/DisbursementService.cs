@@ -21,6 +21,10 @@ namespace Team7_StationeryStore.Service
         public List<Disbursement> retrieveDisbursementByDept(string deptId) {
             return dbcontext.disbursements.Where(x => x.DepartmentsId == deptId).ToList();
         }
+        public List<Disbursement> retrieveDisbursements()
+        {
+            return dbcontext.disbursements.Where(x => x.GeneratedDate.Date == DateTime.Today.Date).ToList();
+        }
 
         public List<DisbursementDetail> retrieveDisbursementDetails(string disId) {
 

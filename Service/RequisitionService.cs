@@ -27,6 +27,10 @@ namespace Team7_StationeryStore.Service
             return dbcontext.requisitions.Where(x => !x.status.Equals(ReqStatus.AWAITING_APPROVAL) && !x.status.Equals(ReqStatus.REJECTED)).ToList();
 
         }
+        public List<Requisition> retrieveAllRequisitions()
+        {
+            return dbcontext.requisitions.ToList();
+        }
         public List<Requisition> findAllRequisitionsFromFilter(string departmentId)
         {
             if(departmentId == "all")
