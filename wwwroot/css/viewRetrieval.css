@@ -1,5 +1,6 @@
 ﻿body {
     font-family: Arial, Helvetica, sans-serif;
+    background-color: #f3f3f3 !important;
 }
 
 * {
@@ -10,84 +11,13 @@
     box-sizing: border-box;
 }
 
-
-header {
-    z-index: 1;
-    background: white;
-    height: 60px;
-    padding-top: 5px;
-    font-family: 'Source Sans Pro', sans-serif;
-    min-width: 100%;
-}
-
-.logo {
-    color: #1e459c;
-    width: 200px;
-    height: 60px;
-    font-size: 20px;
-    padding-top: 15px;
-    padding-left: 15px;
-    display: inline-block;
-    float: left;
-}
-
-    .logo span {
-        color: #4877bd;
-    }
-
-header ul {
-    list-style-type: none;
-}
-
-/* The button used to open the sidebar */
-header .menubtn {
-    font-size: 15px;
-    position: relative;
-    cursor: pointer;
-    background: white;
-    color: rgb(31,77,137);
-    float: left;
-    text-align: center;
-    display: inline-block;
-    border: none;
-    width: 150px;
-    height: 55px;
-    font-weight: 700;
-    padding-left: 10px;
-}
-
-    header .menubtn:hover {
-        color: #4877bd;
-        border: none;
-    }
-
-header .userdetails {
-    display: inline-block;
-    float: right;
-    width: 150px;
-    text-align: center;
-    border-left-style: solid;
-    border-left-color: grey;
-    font-size: 15px;
-    margin: 15px 15px;
-    color: rgb(31,77,137);
-    font-weight: 700;
-}
-
-header img {
-    display: inline-block;
-    float: right;
-    margin-top: 5px;
-    max-width: 40px;
-}
-
 .itemcontainer {
     background: white;
     max-width: 700px;
     margin: auto;
     margin-top: 30px;
-    border-left: 5px solid #8dc3a7;
-    font-size: 11px;
+    border-left: 5px solid #3792cb;
+    font-size: 12px;
     padding: 20px;
 }
 
@@ -96,42 +26,109 @@ body {
     background-color: #f3f3f3 !important;
 }
 
-table {
-    border: 1px solid black;
-    border-collapse: collapse;
-    margin-left: 10px;
-}
-
-th, tr, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
-
-    th:hover {
-        background-color: #DFEAE2;
-    }
 
 .requestdetail {
     visibility: collapse;
+    font-size: 10px;
+    text-decoration-style: italic;
 }
 
-h1 {
-    border-style: solid;
-}
-
-h2 {
-    border-style: solid;
-}
-
-.itemheader {
-    border: 1px solid black;
-    margin-bottom: 10px;
-}
-
-    .itemheader p {
-        width: 100px;
+    .requestdetail input {
+        font-size: 10px;
+        width: 60px;
+        text-align: center;
     }
 
+.itemheader {
+    margin-bottom: 10px;
+    width: 200px;
+}
+
 .departmentOverview:hover {
-    background-color: #DFEAE2;
+    background-color: #D8D5D2;
+}
+
+.departmentOverview {
+    text-align: center;
+}
+
+table.itemtable {
+    width: 555px;
+    margin: auto;
+    margin-top: 30px;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.itemtable th {
+    padding: 10px;
+    color: #003d7a;
+    border-bottom: 1px solid grey;
+    border-collapse: collapse;
+}
+
+.itemtable td {
+    padding: 10px;
+    border-bottom: 1px solid grey;
+    border-collapse: collapse;
+}
+
+.itemname {
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-block;
+    width: 90px;
+    padding: 5px;
+    color: #0076BE;
+}
+
+.totalqty {
+    display: inline-block;
+    font-size: 17px;
+    color: #1c9599;
+    text-align: center;
+    width: 50px;
+}
+
+.departmentName {
+    font-weight: 600;
+}
+
+.requestedQty {
+    font-style: italic;
+}
+
+#newQty {
+    display: none;
+    margin: auto;
+    border: none;
+    border-bottom: 1px solid grey;
+    width: 30px;
+}
+
+#newQtySub {
+    display: none;
+    margin: 2px;
+    background: none;
+    border: none;
+    width: 20px;
+    color: grey;
+}
+
+    #newQtySub:hover {
+        color: red;
+    }
+
+#originalQty {
+    padding: 2px;
+}
+
+#genretrieval {
+    float: right;
+    font-size: 11px;
+    margin: 10px 0px;
+    padding: 10px;
+    background: #4877bd;
+    border: none;
+    color: white;
 }

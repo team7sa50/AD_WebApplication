@@ -8,10 +8,9 @@
     int totalQtyPerDept;
     List<Requisition> requis = (List<Requisition>)ViewData["Requisitions"];
     int j = 0;
+    string identi;
+    string result;
 }
-
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
     <meta charset="utf=8">
@@ -20,72 +19,102 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
     <script src="https://use.fontawesome.com/973befe495.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
-    <script src="~/js/viewRetrieval.js"></script>
+    <!--<script src="~/js/viewRetrieval.js"></script>-->
 </head>
 
 <body>
     @foreach (var r in totalItemQty)
     {
-        <div class="itemcontainer">
-            <div class="itemheader">
-                <p>@r.Key</p>
-                <p>@r.Value</p>
-            </div>
-
-            <table class="itemtable">
-                <tr>
-                    <th>Department</th>
-                    <th>Requested</th>
-                    <th>Recommended</th>
-                </tr>
-                @foreach (var rd in reqPerDept)
-                {
-                    i = 0;
-                    totalQtyPerDept = 0;
-                    @foreach (var rz in rd.Value)
-                    {
-                        if (rz.Inventory.description == r.Key)
-                        {
-                            if (i == 0)
-                            {
-                                <tr class="departmentOverview" onclick="showRequests()">
-                                    <td class="departmentName">@rd.Key</td>
-                                    <td></td>
-                                </tr>
-                            }
-                            <tr class="requestdetail">
-                                <td class="requestId">@rz.Requisition.Id</td>
-                                <td class="requestedQty">@rz.RequestedQty</td>
-                                @{totalQtyPerDept += rz.RequestedQty;}
-                                <td class="recommendedQty"><input type="text" placeholder="@rz.DistributedQty" /></td>
-                            </tr>
-
-                            i++;
-                        }
-                    }
-                    if (i != 0)
-                    {
-                        <tr>
-                            <th>Total Qty:</th>
-                            <td>@totalQtyPerDept </td>
-                        </tr>
-                    }
-
-                }
-            </table>
+    <div class="itemcontainer">
+        <div class="itemheader">
+            <p class="itemname">@r.Key</p>
+            <p class="totalqty">@r.Value</p>
         </div>
+
+        <table class="itemtable">
+            <tr>
+                <th>Department</th>
+                <th>Requested</th>
+                <th>Recommended</th>
+            </tr>
+            @foreach (var rd in reqPerDept)
+            {
+                i = 0;
+                totalQtyPerDept = 0;
+                identi = r.Key + rd.Key;
+                result = string.Concat(identi.Where(c => !char.IsWhiteSpace(c)));
+            <tbody id="@result">
+                @foreach (var rz in rd.Value)
+                {
+                    if (rz.Inventory.description == r.Key)
+                    {
+                        totalQtyPerDept += rz.RequestedQty;
+                        if (i == 0)
+                        {
+                            identi = "";
+                            identi = r.Key + rd.Key;
+                            result = string.Concat(identi.Where(c => !char.IsWhiteSpace(c)));
+                            <tr class="departmentOverview" onclick="showRequests('@result')">
+                                <td class="departmentName">@rd.Key</td>
+                                <td>@totalQtyPerDept</td>
+                                <td></td>
+                            </tr>
+                        }
+            <tr class="requestdetail" style=" visibility:collapse;">
+             <td class="requestId">@rz.Requisition.Id</td>
+             <td class="requestedQty">@rz.RequestedQty</td>
+             <td class="recommendedQty">
+                <p id="originalQty">@rz.DistributedQty  <i class="fas fa-edit" onclick="showChangeQty()"></i></p>
+                <input id="newQty" type="text" placeholder="@rz.DistributedQty" />
+                <button id="newQtySub" style="font-size:11px"><i class="fas fa-arrow-right"></i></button>
+             </td>
+             </tr>
+                        i++;
+                    }
+                }
+            </tbody>
+            }
+        </table>
+    </div>
     }
 
     <form asp-controller="StationeryStore" asp-action="generateDisbursement" method="POST">
-
         <table>
             @foreach (var rqs in requis)
             {
-                <tr>
-                    <td><input type=hidden value="@rqs.Id" name="req"></td>
-                </tr>
+            <tr>
+                <td><input type=hidden value="@rqs.Id" name="req"></td>
+            </tr>
             }
         </table>
-        <input id="genretrieval" type="submit" value="Generate Disbursement List" style="font-size:11px"/>
+        <input id="genretrieval" type="submit" value="Generate Disbursement List" style="font-size:11px" />
     </form>
+
+    <script>
+
+ function showRequests(identifier) {
+            console.log("reached the showRequest function");
+            var x = document.getElementById(identifier).querySelectorAll('.requestdetail');
+            var i;
+            for (i = 0; i < x.length; i++) {
+              console.log("wow");
+                if (x[i].style.visibility === "collapse") {
+                    x[i].style.visibility = "visible";
+                    console.log("It was closed, now visible");
+                }
+                else if (x[i].style.visibility === "visible") {
+                    x[i].style.visibility = "collapse";
+                    console.log("It was visible, now closed");
+                }
+            }
+        }
+
+
+        function showChangeQty() {
+            document.getElementById("newQty").style.display = "inline-block";
+            document.getElementById("newQtySub").style.display = "inline-block";
+            document.getElementById("originalQty").style.display = "none";
+        }
+
+    </script>
 </body>
