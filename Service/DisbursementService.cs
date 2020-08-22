@@ -11,26 +11,38 @@ namespace Team7_StationeryStore.Service
     {
         protected StationeryContext dbcontext;
         protected DepartmentService deptService;
+        protected RequisitionService reqSerivce;
+        protected InventoryService invService;
 
-        public DisbursementService(StationeryContext dbcontext, DepartmentService deptService)
+        public DisbursementService(StationeryContext dbcontext, DepartmentService deptService, RequisitionService reqService, InventoryService invService)
         {
             this.dbcontext = dbcontext;
             this.deptService = deptService;
+            this.reqSerivce = reqService;
+            this.invService = invService;
         }
 
-        public List<Disbursement> retrieveDisbursementByDept(string deptId) {
+        public List<Disbursement> retrieveDisbursementByDept(string deptId)
+        {
             return dbcontext.disbursements.Where(x => x.DepartmentsId == deptId).ToList();
         }
+        public List<Disbursement> retrieveDisbursements()
+        {
+            return dbcontext.disbursements.Where(x => x.GeneratedDate.Date == DateTime.Today.Date).ToList();
+        }
 
-        public List<DisbursementDetail> retrieveDisbursementDetails(string disId) {
+        public List<DisbursementDetail> retrieveDisbursementDetails(string disId)
+        {
 
             return dbcontext.disbursementDetails.Where(x => x.DisbursementId == disId).ToList();
         }
 
-        public List<DisbursementDetailView> retrieveDisbursmentDetailsView(string disId) {
+        public List<DisbursementDetailView> retrieveDisbursmentDetailsView(string disId)
+        {
             List<DisbursementDetail> retrievedDisbursement = retrieveDisbursementDetails(disId);
             List<DisbursementDetailView> disbursementDetailViews = new List<DisbursementDetailView>();
-            foreach (var i in retrievedDisbursement) {
+            foreach (var i in retrievedDisbursement)
+            {
 
                 DisbursementDetailView disDview = new DisbursementDetailView(i.DisbursementId,
                                                                         i.RequisitionDetail.Inventory.itemCode,
@@ -64,6 +76,7 @@ namespace Team7_StationeryStore.Service
         {
             foreach (var dept in requisitionsForDepartment)
             {
+                //Create new disbursement
                 Disbursement d = new Disbursement();
                 d.Id = Guid.NewGuid().ToString();
                 d.GeneratedDate = DateTime.Now;
@@ -74,6 +87,7 @@ namespace Team7_StationeryStore.Service
                 dbcontext.Add(d);
                 dbcontext.SaveChanges();
 
+                //In each new disbursement, create new disbursement
                 foreach (var req in dept.Value)
                 {
                     DisbursementDetail ddetail = new DisbursementDetail();
@@ -88,6 +102,23 @@ namespace Team7_StationeryStore.Service
             }
         }
 
+       /* public Dictionary<Inventory, int> compileRequisitionDetails(List<RequisitionDetail> requisitionDetails)
+        {
+            Dictionary<Inventory, int> compliedList = new Dictionary<Inventory, int>();
+            foreach (var req in requisitionDetails)
+            {
+                if (compliedList.ContainsKey(req.Inventory))
+                {
+                    compliedList[req.Inventory] += req.RequestedQty;
+                }
+                else
+                {
+                    compliedList.Add(req.Inventory, req.RequestedQty);
+                }
+            }
+            return compliedList;
+        }*/
+
         public List<Disbursement> getAllPendingDisbursements()
         {
             List<Disbursement> dibs = (from d in dbcontext.disbursements
@@ -96,10 +127,11 @@ namespace Team7_StationeryStore.Service
             return dibs;
         }
 
-        public List<Disbursement> getAllCompletedDisbursements() {
-             List<Disbursement> dibCompleted = (from d in dbcontext.disbursements
+        public List<Disbursement> getAllCompletedDisbursements()
+        {
+            List<Disbursement> dibCompleted = (from d in dbcontext.disbursements
                                                where d.status == DisbusementStatus.COMPLETED
-                                                           select d).ToList();
+                                               select d).ToList();
             return dibCompleted;
         }
 
@@ -111,5 +143,63 @@ namespace Team7_StationeryStore.Service
             return d;
         }
 
+
+
+        // Unsure how is the Andriod going to pass the disbursed qty
+        public void acknowledgeDisbursement(string disId, List<Disbursement_Detail> disDetailList) {
+
+            Disbursement disbursement = findDisbursementById(disId);
+            //Group the disbursement Details to according to itemId and sort by earliest to latest submition date
+            Dictionary<string, List<DisbursementDetail>> list_disDetails = GroupSortDisDetailsByItemAndEarliestDate(disbursement);
+
+            //Distribute disbursed qty as per items into respectively disbursement_detail & requisition_detail
+            foreach(var d in disDetailList){
+               distributeItemQty(list_disDetails[d.itemId],d.disbursedQty);
+            }
+
+            List<Requisition> requisitions = disbursement.Requisitions.ToList();
+
+            //Update requisition while checking its fufilement
+            foreach (var r in requisitions.Where(r => !reqSerivce.isPartialFufiled(r)).Select(r => r))
+            {
+                r.status = ReqStatus.COMPLETED;
+            }
+            dbcontext.Update(requisitions);
+            dbcontext.SaveChanges();
+        }
+
+        public Dictionary<string, List<DisbursementDetail>> GroupSortDisDetailsByItemAndEarliestDate(Disbursement disbursement) {  
+            return disbursement.DisbursementDetails.OrderBy(x => x.RequisitionDetail.Requisition.DateSubmitted)
+                                                   .GroupBy(x => x.RequisitionDetail.InventoryId)
+                                                   .ToDictionary(x => x.Key, x => x.ToList());
+        }
+
+        //Distribution of item qty among requisitions reference to the disbursement
+        public void distributeItemQty(List<DisbursementDetail> list,int qty){
+            
+            foreach (var i in list) {
+
+                if (qty > i.RequisitionDetail.RequestedQty)
+                {
+                    qty -= i.RequisitionDetail.RequestedQty;
+                    // Update Requisition Detail
+                    i.RequisitionDetail.DistributedQty = i.RequisitionDetail.RequestedQty;
+                    // Update Disbursement Detail
+                    i.disbursedQty = i.RequisitionDetail.RequestedQty;
+                }
+                // Insufficient amount disbursed qty.
+                else {
+                    // Update Requisition Detail
+                    i.RequisitionDetail.DistributedQty = i.RequisitionDetail.RequestedQty - qty;
+                    // Update Disbursement Detail
+                    i.disbursedQty = qty;
+                    break;
+                }
+            }
+            dbcontext.Update(list);
+        }
+
+        
+        
     }
 }

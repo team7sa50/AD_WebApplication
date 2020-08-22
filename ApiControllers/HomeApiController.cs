@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Newtonsoft.Json;
 using Team7_StationeryStore.Database;
 using Team7_StationeryStore.Models;
@@ -46,7 +47,7 @@ namespace Team7_StationeryStore.Controllers
                 /*                Employee empInfo = dbcontext.employees
                                                 .Where(x => x.Email == value.Email)
                                                 .FirstOrDefault();*/
-                Employee empInfo = deptService.findEmployeeById(value.Id);
+                Employee empInfo = deptService.findEmployeeByEmail(value.Email);
                 using (MD5 md5Hash = MD5.Create())
                 {
                     string Hash_Password = MD5Hash.GetMd5Hash(md5Hash, value.Password);
@@ -65,10 +66,11 @@ namespace Team7_StationeryStore.Controllers
                     {
                         Object response = new
                         {
+                            id = empInfo.Id,
                             name = empInfo.Name,
                             email = empInfo.Email,
                             departmentName = empInfo.Departments.DeptName,
-                            role = empInfo.Role,
+                            role = empInfo.Role.ToString(),
                             status = empInfo.Status,
                             message = "Successfully Login",
                             code = HttpStatusCode.OK

@@ -15,6 +15,8 @@ using System.Text;
 using Team7_StationeryStore.Analytics;
 using Team7_StationeryStore.Analytics.ML.Objects;
 using Team7_StationeryStore.Analytics.ML;
+using System.Collections;
+using System.Security.Cryptography;
 
 namespace Team7_StationeryStore.Controllers
 {
@@ -26,6 +28,7 @@ namespace Team7_StationeryStore.Controllers
         protected InventoryService invService;
         protected DepartmentService deptService;
         protected DisbursementService disbService;
+        protected NotificationService notifService;
         protected Trainer trainer;
         protected Predictor predictor;
         public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService,InventoryService invService,DepartmentService deptService, DisbursementService disbService, Trainer trainer, Predictor predictor)
@@ -82,6 +85,44 @@ namespace Team7_StationeryStore.Controllers
         [HttpPost]
         public IActionResult StartAnalytics()
         {
+            int Year = DateTime.Now.Year;
+            int currentMonth = DateTime.Now.Month; // Auguest
+            int past1Month = currentMonth - 1; // July
+            int past2Month = currentMonth - 2; // June
+
+            var po = from p in dbcontext.purchaseOrders
+                     join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
+                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
+                     orderby h.Key.Year,h.Key.Month
+                     where (h.Key.Month >= past2Month && h.Key.Year == Year)
+                     select new
+                     {
+                         ItemCat = h.Key.name,
+                         Month = h.Key.Month.ToString("MMM"),
+                         Qty = h.Sum(x => x.quantity)
+                     };
+
+            
+
+
+
+
+            // Gathering of data
+            IEnumerable <Req> requisitionTable = from req in dbcontext.requisitions
+                                                   join req_d in dbcontext.requisitionDetails
+                                                   on req.Id equals req_d.RequisitionId into g
+                                                   from d in g.DefaultIfEmpty()
+                                                   orderby req.DateSubmitted
+                                                   select new Req
+                                                   {
+                                                       Date = req.DateSubmitted,
+                                                       /* Department = req.DepartmentId,
+                                                          Item = d.InventoryId,*/
+                                                       Qty = (float)d.RequestedQty
+                                                   };
+
+
+            trainer.TimeSeriesForcasting(requisitionTable);
             string traindata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\sampledata.csv";
             string testdata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\testdata.csv";
             System.Diagnostics.Debug.WriteLine("Starting Training");
@@ -117,19 +158,71 @@ namespace Team7_StationeryStore.Controllers
             Disbursement d = disbService.findDisbursementById(id);
             Employee deptRep = deptService.findDeptRepresentative(d.DepartmentsId);
             string disbursementJson = JsonConvert.SerializeObject(d, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-            string rep = JsonConvert.SerializeObject(deptRep);
+            string rep = JsonConvert.SerializeObject(deptRep,new JsonSerializerSettings {ReferenceLoopHandling=ReferenceLoopHandling.Ignore });
             var result = new { disbursementJson, rep };
             return Json(result);
         }
-        public IActionResult viewAnalysis()
+        public IActionResult startPurchaseOrderAnalysis()
         {
+            ViewData["categories"] = invService.retrieveCategories();
             return View();
         }
-        public JsonResult GetDataToAnalyze()
+        public IActionResult ViewAnalysis(string category)
         {
-            List<Inventory> inventories = invService.retrieveCatalogue();
-            string model = JsonConvert.SerializeObject(inventories, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-            return Json(model);
+            ItemCategory cat = invService.retrieveCategory(category);
+            var past4Month = DateTime.Now.AddMonths(-4).Month;
+            var Year = DateTime.Now.Year;
+            var po = from p in dbcontext.purchaseOrders
+                     join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
+                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
+                     where (h.Key.Month >= past4Month && h.Key.Year == Year && h.Key.name == cat.name)
+                     orderby(h.Key.Month)
+                     select new
+                     {
+                         Month = h.Key.Month,
+                         Qty = h.Sum(x => x.quantity)
+                     };
+            List<PurchaseOrderQuantity> poQ = new List<PurchaseOrderQuantity>();
+            foreach(var c in po)
+            {
+                PurchaseOrderQuantity p= new PurchaseOrderQuantity();
+                p.Month = c.Month;
+                p.quantity = c.Qty;
+                poQ.Add(p);
+            }
+            ViewData["dict"] = poQ;
+            ViewData["category"] =cat.name ;
+            return View();
+        }
+        [HttpGet]
+        [Route("api/[controller]/GetDataToAnalyze")]
+        public ActionResult GetDataToAnalyze()
+        {
+            var past2Month = DateTime.Now.AddMonths(-2).Month;
+            var Year = DateTime.Now.Year;
+            string itemCat = "Clip";
+            var po = from p in dbcontext.purchaseOrders
+                     join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
+                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
+                     where (h.Key.Month >= past2Month && h.Key.Year == Year && h.Key.name == itemCat)
+                     select new
+                     {
+                         Month = h.Key.Month,
+                         Category=h.Key.name,
+                         Qty = h.Sum(x => x.quantity)
+                     };
+            /*List<String> currentMonthPOIds = invService.retrievePurchaseOrder(DateTime.Now);
+            List<String> previousMonthPOIds = invService.retrievePurchaseOrder(DateTime.Now.AddMonths(-1));
+           // List<String> secondPreviousMonthPOIds = invService.retrievePurchaseOrder(DateTime.Now.AddMonths(-2));
+            List<PurchaseOrderDetails> currentMonthPODetails = invService.retrievePurchaseOrderDetails(currentMonthPOIds);
+            List<PurchaseOrderDetails> previousMonthPODetails = invService.retrievePurchaseOrderDetails(previousMonthPOIds);
+            //List<PurchaseOrderDetails> secondPreviousMonthPODetails = invService.retrievePurchaseOrderDetails(secondPreviousMonthPOIds);
+            Dictionary<string,int> currentMonthPODetailsTop3 = invService.findPurchaseOrderTop(currentMonthPODetails);
+            Dictionary<string, int> previousMonthPODetailsTop3 = invService.findPurchaseOrderTop(previousMonthPODetails);*/
+
+            
+            return Content(JsonConvert.SerializeObject(po));
+
         }
 
         [HttpPost]
@@ -174,7 +267,6 @@ namespace Team7_StationeryStore.Controllers
 
         public IActionResult viewRetrieval(List<string> req)
         {
-
             List<Requisition> selectedReq = requisitionService.getRequisitionsByIds(req);
             System.Diagnostics.Debug.WriteLine("Selected Requests: " + selectedReq.Count);
             /*List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);
@@ -247,5 +339,18 @@ namespace Team7_StationeryStore.Controllers
             ViewData["user"] = employee;
             return View();
         }
+
+        public IActionResult sendDisbursement(string disId) {
+            Disbursement dis = disbService.findDisbursementById(disId);
+            Employee deptRep = deptService.findDeptRepresentative(dis.Departments.Id);
+            List<Requisition> requisitions = dis.Requisitions.ToList();
+            foreach(var r in requisitions)
+            {
+                requisitionService.updateRequisition(null, r.Id, ReqStatus.COLLECTION, null);
+            }
+            notifService.sendNotification(NotificationType.DISBURSEMENT, null, dis, null);
+            return Json(new { msg = "Sent to Dept Rep: {0}",deptRep.Name });
+        }
+
     }
 }
