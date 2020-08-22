@@ -843,6 +843,32 @@ namespace Team7_StationeryStore.Database
                 disb1Detail.Id = Guid.NewGuid().ToString();
                 disb1Detail.Disbursement = disb1;
                 dbcontext.Add(disb1Detail);*/
+                Inventory[] arrInv = new Inventory[] { item1, item2, item3, item4, item5, item6, item7, item8, item9, item10 }; Random rand = new Random();
+                        int size = 300;
+                for (int i = 0; i<size; i++)
+                {
+                DateTime randDate = DateTime.Now.AddDays(-rand.Next(1100));
+                        int randomQty = rand.Next(1, 100);
+                        int randomPOStatus = rand.Next(0, 2);
+                        PurchaseOrder po = new PurchaseOrder();
+                        po.Id = Guid.NewGuid().ToString();
+                        po.SupplierId = supplier1.Id;
+                po.EmployeeId = employee1.Id;
+                po.date = randDate;
+                po.status = (POStatus) randomPOStatus;
+                        dbcontext.Add(po);
+                for (int k = 0; k< 5; k++)
+                {
+                int randomI = rand.Next(arrInv.Length);
+                        PurchaseOrderDetails pod1 = new PurchaseOrderDetails();
+                        pod1.Id = Guid.NewGuid().ToString();
+                        pod1.PurchaseOrderId = po.Id;
+                pod1.InventoryId = arrInv[randomI].Id;
+                pod1.quantity = randomQty;
+                dbcontext.Add(pod1);
+                }
+                }
+
 
                 dbcontext.SaveChanges();
 

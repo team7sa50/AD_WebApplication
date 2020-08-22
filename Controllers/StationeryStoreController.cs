@@ -129,12 +129,13 @@ namespace Team7_StationeryStore.Controllers
         public IActionResult ViewAnalysis(string category)
         {
             ItemCategory cat = invService.retrieveCategory(category);
-            var past2Month = DateTime.Now.AddMonths(-2).Month;
+            var past4Month = DateTime.Now.AddMonths(-4).Month;
             var Year = DateTime.Now.Year;
             var po = from p in dbcontext.purchaseOrders
                      join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
                      group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
-                     where (h.Key.Month >= past2Month && h.Key.Year == Year && h.Key.name == cat.name)
+                     where (h.Key.Month >= past4Month && h.Key.Year == Year && h.Key.name == cat.name)
+                     orderby(h.Key.Month)
                      select new
                      {
                          Month = h.Key.Month,
