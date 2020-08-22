@@ -8,7 +8,7 @@
 
 <h1>ViewAnalysis</h1>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<div id="chart_div"></div>
+<div id="chart_div" style="display: flex;justify-content: center;"></div>
 <script type="text/javascript">
     google.charts.load('current', { 'packages': ['bar'] });
     google.charts.setOnLoadCallback(drawChart);
@@ -18,19 +18,20 @@
             ['Month', '@category'],
             @foreach(var item in data)
              {
-            @:['@(item.Month)', '@(item.quantity)'],
+            @:['@(item.Month.ToString())', @(item.quantity)],
             }
 
         ]);
 
         var options = {
             chart: {
-                title: 'Company Performance',
-                subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+                title: 'Restock Trends For Item Category:@category',
+                subtitle: 'For the past @data.Count months ',
             },
             bars: 'vertical', // Required for Material Bar Charts.
-            hAxis: { format: 'decimal' },
+            vAxis: { format: 'decimal' },
             height: 400,
+            width: 1000,
             colors: ['#1b9e77', '#d95f02',]
         };
 
