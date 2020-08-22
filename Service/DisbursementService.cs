@@ -98,7 +98,7 @@ namespace Team7_StationeryStore.Service
             }
         }
 
-        public Dictionary<Inventory, int> compileRequisitionDetails(List<RequisitionDetail> requisitionDetails)
+       /* public Dictionary<Inventory, int> compileRequisitionDetails(List<RequisitionDetail> requisitionDetails)
         {
             Dictionary<Inventory, int> compliedList = new Dictionary<Inventory, int>();
             foreach (var req in requisitionDetails)
@@ -113,7 +113,7 @@ namespace Team7_StationeryStore.Service
                 }
             }
             return compliedList;
-        }
+        }*/
 
         public List<Disbursement> getAllPendingDisbursements()
         {
@@ -154,7 +154,9 @@ namespace Team7_StationeryStore.Service
             }
 
             List<Requisition> requisitions = disbursement.Requisitions.ToList();
-            foreach (var r in requisitions.Where(r => !isPartialFufiled(r)).Select(r => r))
+
+            //Update requisition while checking its fufilement
+            foreach (var r in requisitions.Where(r => !reqSerivce.isPartialFufiled(r)).Select(r => r))
             {
                 r.status = ReqStatus.COMPLETED;
             }
@@ -193,17 +195,7 @@ namespace Team7_StationeryStore.Service
             dbcontext.Update(list);
         }
 
-        // To check if the requistion is fulfilled with iterating through each items.
-        public bool isPartialFufiled(Requisition req) {
-            List<RequisitionDetail> details = req.RequisitionDetails.ToList();
-            bool verdict = false;
-            List<bool> result = new List<bool>(); 
-            foreach (var d in details) {
-                if (d.RequestedQty - d.DistributedQty == 0) result.Add(false);
-                else result.Add(true);
-            }
-            if (result.Contains(true)) return verdict = true;
-            return verdict;
-        }
+        
+        
     }
 }

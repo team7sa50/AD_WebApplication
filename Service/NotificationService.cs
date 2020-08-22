@@ -83,8 +83,9 @@ namespace Team7_StationeryStore.Service
 
         public List<Notification> retrieveLatestNotifications(string receiverId)
         {
-        
-            return dbcontext.notifications.Where(x => x.ReceiverId == receiverId && x.type== NotificationType.REQUISITION).OrderByDescending(x=>x.date).ToList();
+            /* return dbcontext.notifications.Where(x => x.ReceiverId == receiverId && x.type== NotificationType.REQUISITION).OrderByDescending(x=>x.date).ToList();*/
+            //Retrive all kinds of notifications that requires receiver attendion.
+            return dbcontext.notifications.Where(x => x.ReceiverId == receiverId).OrderByDescending(x => x.date).ToList();
         }
         public void SendEmail(Employee sender, Employee reciever, string subjectEmail)
         {

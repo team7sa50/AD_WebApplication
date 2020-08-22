@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using Microsoft.ML;
+using Microsoft.ML.Data;
 using Team7_StationeryStore.Analytics.ML.Base;
 using Team7_StationeryStore.Analytics.ML.Objects;
 using Team7_StationeryStore.Analytics.Common;
+using Microsoft.ML.Transforms.TimeSeries;
 
 namespace Team7_StationeryStore.Analytics
 
@@ -35,13 +37,15 @@ namespace Team7_StationeryStore.Analytics
             var trainingDataView = MlContext.Data.LoadFromTextFile<CarInventory>(trainingFileName, ',', hasHeader: false);
 
             //Normalise Mean Variance on the inputted values
-            IEstimator<ITransformer> dataProcessPipeline = MlContext.Transforms.Concatenate("Features",
-                typeof(CarInventory).ToPropertyList<CarInventory>(nameof(CarInventory.Label)))
-                .Append(MlContext.Transforms.NormalizeMeanVariance(inputColumnName: "Features",
-                    outputColumnName: "FeaturesNormalizedByMeanVar"));
+
+            IEstimator<ITransformer> dataProcessPipeline = MlContext.Transforms
+                .Concatenate("Features",typeof(CarInventory)
+                .ToPropertyList<CarInventory>(nameof(CarInventory.Label)))
+                .Append(MlContext.Transforms.NormalizeMeanVariance(inputColumnName: "Features",outputColumnName: "FeaturesNormalizedByMeanVar"));
 
             //Create a trainer object with the label from the car inventory class + normalised mean variance 
-            var trainer = MlContext.BinaryClassification.Trainers.FastTree(labelColumnName: nameof(CarInventory.Label),
+            var trainer = MlContext.BinaryClassification.Trainers.FastTree(
+                labelColumnName: nameof(CarInventory.Label),
                 featureColumnName: "FeaturesNormalizedByMeanVar",
                 numberOfLeaves: 2,
                 numberOfTrees: 800,
@@ -77,6 +81,31 @@ namespace Team7_StationeryStore.Analytics
             System.Diagnostics.Debug.WriteLine($"PositiveRecall: {modelMetrics.PositiveRecall:#.##}");
             System.Diagnostics.Debug.WriteLine($"NegativePrecision: {modelMetrics.NegativePrecision:#.##}");
             System.Diagnostics.Debug.WriteLine($"NegativeRecall: {modelMetrics.NegativeRecall:P2}");
+        }
+
+        public void TimeSeriesForcasting(IEnumerable<Req> data)
+        {
+            //Convert training file into IDataView object (ready for processing)
+            IDataView trainingData = MlContext.Data.LoadFromEnumerable<Req>(data);
+            var preview = trainingData.Preview();
+
+
+            //Define time series analysis pipeline
+            var forecastingPipeline =MlContext.Forecasting.ForecastBySsa(
+                                     outputColumnName: "forcastedQty",
+                                     inputColumnName: nameof(Req.Qty),
+                                     windowSize: 7,
+                                     seriesLength: 30,
+                                     trainSize: 20,
+                                     horizon: 2);
+
+            var model = forecastingPipeline.Fit(trainingData);
+            var forcastingEngine = model.CreateTimeSeriesEngine<Req, ForcastQty>(MlContext);
+            var forcasts = forcastingEngine.Predict();
+
+            foreach(var f in forcasts.forcastedQty) {
+                System.Diagnostics.Debug.WriteLine(f);
+            }
         }
     }
 }
