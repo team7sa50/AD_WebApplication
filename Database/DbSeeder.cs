@@ -616,8 +616,6 @@ namespace Team7_StationeryStore.Database
                 requisition2Detail2.DistributedQty = 0;
                 dbcontext.Add(requisition2Detail2);
 
-                /*
-
                 Requisition requisition3 = new Requisition();
                 requisition3.Id = regr.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
                 requisition3.DepartmentId = regr.Id;
