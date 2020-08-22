@@ -341,6 +341,7 @@ namespace Team7_StationeryStore.Database
                 EN.DeptHead = "marine";
                 EN.FaxNumber = 0000000;
                 EN.PhoneNumber = 1121231231;
+                EN.ContactName = "Mrs Pamela Kow";
                 EN.CollectionPointId = cp1.Id;
                 dbcontext.Add(EN);
 
@@ -647,7 +648,7 @@ namespace Team7_StationeryStore.Database
                 rq1.status = ReqStatus.APPROVED;
                 dbcontext.Add(rq1);*/
 
-                RequisitionDetail rqd1 = new RequisitionDetail();
+                /*RequisitionDetail rqd1 = new RequisitionDetail();
                 rqd1.Id = Guid.NewGuid().ToString();
                 rqd1.Requisition = requisition3;
                 rqd1.Inventory = item8;
@@ -733,7 +734,7 @@ namespace Team7_StationeryStore.Database
                 DisbursementDetail disb1Detail = new DisbursementDetail();
                 disb1Detail.Id = Guid.NewGuid().ToString();
                 disb1Detail.Disbursement = disb1;
-                dbcontext.Add(disb1Detail);
+                dbcontext.Add(disb1Detail);*/
 
                 dbcontext.SaveChanges();
 

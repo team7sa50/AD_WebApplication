@@ -162,7 +162,8 @@ namespace Team7_StationeryStore.Service
             return dbcontext.adjustmentVouchers.ToList();
         }
 
-        public bool updateInventory(string invId,int qty) {
+        public bool updateInventory(string invId, int qty)
+        {
             bool editable = true;
             Inventory inv = retrieveInventory(invId);
             // To validate if the quantity to be deduct from the stock is sufficient.
@@ -170,12 +171,14 @@ namespace Team7_StationeryStore.Service
             {
                 editable = false;
             }
-            else {
+            else
+            {
                 inv.stock += qty;
                 dbcontext.Update(inv);
                 dbcontext.SaveChanges();
             }
             return editable;
+        }
         public List<Inventory> getAllInventories()
         {
             return dbcontext.inventories.ToList();

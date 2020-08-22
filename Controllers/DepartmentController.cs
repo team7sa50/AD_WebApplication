@@ -38,6 +38,7 @@ namespace Team7_StationeryStore.Controllers
             return View();
         }
 
+        
         public IActionResult viewCatalogue()
         {
             string userid = HttpContext.Session.GetString("userId");
@@ -274,6 +275,55 @@ namespace Team7_StationeryStore.Controllers
             ViewData["requisitionDetail"] = requisitionDetails;
             return View();
         }
+
+        public IActionResult viewDepartment()
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            Departments dept = deptService.findDepartmentByEmployee(userid);
+            ViewData["department"] = dept;
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["username"] = emp.Name;
+            CollectionPoint c = dbcontext.collectionPoints.Where(x => x.Id == dept.CollectionPointId).FirstOrDefault();
+            ViewData["collectionpoint"] = c;
+            return View();
+        }
+
+        
+        public IActionResult editDepartmentDetail()
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            Departments dept = deptService.findDepartmentByEmployee(userid);
+            ViewData["department"] = dept;
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["username"] = emp.Name;
+            return View();
+        }
+
+        
+        public IActionResult submit(string Location, string Time)
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            
+            
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["username"] = emp.Name;
+            Departments dept = deptService.findDepartmentByEmployee(userid);
+            ViewData["department"] = dept;
+            if (dept != null)
+            {
+                CollectionPoint c = dbcontext.collectionPoints.Where(x => x.Id == dept.CollectionPointId).FirstOrDefault();
+                c.Location = Location;
+                c.Time = Time;
+                dbcontext.SaveChanges();
+            }
+            return RedirectToAction("viewDepartment");
+        }
+
+        public IActionResult back()
+        {
+            return RedirectToAction("Home");
+        }
+
 
     }
 }
