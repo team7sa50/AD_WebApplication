@@ -33,8 +33,16 @@ namespace Team7_StationeryStore.ApiControllers
         [Route("api/[controller]/get-detail-information-by-req-id")]
         public ActionResult GetDetail(String id)
         {
-            List<RequisitionDetailView> requisitionDetails = reqService.findRequisitionDetail(id);
-            return Content(JsonConvert.SerializeObject(requisitionDetails));
+            Requisition requisition = reqService.findRequisition(id);
+            return Content(JsonConvert.SerializeObject(requisition, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+        }
+        [HttpGet]
+        [Route("api/[controller]/getAllRequisitions")]
+        public ActionResult GetAllRequisitions()
+        {
+            List<Requisition> requisitions = reqService.retrieveAllRequisitions();
+            return Content(JsonConvert.SerializeObject(requisitions, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+
         }
 
         // GET api/<controller>/5

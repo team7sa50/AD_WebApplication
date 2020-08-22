@@ -24,6 +24,10 @@ namespace Team7_StationeryStore.Service
         {
             return dbcontext.employees.Where(x => x.Id == userId).FirstOrDefault();
         }
+        public Employee findEmployeeByEmail(string email)
+        {
+            return dbcontext.employees.Where(x => x.Email == email).FirstOrDefault();
+        }
 
         public List<Employee> findDepartmentEmployeeList(string userId)
         {

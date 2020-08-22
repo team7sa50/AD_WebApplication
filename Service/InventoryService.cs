@@ -48,13 +48,18 @@ namespace Team7_StationeryStore.Service
         {
             return dbcontext.suppliers.Where(x => x.Id == supplier).FirstOrDefault();
         }
-        public List<Supplier> getAllSuppliers() {
+        public List<Supplier> getAllSuppliers()
+        {
             return dbcontext.suppliers.ToList();
         }
 
         public List<ItemCategory> retrieveCategories()
         {
             return dbcontext.itemCategories.ToList();
+        }
+        public ItemCategory retrieveCategory(string id)
+        {
+            return dbcontext.itemCategories.Where(x => x.Id == id).FirstOrDefault();
         }
         public List<PurchaseCart> retrievePurchaseCart(string userId)
         {
@@ -87,11 +92,13 @@ namespace Team7_StationeryStore.Service
             dbcontext.SaveChanges();
         }
 
-        public Inventory retrieveInventory(string invId) {
+        public Inventory retrieveInventory(string invId)
+        {
             return dbcontext.inventories.Where(x => x.Id == invId).FirstOrDefault();
         }
 
-        public AdjustmentVoucher findAdjustmentVoucher(string id) {
+        public AdjustmentVoucher findAdjustmentVoucher(string id)
+        {
             return dbcontext.adjustmentVouchers.Where(x => x.Id == id).FirstOrDefault();
         }
 
@@ -103,6 +110,7 @@ namespace Team7_StationeryStore.Service
         {
             return dbcontext.purchaseOrderDetails.Where(x => x.PurchaseOrderId == poId).ToList();
         }
+
 
         public void CreateAdjustmentVoucher(string userId, string invId, int qty, string reason) {
             AdjustmentVoucher newAdjustmentVoucher = new AdjustmentVoucher();
@@ -121,6 +129,7 @@ namespace Team7_StationeryStore.Service
             notificationService.sendNotification(NotificationType.ADJUSTMENTVOUCHER, null, null, newAdjustmentVoucher);
         }
 
+
         public Employee setAdjustmentVoucherApprover(string userId, string invId, int qty) {
             Inventory inventory = retrieveInventory(invId);
             List<Employee> employees = deptService.findDepartmentEmployeeList(userId);
@@ -136,9 +145,11 @@ namespace Team7_StationeryStore.Service
             AdjustmentVoucher adjustmentVoucher = findAdjustmentVoucher(id);
             string response = "Adjustment Voucher: [" + adjustmentVoucher.Id + "] request for " + action;
             if (adjustmentVoucher == null) { response += " has failed to locate"; }
-            if (action == "approve") {
+            if (action == "approve")
+            {
                 bool res = updateInventory(adjustmentVoucher.InventoryId, adjustmentVoucher.qty);
-                switch (res) {
+                switch (res)
+                {
                     case true:
                         response += " is sucessed.";
                         adjustmentVoucher.status = Status.APPROVED;
@@ -155,13 +166,14 @@ namespace Team7_StationeryStore.Service
             return response;
         }
 
-        public List<AdjustmentVoucher> findAdjustmentVoucherList(Status? status) {
-            if (status != null) {
+        public List<AdjustmentVoucher> findAdjustmentVoucherList(Status? status)
+        {
+            if (status != null)
+            {
                 return dbcontext.adjustmentVouchers.Where(x => x.status == status).ToList();
             }
             return dbcontext.adjustmentVouchers.ToList();
         }
-
         public bool updateInventory(string invId, int qty) {
             bool editable = true;
             Inventory inv = retrieveInventory(invId);
@@ -170,7 +182,8 @@ namespace Team7_StationeryStore.Service
             {
                 editable = false;
             }
-            else {
+            else
+            {
                 inv.stock += qty;
                 dbcontext.Update(inv);
                 dbcontext.SaveChanges();
@@ -181,5 +194,64 @@ namespace Team7_StationeryStore.Service
         {
             return dbcontext.inventories.ToList();
         }
-    } 
+        public List<Departments> getAllDepartments()
+        {
+            return dbcontext.departments.ToList();
+        }
+        public Departments getDepartmentDetail(string deptId)
+        {
+            return dbcontext.departments.Where(x => x.Id == deptId).FirstOrDefault();
+
+        }
+        public List<String> retrievePurchaseOrder(DateTime dateTime)
+        {
+            List<String> poList = new List<string>();
+            var items = (from c in dbcontext.purchaseOrders
+                         where c.date.Month == dateTime.Month
+                         select new
+                         {
+                             poId = c.Id,
+                         }
+               );
+            foreach (var c in items)
+            {
+                poList.Add(c.poId);
+
+            }
+            return poList;
+        }
+        public List<PurchaseOrderDetails> retrievePurchaseOrderDetails(List<String> poIds)
+        {
+            List<PurchaseOrderDetails> poDetails = new List<PurchaseOrderDetails>();
+            foreach(var c in poIds)
+            {
+                List<PurchaseOrderDetails> poDetailsList=(dbcontext.purchaseOrderDetails.Where(x => x.PurchaseOrderId == c).ToList());
+                foreach (PurchaseOrderDetails d in poDetailsList)
+                {
+                    poDetails.Add(d);
+                }
+            }
+            return poDetails;
+        }
+        public Dictionary<string,int> findPurchaseOrderTop(List<PurchaseOrderDetails> poDetails)
+        {
+            Dictionary<string, int> top3 = new Dictionary<string, int>();
+            Dictionary<string, int> top3Result = new Dictionary<string, int>();
+
+            var groupByResult = poDetails.GroupBy(x => x.Inventory.ItemCategory);
+            foreach (var group in groupByResult)
+            {
+                int total = 0;
+                string category = "";
+                foreach (var detail in group)
+                {
+                    total += detail.quantity;
+                    category = detail.Inventory.ItemCategory.name;
+                }
+                top3.Add(category, total);
+            }
+            top3Result = top3.OrderByDescending(x=>x.Value).Take(3).ToDictionary(x=>x.Key,x=>x.Value);
+            return top3Result;
+        }
+    }   
 }

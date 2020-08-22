@@ -206,7 +206,6 @@ body {
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
-    border-style: black;
 }
 
 #detailclosebtn {
@@ -316,7 +315,7 @@ input.modal-contents {
     color: #333;
     transform: rotate(45deg);
     cursor: pointer;
-    &:hover
+}
 
 {
     color: #666;

@@ -158,19 +158,71 @@ namespace Team7_StationeryStore.Controllers
             Disbursement d = disbService.findDisbursementById(id);
             Employee deptRep = deptService.findDeptRepresentative(d.DepartmentsId);
             string disbursementJson = JsonConvert.SerializeObject(d, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-            string rep = JsonConvert.SerializeObject(deptRep);
+            string rep = JsonConvert.SerializeObject(deptRep,new JsonSerializerSettings {ReferenceLoopHandling=ReferenceLoopHandling.Ignore });
             var result = new { disbursementJson, rep };
             return Json(result);
         }
-        public IActionResult viewAnalysis()
+        public IActionResult startPurchaseOrderAnalysis()
         {
+            ViewData["categories"] = invService.retrieveCategories();
             return View();
         }
-        public JsonResult GetDataToAnalyze()
+        public IActionResult ViewAnalysis(string category)
         {
-            List<Inventory> inventories = invService.retrieveCatalogue();
-            string model = JsonConvert.SerializeObject(inventories, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-            return Json(model);
+            ItemCategory cat = invService.retrieveCategory(category);
+            var past4Month = DateTime.Now.AddMonths(-4).Month;
+            var Year = DateTime.Now.Year;
+            var po = from p in dbcontext.purchaseOrders
+                     join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
+                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
+                     where (h.Key.Month >= past4Month && h.Key.Year == Year && h.Key.name == cat.name)
+                     orderby(h.Key.Month)
+                     select new
+                     {
+                         Month = h.Key.Month,
+                         Qty = h.Sum(x => x.quantity)
+                     };
+            List<PurchaseOrderQuantity> poQ = new List<PurchaseOrderQuantity>();
+            foreach(var c in po)
+            {
+                PurchaseOrderQuantity p= new PurchaseOrderQuantity();
+                p.Month = c.Month;
+                p.quantity = c.Qty;
+                poQ.Add(p);
+            }
+            ViewData["dict"] = poQ;
+            ViewData["category"] =cat.name ;
+            return View();
+        }
+        [HttpGet]
+        [Route("api/[controller]/GetDataToAnalyze")]
+        public ActionResult GetDataToAnalyze()
+        {
+            var past2Month = DateTime.Now.AddMonths(-2).Month;
+            var Year = DateTime.Now.Year;
+            string itemCat = "Clip";
+            var po = from p in dbcontext.purchaseOrders
+                     join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
+                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
+                     where (h.Key.Month >= past2Month && h.Key.Year == Year && h.Key.name == itemCat)
+                     select new
+                     {
+                         Month = h.Key.Month,
+                         Category=h.Key.name,
+                         Qty = h.Sum(x => x.quantity)
+                     };
+            /*List<String> currentMonthPOIds = invService.retrievePurchaseOrder(DateTime.Now);
+            List<String> previousMonthPOIds = invService.retrievePurchaseOrder(DateTime.Now.AddMonths(-1));
+           // List<String> secondPreviousMonthPOIds = invService.retrievePurchaseOrder(DateTime.Now.AddMonths(-2));
+            List<PurchaseOrderDetails> currentMonthPODetails = invService.retrievePurchaseOrderDetails(currentMonthPOIds);
+            List<PurchaseOrderDetails> previousMonthPODetails = invService.retrievePurchaseOrderDetails(previousMonthPOIds);
+            //List<PurchaseOrderDetails> secondPreviousMonthPODetails = invService.retrievePurchaseOrderDetails(secondPreviousMonthPOIds);
+            Dictionary<string,int> currentMonthPODetailsTop3 = invService.findPurchaseOrderTop(currentMonthPODetails);
+            Dictionary<string, int> previousMonthPODetailsTop3 = invService.findPurchaseOrderTop(previousMonthPODetails);*/
+
+            
+            return Content(JsonConvert.SerializeObject(po));
+
         }
 
         [HttpPost]

@@ -4,58 +4,39 @@
     var username = ViewData["username"];
 }
 
-<h1>Home</h1>
 <html>
-<title>W3.CSS</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<head>
+    <meta charset="utf=8">
+    <title>Home</title>
+    <link href="~/css/homepage.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <script src="https://use.fontawesome.com/973befe495.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
 <body>
-
-    <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
-        <button class="w3-bar-item w3-button w3-large"
-                onclick="w3_close()">
-            Close &times;
-        </button>
-        <form asp-controller="Requisition" asp-action="ViewRequisitions" method="POST" class="form-inline my-2 my-lg-0">
-            <a><input type="submit" class="w3-bar-item w3-button" value="View Requisitions"/></a>
-        </form>
-        <form asp-controller="PurchaseOrder" asp-action="SelectSupplier" method="POST" class="form-inline my-2 my-lg-0">
-            <a><input type="submit" class="w3-bar-item w3-button"value="Create Purchase Order" /></a>
-        </form>
-        <form asp-controller="StationeryStore" asp-action="ViewInventory" method="POST" class="form-inline my-2 my-lg-0">
-            <a><input type="submit" class="w3-bar-item w3-button" value="Inventory" /></a>
-        </form>
-    </div>
-
     <div id="main">
-
-        <div class="w3-teal">
-            <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
-            <div class="w3-container">
-                <h1>My Page</h1>
+        <div id="clerkhomebody">
+            <div>
+                <button class="clerkhome-container">Purchase Order</button>
+            </div>
+            <div>
+                <button href="@Url.Action("ViewAllPurchaseOrders", "PurchaseOrder")" class="clerkhome-container">Requisitions</button>
+            </div>
+            <div>
+                <button href="@Url.Action("ViewInventory", "StationeryStore")" class="clerkhome-container">Inventory
+                </button>
+            </div>
+            <div>
+                <button  href="@Url.Action("StartAnalytics", "StationeryStore")" class="clerkhome-container">Reports</button>
             </div>
         </div>
 
-
-        <div class="w3-container">
-            <p>"Welcome"+@username</p>
+        <div id="clerkhomelower">
+            <p>Testing Text</p>
         </div>
-
     </div>
-
-    <script>
-function w3_open() {
-  document.getElementById("main").style.marginLeft = "25%";
-  document.getElementById("mySidebar").style.width = "25%";
-  document.getElementById("mySidebar").style.display = "block";
-  document.getElementById("openNav").style.display = 'none';
-}
-function w3_close() {
-  document.getElementById("main").style.marginLeft = "0%";
-  document.getElementById("mySidebar").style.display = "none";
-  document.getElementById("openNav").style.display = "inline-block";
-}
-    </script>
 
 </body>
 </html>

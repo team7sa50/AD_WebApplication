@@ -234,6 +234,32 @@ namespace Team7_StationeryStore.Database
                 item10.price = 1.1;
                 dbcontext.Add(item10);
 
+                Inventory item11 = new Inventory();
+                item11.Id = Guid.NewGuid().ToString();
+                item11.ItemCategoryId = category7.Id;
+                item11.itemCode = "P004";
+                item11.description = "Pancer Brown(5x7) w/Window";
+                item11.stock = 1000;
+                item11.measurementUnit = "Each";
+                item11.location = "bin07";
+                item11.reorderLevel = 600;
+                item11.reorderQty = 400;
+                item11.price = 1.1;
+                dbcontext.Add(item11);
+
+                Inventory item12 = new Inventory();
+                item12.Id = Guid.NewGuid().ToString();
+                item12.ItemCategoryId = category6.Id;
+                item12.itemCode = "PE004";
+                item12.description = "Pen red";
+                item12.stock = 1000;
+                item12.measurementUnit = "Each";
+                item12.location = "bin07";
+                item12.reorderLevel = 600;
+                item12.reorderQty = 400;
+                item12.price = 1.1;
+                dbcontext.Add(item12);
+
                 Supplier supplier1 = new Supplier();
                 supplier1.Id = Guid.NewGuid().ToString();
                 supplier1.supplierCode = "ALPA";
@@ -332,7 +358,19 @@ namespace Team7_StationeryStore.Database
                 dbcontext.Add(inventory_Supplier10);
 
 
+                Inventory_Supplier inventory_Supplier11 = new Inventory_Supplier();
+                inventory_Supplier11.Id = Guid.NewGuid().ToString();
+                inventory_Supplier11.InventoryItemId = item11.Id;
+                inventory_Supplier11.SupplierId = supplier1.Id;
+                inventory_Supplier11.qtyOrdered = 300;
+                dbcontext.Add(inventory_Supplier11);
 
+                Inventory_Supplier inventory_Supplier12 = new Inventory_Supplier();
+                inventory_Supplier12.Id = Guid.NewGuid().ToString();
+                inventory_Supplier12.InventoryItemId = item12.Id;
+                inventory_Supplier12.SupplierId = supplier1.Id;
+                inventory_Supplier12.qtyOrdered = 300;
+                dbcontext.Add(inventory_Supplier12);
 
                 Departments EN = new Departments();
                 EN.Id = Guid.NewGuid().ToString();
@@ -536,7 +574,80 @@ namespace Team7_StationeryStore.Database
                 employee15.Role = Role.EMPLOYEE;
                 employee15.DepartmentsId = regr.Id;
                 dbcontext.Add(employee15);
-                
+
+                PurchaseOrder po1 = new PurchaseOrder();
+                po1.Id = Guid.NewGuid().ToString();
+                po1.SupplierId = supplier1.Id;
+                po1.EmployeeId = employee1.Id;
+                po1.date = DateTime.Now;
+                po1.status = POStatus.PENDING;
+                dbcontext.Add(po1);
+
+                PurchaseOrderDetails po1detail1 = new PurchaseOrderDetails();
+                po1detail1.Id = Guid.NewGuid().ToString();
+                po1detail1.PurchaseOrderId = po1.Id;
+                po1detail1.InventoryId = item1.Id;
+                po1detail1.quantity = 20;
+                dbcontext.Add(po1detail1);
+
+                PurchaseOrderDetails po1detail2 = new PurchaseOrderDetails();
+                po1detail2.Id = Guid.NewGuid().ToString();
+                po1detail2.PurchaseOrderId = po1.Id;
+                po1detail2.InventoryId = item3.Id;
+                po1detail2.quantity = 20;
+                dbcontext.Add(po1detail2);
+
+                PurchaseOrderDetails po1detail3 = new PurchaseOrderDetails();
+                po1detail3.Id = Guid.NewGuid().ToString();
+                po1detail3.PurchaseOrderId = po1.Id;
+                po1detail3.InventoryId = item4.Id;
+                po1detail3.quantity = 20;
+                dbcontext.Add(po1detail3);
+
+                PurchaseOrder po2 = new PurchaseOrder();
+                po2.Id = Guid.NewGuid().ToString();
+                po2.SupplierId = supplier2.Id;
+                po2.EmployeeId = employee1.Id;
+                po2.date = DateTime.Now.AddMonths(-1);
+                po2.status = POStatus.PENDING;
+                dbcontext.Add(po2);
+
+                PurchaseOrderDetails po2detail1 = new PurchaseOrderDetails();
+                po2detail1.Id = Guid.NewGuid().ToString();
+                po2detail1.PurchaseOrderId = po2.Id;
+                po2detail1.InventoryId = item2.Id;
+                po2detail1.quantity = 20;
+                dbcontext.Add(po2detail1);
+
+                PurchaseOrderDetails po2detail2 = new PurchaseOrderDetails();
+                po2detail2.Id = Guid.NewGuid().ToString();
+                po2detail2.PurchaseOrderId = po2.Id;
+                po2detail2.InventoryId = item7.Id;
+                po2detail2.quantity = 20;
+                dbcontext.Add(po2detail2);
+
+                PurchaseOrderDetails po2detail3 = new PurchaseOrderDetails();
+                po2detail3.Id = Guid.NewGuid().ToString();
+                po2detail3.PurchaseOrderId = po2.Id;
+                po2detail3.InventoryId = item5.Id;
+                po2detail3.quantity = 20;
+                dbcontext.Add(po2detail3);
+
+                PurchaseOrderDetails po2detail4 = new PurchaseOrderDetails();
+                po2detail4.Id = Guid.NewGuid().ToString();
+                po2detail4.PurchaseOrderId = po2.Id;
+                po2detail4.InventoryId = item11.Id;
+                po2detail4.quantity = 10;
+                dbcontext.Add(po2detail4);
+
+                PurchaseOrderDetails po2detail5 = new PurchaseOrderDetails();
+                po2detail5.Id = Guid.NewGuid().ToString();
+                po2detail5.PurchaseOrderId = po2.Id;
+                po2detail5.InventoryId = item12.Id;
+                po2detail5.quantity = 15;
+                dbcontext.Add(po2detail5);
+
+
                 Requisition requisition1 = new Requisition();
                 requisition1.Id = EN.DeptCode+"_"+DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
                 requisition1.DepartmentId = EN.Id;
@@ -588,6 +699,7 @@ namespace Team7_StationeryStore.Database
                 requisition2Detail2.RequestedQty = 20;
                 requisition2Detail2.DistributedQty = 0;
                 dbcontext.Add(requisition2Detail2);
+
                 //-------------------------------------------------------------Seeding for training model-------------------------------------------------------------------------------------->
                 Inventory[] arrInv = new Inventory[] { item1, item2, item3, item4, item5, item6, item7, item8, item9, item10 };
 
@@ -645,6 +757,25 @@ namespace Team7_StationeryStore.Database
                
                 //-------------------------------------------------------------Seeding for training model-------------------------------------------------------------------------------------->
 
+                Requisition requisition3 = new Requisition();
+                requisition3.Id = regr.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
+                requisition3.DepartmentId = regr.Id;
+                requisition3.EmployeeId = employee15.Id;
+                requisition3.ApprovedEmployeeId = employee13.Id;
+                requisition3.DateSubmitted = DateTime.Now;
+                requisition3.status = ReqStatus.REJECTED;
+                requisition3.Remarks = "nothing";
+                dbcontext.Add(requisition3);
+
+                Requisition requisition4 = new Requisition();
+                requisition4.Id = regr.DeptCode + "/" + DateTime.Now;
+                requisition4.DepartmentId = regr.Id;
+                requisition4.EmployeeId = employee15.Id;
+                requisition4.ApprovedEmployeeId = employee13.Id;
+                requisition4.DateSubmitted = DateTime.Now;
+                requisition4.status = ReqStatus.PROCESSING;
+                requisition4.Remarks = "nothing";
+                dbcontext.Add(requisition4);
                 dbcontext.SaveChanges();
 
             }
