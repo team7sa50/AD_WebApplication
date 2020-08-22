@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -150,6 +151,37 @@ namespace Team7_StationeryStore.Service
                 selectedReq.Add(r);
             }
             return selectedReq; 
+        }
+
+        // To check if the requistion is fulfilled with iterating through each items.
+        public bool isPartialFufiled(Requisition req)
+        {
+            List<RequisitionDetail> details = req.RequisitionDetails.ToList();
+            bool verdict = false;
+            List<bool> result = new List<bool>();
+            foreach (var d in details)
+            {
+                if (d.RequestedQty - d.DistributedQty == 0) result.Add(false);
+                else result.Add(true);
+            }
+            if (result.Contains(true)) return verdict = true;
+            return verdict;
+        }
+
+        public Req_Complier joinRequisitionDetails(int year,int month) {
+            var re = from req in dbcontext.requisitions
+                     join req_d in dbcontext.requisitionDetails on req.Id equals req_d.RequisitionId
+                     group req_d by new { req.DateSubmitted.Year, req.DateSubmitted.Month, req_d.Inventory.ItemCategory.name } into g
+                     where (g.Key.Year == year && g.Key.Month >= month)
+                     select new Req_Complier
+                     {
+                         Year = g.Key.Year,
+                         Month = g.Key.Month,
+                         InventoryCategory = g.Key.name,
+                         Qty = g.Sum(x => x.RequestedQty)
+                     };
+
+            return (Req_Complier) re;
         }
 
     }
