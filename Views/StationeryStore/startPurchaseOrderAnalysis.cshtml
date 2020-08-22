@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewData["Title"] = "startPurchaseOrderAnalysis";
+    var categories = (List<ItemCategory>)ViewData["categories"];
+}
+
+<h1>startPurchaseOrderAnalysis</h1>
+<h1>Select ItemCategory</h1>
+<div>
+    <form asp-controller="StationeryStore" asp-action="ViewAnalysis" method="POST" class="form-inline my-2 my-lg-0">
+
+        <select name="category" id="category">
+
+            @foreach (var c in categories)
+            {
+                <option value="@c.Id"> @c.name</option>
+
+            }
+        </select>
+        <input class="btn btn btn-outline-info my-2 my-sm-0" type="submit" value="Enter">
+    </form>
+</div>
+
+
