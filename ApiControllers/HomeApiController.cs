@@ -32,7 +32,6 @@ namespace Team7_StationeryStore.Controllers
         [Route("api/[controller]/login")]
         public ActionResult Login([FromBody]Employee value)
         {
-
             if (value.Email == null || value.Password == null)
             {
                 Object response = new
