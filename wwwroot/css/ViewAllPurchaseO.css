@@ -1,0 +1,178 @@
+﻿@charset "utf=8"
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: black !important;
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f3f3f3 !important;
+}
+
+#main {
+    width: 700px;
+    margin: auto;
+}
+
+.requisitioncontainer {
+    background: white;
+    min-height: 100px;
+    max-width: 100%;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    border: none;
+}
+
+    .requisitioncontainer h1 {
+        font-size: 16px;
+        color: #a9a9a9;
+    }
+
+.requisitiontable {
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    font-size: 11px;
+    border-collapse: collapse;
+    background: white;
+}
+
+    .requisitiontable th {
+        border-top: 2px solid #ddd;
+        padding: 20px 10px;
+        border-right: 2px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        color: #028c6A;
+    }
+
+    .requisitiontable td {
+        border-right: 2px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .requisitiontable button {
+        font-size: 10px;
+        border: none;
+        padding: 5px 10px;
+    }
+
+    .requisitiontable a {
+        color: #05668d;
+    }
+
+        .requisitiontable a:hover {
+            text-decoration: underline;
+        }
+
+.requisitionfilter {
+    padding: 20px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: #003e19;
+}
+
+.bg-modal {
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 100%;
+    min-height: 800px;
+    position: absolute;
+    top: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+#close {
+    float: right;
+    margin-right: 30px;
+    margin-top: 20px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #9c9c9c;
+}
+
+    #close:hover {
+        color: black;
+        background: none;
+    }
+
+.modal-contents {
+    height: 250px;
+    width: 500px;
+    top: 200;
+    background-color: white;
+    position: absolute;
+    border-radius: 4px;
+}
+
+.modal-body {
+    text-align: center;
+    align-items: center;
+    margin-top: 80px;
+}
+
+    .modal-body p {
+        font-size: 15px;
+        color: #006a4e;
+        letter-spacing: 1px;
+    }
+
+.modal-contents button {
+    float: left;
+    margin-top: 40px;
+    width: 60px;
+    margin-right: 50px;
+    height: 25px;
+    border: none;
+}
+
+#yesorno {
+    height: 100px;
+    padding-left: 150px;
+}
+
+#no:hover {
+    color: red;
+}
+
+#yes:hover {
+    color: white;
+}
+
+#createPO {
+    float: right;
+    font-size: 14px;
+    padding: 10px;
+    font-weight: 600;
+    background: none;
+    border: none;
+    color: #028090;
+    letter-spacing: 1px;
+}
+
+    #createPO:hover {
+        background: #8fc089;
+        color: white;
+    }
+
+#POheader {
+    width: 100%;
+    height: 80px;
+    padding-top: 50px;
+}
+
+    #POheader button {
+        bottom: 0;
+    }
