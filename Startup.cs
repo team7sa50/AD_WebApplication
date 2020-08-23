@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Team7_StationeryStore.Models;
 using Team7_StationeryStore.Database;
 using Team7_StationeryStore.Service;
+using Team7_StationeryStore.Analytics;
+using Team7_StationeryStore.Analytics.ML;
 
 namespace Team7_StationeryStore
 {
@@ -20,6 +22,7 @@ namespace Team7_StationeryStore
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
         }
 
         public IConfiguration Configuration { get; }
@@ -39,6 +42,9 @@ namespace Team7_StationeryStore
             services.AddScoped<DisbursementService>();
             services.AddScoped<NotificationService>();
             services.AddSession();
+            services.AddScoped<Trainer>();
+            services.AddScoped<Predictor>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

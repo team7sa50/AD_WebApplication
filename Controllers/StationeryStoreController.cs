@@ -10,6 +10,13 @@ using Microsoft.AspNetCore.Http;
 using Team7_StationeryStore.Service;
 using System.Net.Mail;
 using System.Net;
+using Newtonsoft.Json;
+using System.Text;
+using Team7_StationeryStore.Analytics;
+using Team7_StationeryStore.Analytics.ML.Objects;
+using Team7_StationeryStore.Analytics.ML;
+using System.Collections;
+using System.Security.Cryptography;
 
 namespace Team7_StationeryStore.Controllers
 {
@@ -20,141 +27,232 @@ namespace Team7_StationeryStore.Controllers
         protected RequisitionService requisitionService;
         protected InventoryService invService;
         protected DepartmentService deptService;
-
-        public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService,InventoryService invService,DepartmentService deptService)
+        protected DisbursementService disbService;
+        protected NotificationService notifService;
+        protected Trainer trainer;
+        protected Predictor predictor;
+        public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService,InventoryService invService,DepartmentService deptService, DisbursementService disbService, Trainer trainer, Predictor predictor)
         {
             this.dbcontext = dbcontext;
             this.rservice = rservice;
             this.requisitionService = requisitionService;
             this.invService = invService;
             this.deptService = deptService;
+            this.disbService = disbService;
+            this.trainer = trainer;
+            this.predictor = predictor;
         }
 
         public IActionResult Index()
         {
-            System.Diagnostics.Debug.WriteLine("Reached Stationery Store Controller");
-            return RedirectToAction("viewRetrieval", "StationeryStore");
-        }
-        
-        [HttpPost]
-        public JsonResult getDisbursementsByDepartment(string id)
-        {
-            List<Disbursement> disbursements = (from d in dbcontext.disbursements
-                                               where d.Departments.Id == id
-                                               select d).ToList();
-            return Json(new { data = disbursements });
+            System.Diagnostics.Debug.WriteLine("List Employee Method reached");
+            return View();
         }
         public IActionResult Home()
         {
-            Employee emp = deptService.findEmployeeById(HttpContext.Session.GetString("userId"));
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
             ViewData["username"] = emp.Name;
             return View();
         }
 
-        public IActionResult viewRetrieval(List<string> req)
-        {
-            List<Requisition> selectedReq=new List<Requisition>();
-            foreach (string value in req)
-            {
-                Requisition r = requisitionService.findRequisition(value);
-                selectedReq.Add(r);
-            }
-            //Replace with the selected Requisitions from RequisitionController
-           // List<Requisition> selectedReq = (from x in dbcontext.requisitions
-                                            //select x).ToList();
+        [HttpPost]
+        public IActionResult Export(){
+            List<Employee> employees = (from er in dbcontext.employees
+                                 select er).ToList();
 
-            //Retrieval List Generation Starts here
-            List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);          
-            Dictionary<string, int> totalItemQty = rservice.getTotalQtyPerItem(selectedReqDetail);
-            Dictionary<string, List<RequisitionDetail>> reqPerIt = rservice.getReqDetailPerItem(selectedReqDetail);
-            ViewData["totalItemQty"] = totalItemQty;
-            rservice.recommendQty(reqPerIt);
-            Dictionary<string, List<RequisitionDetail>> reqPerDept = rservice.getReqPerDeptPerItem(reqPerIt);
-            ViewData["reqPerDept"] = reqPerDept;
-            return View();        
+            List<object> emps = new List<object>();
+            int k = 0;
+            foreach(Employee e in employees){
+                k++;
+                emps.Add(new string[6] { e.Id, e.Name , e.Email, e.Password, e.Role.ToString(), e.DepartmentsId});
+            }
+            emps.Insert(0, new string[6] {"emp_id", "name", "email", "password", "role", "departmentId"});
+            StringBuilder sb = new StringBuilder(); 
+
+            for (int i = 0; i < emps.Count; i++)
+			{
+                string[] employe = (string[])emps[i];
+
+                for(int j=0; j< employe.Length;j++){
+                sb.Append(employe[j] +',');
+                }
+                sb.Append("\r\n");
+			}
+            return File(Encoding.UTF8.GetBytes(sb.ToString()),"text/csv", "Grid.csv");
         }
-        public IActionResult viewDisbursements()
+
+        [HttpPost]
+        public IActionResult StartAnalytics()
         {
-            List<Departments> departments = (from d in dbcontext.departments
-                                             select d).ToList();
-            ViewData["departments"] = departments;
-            //On click of button, transfer retrieved requests here
-            List < Requisition > selectedReq = (from x in dbcontext.requisitions
-                                                select x).ToList();
-            List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);
+            int Year = DateTime.Now.Year;
+            int currentMonth = DateTime.Now.Month; // Auguest
+            int past1Month = currentMonth - 1; // July
+            int past2Month = currentMonth - 2; // June
+
+            var po = from p in dbcontext.purchaseOrders
+                     join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
+                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
+                     orderby h.Key.Year,h.Key.Month
+                     where (h.Key.Month >= past2Month && h.Key.Year == Year)
+                     select new
+                     {
+                         ItemCat = h.Key.name,
+                         Month = h.Key.Month.ToString("MMM"),
+                         Qty = h.Sum(x => x.quantity)
+                     };
+
             
-            //Convert request to disbursement 
-            Dictionary<Departments, List<RequisitionDetail>> requisitionsForDepartment = new Dictionary<Departments, List<RequisitionDetail>>();
-            foreach (var r in selectedReqDetail)
-            {
-                if (!requisitionsForDepartment.ContainsKey(r.Requisition.Department))
-                {
-                    requisitionsForDepartment.Add(r.Requisition.Department, new List<RequisitionDetail>());
-                    requisitionsForDepartment[r.Requisition.Department].Add(r);
-                }
-                else if (requisitionsForDepartment.ContainsKey(r.Requisition.Department))
-                {
-                    requisitionsForDepartment[r.Requisition.Department].Add(r);
-                }
-            }
-            System.Diagnostics.Debug.WriteLine("Sorted by departments");
-            System.Diagnostics.Debug.WriteLine("Total Count:" + requisitionsForDepartment.Count);
 
 
-            foreach (var dept in requisitionsForDepartment)
-            {
-                System.Diagnostics.Debug.WriteLine("Creating disbursements");
-                Disbursement d = new Disbursement();
-                Employee emp = deptService.findEmployeeById(HttpContext.Session.GetString("userId"));
-                d.Id = Guid.NewGuid().ToString();
-                d.GeneratedDate = DateTime.Now;
-                d.CollectionDate = DateTime.Now.AddDays(1);
-                d.Departments = dept.Key;
-                d.DepartmentsId = dept.Key.Id;
-                d.status = DisbusementStatus.PENDING;
-                d.storeClerk = emp;
-                dbcontext.Add(d);
-                dbcontext.SaveChanges();
-                
-                foreach (var req in dept.Value)
-                {
-                    DisbursementDetail ddetail = new DisbursementDetail();
-                    ddetail.Id = Guid.NewGuid().ToString(); 
-                    ddetail.DisbursementId = d.Id;
-                    ddetail.Disbursement = d;
-                    ddetail.RequisitionDetail = req;
-                    ddetail.disbursedQty = req.DistributedQty;
-                    dbcontext.Add(ddetail);
-                    dbcontext.SaveChanges();
-                }
-            }
-            //get all disbursements and display 
 
-            List<Disbursement> dibs = (from d in dbcontext.disbursements
-                                       where d.status == DisbusementStatus.PENDING
-                                       select d).ToList();
-            System.Diagnostics.Debug.WriteLine("Total disbursements Count:" + dibs.Count);
-            ViewData["disbursements"] = dibs;
 
-            List<Disbursement> dibCompleted = (from d in dbcontext.disbursements
-                                               where d.status == DisbusementStatus.COMPLETED
-                                               select d).ToList();
-            ViewData["completedDisb"] = dibCompleted;
+            // Gathering of data
+            IEnumerable <Req> requisitionTable = from req in dbcontext.requisitions
+                                                   join req_d in dbcontext.requisitionDetails
+                                                   on req.Id equals req_d.RequisitionId into g
+                                                   from d in g.DefaultIfEmpty()
+                                                   orderby req.DateSubmitted
+                                                   select new Req
+                                                   {
+                                                       Date = req.DateSubmitted,
+                                                       /* Department = req.DepartmentId,
+                                                          Item = d.InventoryId,*/
+                                                       Qty = (float)d.RequestedQty
+                                                   };
+
+
+            trainer.TimeSeriesForcasting(requisitionTable);
+            string traindata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\sampledata.csv";
+            string testdata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\testdata.csv";
+            System.Diagnostics.Debug.WriteLine("Starting Training");
+            trainer.Train(traindata, testdata);           
+            System.Diagnostics.Debug.WriteLine("Finished Training");
             return View();
         }
-        //should set collection date as next workign day 
-        public IActionResult CreateAdjustment(string itemId, int quantity, string reason) {
-            string userid = HttpContext.Session.GetString("userId");
-            invService.CreateAdjustmentVoucher(userid, itemId, quantity, reason);
-            return RedirectToAction("ViewInventory");
+
+        [HttpPost]
+        public JsonResult AnalyzeResults(int requestedQty, int stockQty, string dateT)
+        {
+            string month = dateT.Substring(5, 2);
+            string year = dateT.Substring(0, 4);
+            System.Diagnostics.Debug.WriteLine("Month: " + month);
+            System.Diagnostics.Debug.WriteLine("Year" + year);
+            RequestModel rrn = new RequestModel()
+            {
+                RequestedQty = requestedQty.ToString(),
+                InventoryQty = stockQty.ToString(),
+                Month = month,
+                Year = year
+            };
+            string inputJson = JsonConvert.SerializeObject(rrn, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            System.Diagnostics.Debug.WriteLine("Results:" + inputJson);
+            CarInventoryPrediction cp = predictor.Predict(inputJson);
+            string results = JsonConvert.SerializeObject(cp, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });           
+            return Json(results);
         }
 
-        public IActionResult updateAdjustmentVoucher(string adjVoucherId,string action,string remarks) {
-            string userId = HttpContext.Session.GetString("userId");
-            ViewData["response"] = invService.UpdateAdjustmentVoucher(adjVoucherId, action, remarks);
-            return RedirectToAction("viewAdjustmentVouchers");
+        [HttpPost]
+        public JsonResult GetEmployeeTest(string id)
+        {
+            Disbursement d = disbService.findDisbursementById(id);
+            Employee deptRep = deptService.findDeptRepresentative(d.DepartmentsId);
+            string disbursementJson = JsonConvert.SerializeObject(d, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            string rep = JsonConvert.SerializeObject(deptRep,new JsonSerializerSettings {ReferenceLoopHandling=ReferenceLoopHandling.Ignore });
+            var result = new { disbursementJson, rep };
+            return Json(result);
         }
-        
+        public IActionResult startPurchaseOrderAnalysis()
+        {
+            ViewData["categories"] = invService.retrieveCategories();
+            return View();
+        }
+        public IActionResult ViewAnalysis(string category)
+        {
+            ItemCategory cat = invService.retrieveCategory(category);
+            var past4Month = DateTime.Now.AddMonths(-4).Month;
+            var Year = DateTime.Now.Year;
+            var po = from p in dbcontext.purchaseOrders
+                     join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
+                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
+                     where (h.Key.Month >= past4Month && h.Key.Year == Year && h.Key.name == cat.name)
+                     orderby(h.Key.Month)
+                     select new
+                     {
+                         Month = h.Key.Month,
+                         Qty = h.Sum(x => x.quantity)
+                     };
+            List<PurchaseOrderQuantity> poQ = new List<PurchaseOrderQuantity>();
+            foreach(var c in po)
+            {
+                PurchaseOrderQuantity p= new PurchaseOrderQuantity();
+                p.Month = c.Month;
+                p.quantity = c.Qty;
+                poQ.Add(p);
+            }
+            ViewData["dict"] = poQ;
+            ViewData["category"] =cat.name ;
+            return View();
+        }
+        [HttpGet]
+        [Route("api/[controller]/GetDataToAnalyze")]
+        public ActionResult GetDataToAnalyze()
+        {
+            var past2Month = DateTime.Now.AddMonths(-2).Month;
+            var Year = DateTime.Now.Year;
+            string itemCat = "Clip";
+            var po = from p in dbcontext.purchaseOrders
+                     join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
+                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
+                     where (h.Key.Month >= past2Month && h.Key.Year == Year && h.Key.name == itemCat)
+                     select new
+                     {
+                         Month = h.Key.Month,
+                         Category=h.Key.name,
+                         Qty = h.Sum(x => x.quantity)
+                     };
+            /*List<String> currentMonthPOIds = invService.retrievePurchaseOrder(DateTime.Now);
+            List<String> previousMonthPOIds = invService.retrievePurchaseOrder(DateTime.Now.AddMonths(-1));
+           // List<String> secondPreviousMonthPOIds = invService.retrievePurchaseOrder(DateTime.Now.AddMonths(-2));
+            List<PurchaseOrderDetails> currentMonthPODetails = invService.retrievePurchaseOrderDetails(currentMonthPOIds);
+            List<PurchaseOrderDetails> previousMonthPODetails = invService.retrievePurchaseOrderDetails(previousMonthPOIds);
+            //List<PurchaseOrderDetails> secondPreviousMonthPODetails = invService.retrievePurchaseOrderDetails(secondPreviousMonthPOIds);
+            Dictionary<string,int> currentMonthPODetailsTop3 = invService.findPurchaseOrderTop(currentMonthPODetails);
+            Dictionary<string, int> previousMonthPODetailsTop3 = invService.findPurchaseOrderTop(previousMonthPODetails);*/
+
+            
+            return Content(JsonConvert.SerializeObject(po));
+
+        }
+
+        [HttpPost]
+        public JsonResult SaveChangesToDisb(string newDate, string newColl, string rqId)
+        {
+            rqId = rqId.Remove(rqId.Length - 1, 1);
+            Disbursement dbDetail = (from rqd in dbcontext.disbursements
+                                    where rqd.Id == rqId
+                                    select rqd).FirstOrDefault();
+
+            CollectionPoint cp = (from cps in dbcontext.collectionPoints
+                                  where newColl == cps.Location
+                                  select cps).FirstOrDefault();
+            dbDetail.Departments.CollectionPoint = cp;
+
+            DateTime collDateTimeObj = DateTime.Parse(newDate);
+            dbDetail.CollectionDate = collDateTimeObj;
+            dbcontext.SaveChanges();
+            return Json("1");
+        }
+
+        [HttpPost]
+        public IActionResult getDisbursementsByDepartment(string id)
+        {
+            List<Disbursement> disbursements = (from d in dbcontext.disbursements
+                                               where d.Departments.Id == id
+                                               select d).ToList();
+            return Json(disbursements);
+        }
+
         public IActionResult ViewInventory()
         {
             string userid = HttpContext.Session.GetString("userId");
@@ -166,10 +264,93 @@ namespace Team7_StationeryStore.Controllers
             ViewData["username"] = emp.Name;
             return View();
         }
+
+        public IActionResult viewRetrieval(List<string> req)
+        {
+            List<Requisition> selectedReq = requisitionService.getRequisitionsByIds(req);
+            System.Diagnostics.Debug.WriteLine("Selected Requests: " + selectedReq.Count);
+            /*List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);
+            System.Diagnostics.Debug.WriteLine("Selected Requests: " + selectedReqDetail.Count);*/
+            ViewData["Requisitions"] = selectedReq;
+
+            List<RequisitionDetail> selectedReqD = new List<RequisitionDetail>();
+            foreach (var r in selectedReq) {
+                System.Diagnostics.Debug.WriteLine("Starting to loop through requisitions: " + "1");
+                List<RequisitionDetail> rds = (from rd in dbcontext.requisitionDetails
+                                               where rd.Requisition == r
+                                               select rd).ToList();
+               foreach(var rd in rds){
+                    System.Diagnostics.Debug.WriteLine("Checking for rd: " + rd.Id);
+                    selectedReqD.Add(rd);
+                }
+             }
+            //Retrieval List Generation Starts here
+            ViewData["totalItemQty"] = rservice.getTotalQtyPerItem(selectedReqD);
+            Dictionary<string, List<RequisitionDetail>> reqPerIt = rservice.getReqDetailPerItem(selectedReqD);
+            rservice.recommendQty(reqPerIt);
+            ViewData["reqPerDept"] = rservice.getReqPerDeptPerItem(reqPerIt);
+            return View();        
+        }
+
+        public IActionResult generateDisbursement(List<string> req)
+        {
+            //Transfer retrieved requests here
+            List<Requisition> selectedReq = requisitionService.getRequisitionsByIds(req);
+            List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);
+
+            //Convert request to disbursement 
+            Dictionary<Departments, List<RequisitionDetail>> requisitionsForDepartment = disbService.sortRequisitionByDept(selectedReqDetail);
+            disbService.saveRequisitionsAsDisbursement(requisitionsForDepartment);
+
+            return RedirectToAction("viewDisbursements");
+        }
+
+        public IActionResult viewDisbursements()
+        { 
+            ViewData["disbursements"] = disbService.getAllPendingDisbursements();
+            ViewData["completedDisb"] = disbService.getAllCompletedDisbursements();
+            ViewData["collectPoints"] = deptService.findAllCollectionPts();
+            ViewData["departments"] = deptService.findAllDepartments();
+            return View();
+        }
+        //should set collection date as next workign day 
+
+        public IActionResult CreateAdjustment(string itemId, int quantity, string reason) {
+            string userid = HttpContext.Session.GetString("userId");
+            invService.CreateAdjustmentVoucher(userid, itemId, quantity, reason);
+            return RedirectToAction("ViewInventory");
+        }
+
+        public IActionResult updateAdjustmentVoucher(string adjVoucherId,string action,string remarks) {
+            string userId = HttpContext.Session.GetString("userId");
+            ViewData["response"] = invService.UpdateAdjustmentVoucher(adjVoucherId, action, remarks);
+            return RedirectToAction("viewAdjustmentVouchers");
+        }
+       
+
         public IActionResult viewAdjustmentVouchers() {
             ViewData["adjList"] = invService.findAdjustmentVoucherList(null);
             ViewData["PendingAdjList"] = invService.findAdjustmentVoucherList(Status.PENDING);
             return View();
         }
+        public IActionResult HomeManagerSupervisor()
+        {
+            Employee employee = dbcontext.employees.Where(x => x.Id == HttpContext.Session.GetString("userId")).FirstOrDefault();
+            ViewData["user"] = employee;
+            return View();
+        }
+
+        public IActionResult sendDisbursement(string disId) {
+            Disbursement dis = disbService.findDisbursementById(disId);
+            Employee deptRep = deptService.findDeptRepresentative(dis.Departments.Id);
+            List<Requisition> requisitions = dis.Requisitions.ToList();
+            foreach(var r in requisitions)
+            {
+                requisitionService.updateRequisition(null, r.Id, ReqStatus.COLLECTION, null);
+            }
+            notifService.sendNotification(NotificationType.DISBURSEMENT, null, dis, null);
+            return Json(new { msg = "Sent to Dept Rep: {0}",deptRep.Name });
+        }
+
     }
 }

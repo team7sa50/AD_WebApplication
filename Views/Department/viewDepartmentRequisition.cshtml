@@ -3,6 +3,8 @@
 @{
     var plists = (List<Requisition>)ViewData["PendingRequisitions"];
     var lists = (List<Requisition>)ViewData["AllRequisitions"];
+    bool IsAuthorized = (Boolean) ViewData["Authorizer"];
+
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -147,8 +149,12 @@
                 </tr>
                 <tbody class="table-body-req-detail"></tbody>
                 <tr>
-                    <td><button id="approvebtn"class="btn btn-success" onclick="approve()">Approve</button></td>
-                    <td><button id="rejectbtn"class="btn btn-danger" onclick="reject()">Reject</button></td>
+                    @if (IsAuthorized)
+                    {
+                        <td><button id="approvebtn" class="btn btn-success" onclick="approve()">Approve</button></td>
+                        <td><button id="rejectbtn" class="btn btn-danger" onclick="reject()">Reject</button></td>
+                    }
+
                 </tr>
             </table>
         </div>

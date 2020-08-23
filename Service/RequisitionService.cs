@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,10 @@ namespace Team7_StationeryStore.Service
         {
             return dbcontext.requisitions.Where(x => !x.status.Equals(ReqStatus.AWAITING_APPROVAL) && !x.status.Equals(ReqStatus.REJECTED)).ToList();
 
+        }
+        public List<Requisition> retrieveAllRequisitions()
+        {
+            return dbcontext.requisitions.ToList();
         }
         public List<Requisition> findAllRequisitionsFromFilter(string departmentId)
         {
@@ -72,11 +77,14 @@ namespace Team7_StationeryStore.Service
             return dbcontext.requisitions.Where(x => x.Id == requisitionId).FirstOrDefault();
         }
 
-        public void updateStatus(string requisitionId, ReqStatus status) {
-
+        public void updateRequisition(string? userId,string requisitionId, ReqStatus? status, string? remarks) {
             Requisition requisition = findRequisition(requisitionId);
-            requisition.status = status;
-
+            // When authorization period expired, the default approver will be dept head.
+            requisition.ApprovedEmployeeId = userId;
+            requisition.Remarks = remarks;
+            requisition.status = (ReqStatus)status;
+            dbcontext.Update(requisition);
+            dbcontext.SaveChanges();
         }
         public List<RequisitionDetailView> findRequisitionDetail(string requisitionId)
         {
@@ -132,6 +140,48 @@ namespace Team7_StationeryStore.Service
             notificationService.sendNotification(NotificationType.REQUISITION, newRequisition,null,null);
 
 
+        }
+
+        public List<Requisition> getRequisitionsByIds(List<string> req)
+        {
+            List<Requisition> selectedReq = new List<Requisition>();
+            foreach (string value in req)
+            {
+                Requisition r = findRequisition(value);
+                selectedReq.Add(r);
+            }
+            return selectedReq; 
+        }
+
+        // To check if the requistion is fulfilled with iterating through each items.
+        public bool isPartialFufiled(Requisition req)
+        {
+            List<RequisitionDetail> details = req.RequisitionDetails.ToList();
+            bool verdict = false;
+            List<bool> result = new List<bool>();
+            foreach (var d in details)
+            {
+                if (d.RequestedQty - d.DistributedQty == 0) result.Add(false);
+                else result.Add(true);
+            }
+            if (result.Contains(true)) return verdict = true;
+            return verdict;
+        }
+
+        public Req_Complier joinRequisitionDetails(int year,int month) {
+            var re = from req in dbcontext.requisitions
+                     join req_d in dbcontext.requisitionDetails on req.Id equals req_d.RequisitionId
+                     group req_d by new { req.DateSubmitted.Year, req.DateSubmitted.Month, req_d.Inventory.ItemCategory.name } into g
+                     where (g.Key.Year == year && g.Key.Month >= month)
+                     select new Req_Complier
+                     {
+                         Year = g.Key.Year,
+                         Month = g.Key.Month,
+                         InventoryCategory = g.Key.name,
+                         Qty = g.Sum(x => x.RequestedQty)
+                     };
+
+            return (Req_Complier) re;
         }
 
     }

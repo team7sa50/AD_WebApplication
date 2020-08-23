@@ -6,9 +6,11 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Newtonsoft.Json;
 using Team7_StationeryStore.Database;
 using Team7_StationeryStore.Models;
+using Team7_StationeryStore.Service;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,11 +19,12 @@ namespace Team7_StationeryStore.Controllers
 
     public class HomeApiController : Controller
     {
-
         protected StationeryContext dbcontext;
-        public HomeApiController(StationeryContext dbcontext)
+        protected DepartmentService deptService;
+        public HomeApiController(StationeryContext dbcontext, DepartmentService deptService)
         {
             this.dbcontext = dbcontext;
+            this.deptService = deptService;
         }
 
         // GET: api/<controller>
@@ -42,9 +45,10 @@ namespace Team7_StationeryStore.Controllers
             }
             else
             {
-                Employee empInfo = dbcontext.employees
-                                .Where(x => x.Email == value.Email)
-                                .FirstOrDefault();
+                /*                Employee empInfo = dbcontext.employees
+                                                .Where(x => x.Email == value.Email)
+                                                .FirstOrDefault();*/
+                Employee empInfo = deptService.findEmployeeByEmail(value.Email);
                 using (MD5 md5Hash = MD5.Create())
                 {
                     string Hash_Password = MD5Hash.GetMd5Hash(md5Hash, value.Password);
@@ -63,10 +67,11 @@ namespace Team7_StationeryStore.Controllers
                     {
                         Object response = new
                         {
+                            id = empInfo.Id,
                             name = empInfo.Name,
                             email = empInfo.Email,
                             departmentName = empInfo.Departments.DeptName,
-                            role = empInfo.Role,
+                            role = empInfo.Role.ToString(),
                             status = empInfo.Status,
                             message = "Successfully Login",
                             code = HttpStatusCode.OK

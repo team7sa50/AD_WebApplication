@@ -41,6 +41,16 @@ namespace Team7_StationeryStore.Controllers
             List<Departments> departments = deptService.findAllDepartments();
             List<Requisition> requisitions = reqService.findAllRequisitionsFromStationery();
             List<Requisition> oustandingReq = reqService.findOustandingRequisitions();
+            List<string> statuses = new List<string>();
+            foreach (var e in Enum.GetValues(typeof(ReqStatus)))
+            {
+                if (e.ToString() == "APPROVED" || e.ToString() == "OUTSTAND")
+                {
+                    Console.WriteLine("Enum: " + e.ToString());
+                    statuses.Add(e.ToString());
+                }
+            }
+            ViewData["status"] = statuses;
             ViewData["outsandingReq"] = oustandingReq;
             ViewData["departments"] = departments; 
             ViewData["requisitions"] = requisitions;
@@ -57,11 +67,15 @@ namespace Team7_StationeryStore.Controllers
             return View("ViewRequisitions");
         }
 
-        [Route("Requisition/GetRequisitionDetail/{reqId}")]
-        public ActionResult GetRequisitionDetail(String reqId)
+        [HttpPost]
+        public JsonResult GetRequisitionDetail(string reqId)
         {
-            List<RequisitionDetailView> requisitionDetails = reqService.findRequisitionDetail(reqId);
-            return Content(JsonConvert.SerializeObject(requisitionDetails));
+            System.Diagnostics.Debug.WriteLine("Reached Requisition Controller...");
+            Requisition requisit = (from rll in dbcontext.requisitions
+                             where rll.Id == reqId
+                             select rll).FirstOrDefault();
+            string requisitionJson = JsonConvert.SerializeObject(requisit, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            return Json(requisitionJson);
         }
 
 

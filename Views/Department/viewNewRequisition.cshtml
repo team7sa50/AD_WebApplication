@@ -1,0 +1,116 @@
+﻿@using Team7_StationeryStore.Models;
+@{
+    ViewData["Title"] = "viewRequisition";
+    var requisition = (Requisition)ViewData["requisition"];
+    var lists = (List<RequisitionDetail>)ViewData["requisitionDetail"];
+    var username = ViewData["username"];
+}
+
+<head>
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+
+<header>
+    <ul>
+        <li class="logo">Logic <span>Stationery</span></li>
+        <li> <button class="menubtn" href="#inventory">Inventory</li>
+        <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
+        <li><p class="userdetails">@username</p> <img src="~/lib/img/employeeicon.jpg"> </li>
+    </ul>
+</header>
+
+<h2 style="text-align:center">Your Requisition Detail</h2>
+<br />
+<br />
+
+<div class="container">
+    <div align=center>
+        <div>
+            <h5 style="text-align:left;float:left;text-emphasis-color:blue">
+                Requistion Form ID:
+                @requisition.Id
+
+            </h5>
+            <h5 style="text-align:right;float:right;text-emphasis-color:blue">
+                Status:
+                @requisition.status
+            </h5>
+
+        </div>
+
+        <div>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Item Code</th>
+                        <th>Descripion</th>
+                        <th>Quantity</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var i in lists)
+                    {
+                        <tr>
+
+                            <td class="text-center">@i.Inventory.itemCode</td>
+                            <td class="text-left">@i.Inventory.ItemCategory.name</td>
+                            <td class="text-right">@i.RequestedQty</td>
+
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+            <div>
+
+                <button id="approvebtn" class="btn btn-success" onclick="approve('@requisition.Id')">Approve</button>
+                <button id="rejectbtn" class="btn btn-danger" onclick="reject('@requisition.Id')">Reject</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myRemarkModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title" id="myModalLabel"> Add Remarks</h4>
+                <p id="myModalLabel" />
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Department" asp-action="updateRequisition" method="POST">
+                    <input type="text" name="remarks" placeholder="Optional" id="remarks" style="height: 80px; width:100%;text-align:start">
+                    <input type="hidden" id="requisitionId" name="requisitionId">
+                    <input type="hidden" id="action" name="action">
+                    <br />
+                    <input type="submit" class="btn btn-outline-primary" value="Submit" style="margin-top: 20px">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function approve(id) {
+        $('#myRemarkModal1').modal();
+        console.log(id);
+        document.getElementById("requisitionId").value = id;
+        document.getElementById("action").value = "approve";
+    }
+    function reject(id) {
+        $('#myRemarkModal1').modal();
+        console.log(id);
+        document.getElementById("requisitionId").value = id;
+        document.getElementById("action").value = "reject";
+    }
+</script>
+
+
+

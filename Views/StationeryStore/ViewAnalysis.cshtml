@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewData["Title"] = "ViewAnalysis";
+    var data = (List<PurchaseOrderQuantity>)ViewData["dict"];
+    var category = ViewData["category"];
+
+}
+
+<h1>ViewAnalysis</h1>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<div id="chart_div" style="display: flex;justify-content: center;"></div>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['bar'] });
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+            ['Month', '@category'],
+            @foreach(var item in data)
+             {
+            @:['@(item.Month.ToString())', @(item.quantity)],
+            }
+
+        ]);
+
+        var options = {
+            chart: {
+                title: 'Restock Trends For Item Category:@category',
+                subtitle: 'For the past @data.Count months ',
+            },
+            bars: 'vertical', // Required for Material Bar Charts.
+            vAxis: { format: 'decimal' },
+            height: 400,
+            width: 1000,
+            colors: ['#1b9e77', '#d95f02',]
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('chart_div'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+
+    }
+</script>
+

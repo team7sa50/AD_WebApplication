@@ -24,6 +24,10 @@ namespace Team7_StationeryStore.Service
         {
             return dbcontext.employees.Where(x => x.Id == userId).FirstOrDefault();
         }
+        public Employee findEmployeeByEmail(string email)
+        {
+            return dbcontext.employees.Where(x => x.Email == email).FirstOrDefault();
+        }
 
         public List<Employee> findDepartmentEmployeeList(string userId)
         {
@@ -67,6 +71,7 @@ namespace Team7_StationeryStore.Service
             newAuthorize.startDate = startDate;
             newAuthorize.endDate = endDate;
             newAuthorize.DepartmentsId = employee.DepartmentsId;
+            newAuthorize.EmployeeName = employee.Name;
             dbcontext.employeeAuthorizes.Add(newAuthorize);
             dbcontext.SaveChanges();
         }
@@ -79,7 +84,8 @@ namespace Team7_StationeryStore.Service
                                                 .Where(x => DateTime.Now >= x.startDate
                                                         && DateTime.Now <= x.endDate
                                                         && x.DepartmentsId == department.Id).FirstOrDefault();
-            if (employeeAuthorize != null)
+
+            if (employeeAuthorize != null && employeeAuthorize.EmployeeId != userId)
             {
                 return findEmployeeById(employeeAuthorize.EmployeeId);
             }
@@ -89,6 +95,22 @@ namespace Team7_StationeryStore.Service
 
         public Employee findDeptRepresentative(string deptId) {
             return dbcontext.employees.Where(x => x.DepartmentsId == deptId && x.Role == Role.DEPT_REP).FirstOrDefault();
+        }
+
+        public List<CollectionPoint> findAllCollectionPts()
+        {
+            List<CollectionPoint> collectionPoint = (from cp in dbcontext.collectionPoints
+                                                     select cp).ToList();
+            return collectionPoint;
+        }
+
+        public bool IsAuthorizer(string userId) {
+            Employee approver = setApprover(userId);
+            if (approver.Id != userId)
+            {
+                return false;
+            }
+            else return true;
         }
     }
 }
