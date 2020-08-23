@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewData["Title"] = "startRequisitionAnalysis";
+    var categories= (List<ItemCategory>)ViewData["categories"];
+    var departments = (List<Departments>)ViewData["departments"];
+}
+
+<h1>startRequisitionAnalysis</h1>
+<h1>Select ItemCategory</h1>
+<div>
+    <form asp-controller="StationeryStore" asp-action="ViewRequisitionAnalysis" method="POST" class="form-inline my-2 my-lg-0">
+
+        <select name="category" id="category">
+
+            @foreach (var c in categories)
+            {
+                <option value="@c.Id"> @c.name</option>
+
+            }
+        </select>
+        <select name="department" id="department">
+
+            @foreach (var d in departments)
+            {
+                <option value="@d.Id"> @d.DeptName</option>
+
+            }
+        </select>
+        <input class="btn btn btn-outline-info my-2 my-sm-0" type="submit" value="Enter">
+    </form>
+</div>
+
