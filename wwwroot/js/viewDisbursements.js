@@ -235,9 +235,9 @@ function viewDisDetail(e) {
     document.querySelector('.bg-modal').style.display = "flex";
 }
 
-/*document.getElementById('.close').addEventListener("click", function () {
-        document.querySelector('.bg-modal').style.display = "none";
-    });*/
+function closePopUp() {
+    document.querySelector('.bg-modal').style.display = "none";
+}
 
 function submitChangesDisb() {
     var newDate = $("#collDateSpec").val();
