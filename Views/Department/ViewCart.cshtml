@@ -4,6 +4,7 @@
     var lists = (List<EmployeeCart>)ViewData["employeeCarts"];
     var username = ViewData["username"];
     var userid = ViewData["userid"];
+    var supplier = (Supplier)ViewData["supplier"];
 }
 <head>
     <title>View Cart</title>
@@ -53,6 +54,7 @@
             <a asp-controller="PurchaseOrder" asp-action="RemoveAllItems" id="clearcart">Clear All</a>
         </div>
     </div>
+
 </body>
 
 
