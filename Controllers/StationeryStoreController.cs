@@ -83,7 +83,7 @@ namespace Team7_StationeryStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult StartAnalytics()
+       /* public IActionResult StartAnalytics()
         {
             int Year = DateTime.Now.Year;
             int currentMonth = DateTime.Now.Month; // Auguest
@@ -113,11 +113,11 @@ namespace Team7_StationeryStore.Controllers
                                                    on req.Id equals req_d.RequisitionId into g
                                                    from d in g.DefaultIfEmpty()
                                                    orderby req.DateSubmitted
-                                                   select new Req
+                                                   select new Req_Complier
                                                    {
                                                        Date = req.DateSubmitted,
                                                        /* Department = req.DepartmentId,
-                                                          Item = d.InventoryId,*/
+                                                          Item = d.InventoryId,
                                                        Qty = (float)d.RequestedQty
                                                    };
 
@@ -130,7 +130,7 @@ namespace Team7_StationeryStore.Controllers
             System.Diagnostics.Debug.WriteLine("Finished Training");
             return View();
         }
-
+        
         [HttpPost]
         public JsonResult AnalyzeResults(int requestedQty, int stockQty, string dateT)
         {
@@ -150,7 +150,7 @@ namespace Team7_StationeryStore.Controllers
             CarInventoryPrediction cp = predictor.Predict(inputJson);
             string results = JsonConvert.SerializeObject(cp, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });           
             return Json(results);
-        }
+        }*/
 
         [HttpPost]
         public JsonResult GetEmployeeTest(string id)
@@ -194,6 +194,41 @@ namespace Team7_StationeryStore.Controllers
             ViewData["category"] =cat.name ;
             return View();
         }
+        public IActionResult startRequisitionAnalysis()
+        {
+            ViewData["categories"] = invService.retrieveCategories();
+            ViewData["departments"] = invService.getAllDepartments();
+            return View();
+        }
+        public IActionResult ViewRequisitionAnalysis(string category,string department)
+        {
+            ItemCategory cat = invService.retrieveCategory(category);
+            Departments dept = invService.getDepartmentDetail(department); 
+            var past4Month = DateTime.Now.AddMonths(-4).Month;
+            var Year = DateTime.Now.Year;
+            var po = from req in dbcontext.requisitions
+                     join req_d in dbcontext.requisitionDetails on req.Id equals req_d.RequisitionId
+                     group req_d by new { req_d.Inventory.ItemCategory.name, req.Department.DeptName, req.DateSubmitted.Month,req.DateSubmitted.Year} into h
+                     where (h.Key.Month >= past4Month && h.Key.Year == Year && h.Key.DeptName== dept.DeptName && h.Key.name == cat.name)
+                     orderby (h.Key.Month)
+                     select new
+                     {
+                         Month = h.Key.Month,
+                         Qty = h.Sum(x => x.RequestedQty)
+                     };
+            List<PurchaseOrderQuantity> reQ = new List<PurchaseOrderQuantity>();
+            foreach (var c in po)
+            {
+                PurchaseOrderQuantity p = new PurchaseOrderQuantity();
+                p.Month = c.Month;
+                p.quantity = c.Qty;
+                reQ.Add(p);
+            }
+            ViewData["dict"] = reQ;
+            ViewData["category"] = cat.name;
+            ViewData["department"] = dept.DeptName;
+            return View();
+        }
         [HttpGet]
         [Route("api/[controller]/GetDataToAnalyze")]
         public ActionResult GetDataToAnalyze()
@@ -203,12 +238,12 @@ namespace Team7_StationeryStore.Controllers
             string itemCat = "Clip";
             var po = from p in dbcontext.purchaseOrders
                      join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
-                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
+                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year} into h
                      where (h.Key.Month >= past2Month && h.Key.Year == Year && h.Key.name == itemCat)
                      select new
                      {
                          Month = h.Key.Month,
-                         Category=h.Key.name,
+                         Category =h.Key.name,
                          Qty = h.Sum(x => x.quantity)
                      };
             /*List<String> currentMonthPOIds = invService.retrievePurchaseOrder(DateTime.Now);
