@@ -1,7 +1,7 @@
 ﻿@charset "utf=8"
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Raleway', sans-serif;
     background-color: black !important;
 }
 
@@ -14,12 +14,12 @@ body {
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Raleway', sans-serif;
     background-color: #f3f3f3 !important;
 }
 
 #main {
-    width: 700px;
+    width: 800px;
     margin: auto;
 }
 
@@ -40,7 +40,6 @@ body {
 
 .requisitiontable {
     width: 100%;
-    text-align: center;
     padding: 15px;
     font-size: 11px;
     border-collapse: collapse;
@@ -59,6 +58,7 @@ body {
         border-right: 2px solid #ddd;
         border-bottom: 1px solid #ddd;
         padding: 8px;
+        text-align: center;
     }
 
     .requisitiontable button {

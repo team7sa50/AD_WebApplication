@@ -47,9 +47,9 @@
             @foreach (var i in lists)
                     {
             <tr>
-                <td class="text-center">@i.description</td>
-                <td class="text-left">@i.stock</td>
-                <td class="text-right">
+                <td>@i.description</td>
+                <td>@i.stock</td>
+                <td>
                     <button class="btnCart" onclick="addToCartPurchase('@i.Id', '@i.description',
     '@i.measurementUnit')">
                         Add to Cart
