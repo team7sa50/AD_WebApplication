@@ -138,7 +138,7 @@ namespace Team7_StationeryStore.Controllers
             string year = dateT.Substring(0, 4);
             System.Diagnostics.Debug.WriteLine("Month: " + month);
             System.Diagnostics.Debug.WriteLine("Year" + year);
-            RequestModel rrn = new RequestModel()
+            Req_Complier rrn = new Req_Complier()
             {
                 RequestedQty = requestedQty.ToString(),
                 InventoryQty = stockQty.ToString(),

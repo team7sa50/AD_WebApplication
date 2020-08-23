@@ -737,18 +737,18 @@ namespace Team7_StationeryStore.Database
                     dbcontext.Add(rd2);
 
                     int randomPOStatus = rand.Next(0, 2);
-                    PurchaseOrder po1 = new PurchaseOrder();
-                    po1.Id = Guid.NewGuid().ToString();
-                    po1.SupplierId = supplier1.Id;
-                    po1.EmployeeId = employee1.Id;
-                    po1.date = randDate;
-                    po1.status = (POStatus)randomPOStatus;
-                    dbcontext.Add(po1);
+                    PurchaseOrder po11 = new PurchaseOrder();
+                    po11.Id = Guid.NewGuid().ToString();
+                    po11.SupplierId = supplier1.Id;
+                    po11.EmployeeId = employee1.Id;
+                    po11.date = randDate;
+                    po11.status = (POStatus)randomPOStatus;
+                    dbcontext.Add(po11);
                     for (int k = 0; k < 5; k++) {
                         int randomI = rand.Next(arrInv.Length);
                         PurchaseOrderDetails pod1 = new PurchaseOrderDetails();
                         pod1.Id = Guid.NewGuid().ToString();
-                        pod1.PurchaseOrderId = po1.Id;
+                        pod1.PurchaseOrderId = po11.Id;
                         pod1.InventoryId = arrInv[randomI].Id;
                         pod1.quantity = randomQty;
                         dbcontext.Add(pod1);
