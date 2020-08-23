@@ -6,24 +6,27 @@
 
 
     <head>
-        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+        <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet">
+        <link href="~/css/POAnalytics.css" rel="stylesheet" />
     </head>
 <body>
-<h1>startPurchaseOrderAnalysis</h1>
-<h1>Select ItemCategory</h1>
-<div>
-    <form asp-controller="StationeryStore" asp-action="ViewAnalysis" method="POST" class="form-inline my-2 my-lg-0">
+    <div id="main">
+        <div id="selectForm">
+            <p style="display: inline-block; color: #f7b733;"><i class="fas fa-calculator"></i></p>
+            <p style="display: inline-block;" id="title">Purchase Order Analytics</p>
+            <form asp-controller="StationeryStore" asp-action="ViewAnalysis" method="POST">
+                <label>Select an item category</label>
+                <select name="category" id="category">
+                    @foreach (var c in categories)
+                    {
+                        <option value="@c.Id"> @c.name</option>
 
-        <select name="category" id="category">
-
-            @foreach (var c in categories)
-            {
-                <option value="@c.Id"> @c.name</option>
-
-            }
-        </select>
-        <input class="btn btn btn-outline-info my-2 my-sm-0" type="submit" value="Enter">
-    </form>
-</div>
+                    }
+                </select>
+                <button id="submitBtn" type="submit"><i class="fas fa-arrow-right"></i></button>
+            </form>
+        </div>
+    </div>
 </body>
 

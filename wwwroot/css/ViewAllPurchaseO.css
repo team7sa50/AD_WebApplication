@@ -79,8 +79,16 @@ body {
     padding: 20px;
     letter-spacing: 1px;
     font-weight: 600;
+    font-size: 18px;
     color: #003e19;
 }
+
+    .requisitionfilter p {
+        width: 200px;
+        display: inline-block;
+        float: left;
+        letter-spacing: 3px;
+    }
 
 .bg-modal {
     background-color: rgba(0, 0, 0, 0.3);
@@ -160,6 +168,8 @@ body {
     border: none;
     color: #028090;
     letter-spacing: 1px;
+    margin-bottom: 20px;
+    display: inline-block;
 }
 
     #createPO:hover {
@@ -170,9 +180,21 @@ body {
 #POheader {
     width: 100%;
     height: 80px;
-    padding-top: 50px;
+    padding-top: 40px;
 }
 
     #POheader button {
         bottom: 0;
     }
+
+#analyze {
+    padding: 3px;
+    border: none;
+    color: orange;
+    background: none;
+    color: #028090;
+    font-weight: 600;
+}
+
+    #analyze:hover {
+        border: 2px solid #028090;
