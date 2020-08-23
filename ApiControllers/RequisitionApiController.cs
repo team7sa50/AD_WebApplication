@@ -44,6 +44,26 @@ namespace Team7_StationeryStore.ApiControllers
             return Content(JsonConvert.SerializeObject(requisitions, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
 
         }
+        [HttpGet]
+        [Route("api/[controller]/getAllRequisitionsByEmpId")]
+        public ActionResult GetAllRequisitionsBYEmpId(string empId)
+        {
+
+            var items = (from c in dbcontext.requisitions
+                         where c.EmployeeId == empId
+                         orderby c.DateSubmitted descending
+                         select new
+                         {
+                             Id = c.Id,
+                             DateSubmitted = c.DateSubmitted,
+                             status=c.status.ToString(),
+                             remarks=c.Remarks
+                         }
+          );
+
+            return Content(JsonConvert.SerializeObject(items, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+
+        }
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
