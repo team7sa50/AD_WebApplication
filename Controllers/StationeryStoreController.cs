@@ -55,7 +55,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["username"] = emp.Name;
             return View();
         }
-
+/*
         [HttpPost]
         public IActionResult Export(){
             List<Employee> employees = (from er in dbcontext.employees
@@ -102,8 +102,6 @@ namespace Team7_StationeryStore.Controllers
                          Qty = h.Sum(x => x.quantity)
                      };
 
-            
-
 
 
 
@@ -117,8 +115,8 @@ namespace Team7_StationeryStore.Controllers
                                                    {
                                                        Date = req.DateSubmitted,
                                                        /* Department = req.DepartmentId,
-                                                          Item = d.InventoryId,*/
-                                                       Qty = (float)d.RequestedQty
+                                                          Item = d.InventoryId,
+                                                       Qty = (float) d.RequestedQty
                                                    };
 
 
@@ -130,8 +128,9 @@ namespace Team7_StationeryStore.Controllers
             System.Diagnostics.Debug.WriteLine("Finished Training");
             return View();
         }
+*/
 
-        [HttpPost]
+      /*  [HttpPost]
         public JsonResult AnalyzeResults(int requestedQty, int stockQty, string dateT)
         {
             string month = dateT.Substring(5, 2);
@@ -150,7 +149,7 @@ namespace Team7_StationeryStore.Controllers
             CarInventoryPrediction cp = predictor.Predict(inputJson);
             string results = JsonConvert.SerializeObject(cp, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });           
             return Json(results);
-        }
+        }*/
 
         [HttpPost]
         public JsonResult GetEmployeeTest(string id)
