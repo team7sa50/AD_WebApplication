@@ -22,14 +22,20 @@
                 <button class="clerkhome-container">Purchase Order</button>
             </div>
             <div>
-                <button href="@Url.Action("ViewAllPurchaseOrders", "PurchaseOrder")" class="clerkhome-container">Requisitions</button>
+                <form asp-controller="PurchaseOrder" asp-action="ViewAllPurchaseOrders" method="POST">
+                    <button class="clerkhome-container">Requisitions</button>
+                </form>
+                
             </div>
             <div>
-                <button href="@Url.Action("ViewInventory", "StationeryStore")" class="clerkhome-container">Inventory
-                </button>
+                <form asp-controller="StationeryStore" asp-action="ViewInventory" method="POST">
+                    <button class="clerkhome-container">Requisitions</button>
+                </form>
             </div>
             <div>
-                <button  href="@Url.Action("StartAnalytics", "StationeryStore")" class="clerkhome-container">Reports</button>
+                <form asp-controller="StationeryStore" asp-action="ViewRequisitions" method="POST">
+                    <button class="clerkhome-container">Requisitions</button>
+                </form>
             </div>
         </div>
 
