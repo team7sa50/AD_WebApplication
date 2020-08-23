@@ -5,73 +5,57 @@
     var username = ViewData["username"];
     var userid = ViewData["userid"];
 }
-
 <head>
-    <title></title>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <title>View Cart</title>
+    <link href="~/css/ViewCart.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
+<body>
+    <div id="main">
+        <div id="cartHeader">
+            <form asp-controller="PurchaseOrder" asp-action="PurchaseOrder" method="POST">
+                <button type="submit" id="backToItems"><i class="fas fa-arrow-left"></i> Back</button>
+            </form>
 
-<header>
-    <ul>
-        <li class="logo">Logic <span>Stationery</span></li>
-        <li> <button class="menubtn" href="#inventory">Inventory</li>
-        <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
-        <li><p class="userdetails">@username</p> <img src="~/lib/img/employeeicon.jpg"> </li>
-    </ul>
-</header>
+            <form asp-controller="PurchaseOrder" asp-action="RaisePurchaseOrder" method="POST">
+                <input type="hidden" value="@supplier.Id" name="supplier" />
+                <button type="submit" id="submitPO">Create PO</button>
+            </form>
+        </div>
 
-<h2 style="text-align:center">Your Cart</h2>
+        <table class="cartTable">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
 
-<div class="container">
-    <div>
-        
-        <a asp-controller="Department" asp-action="viewCatalogue" style="margin-left:850px;font-size:30px">View Catalogue</a>
-    </div>
-    <div align=center>
-        <div>
-            <table class="table table-bordered table-striped">
-                <thead>
+            <tbody>
+                @foreach (var i in lists)
+                {
                     <tr>
-                        <th>Item Code</th>
-                        <th>Descripion</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
+                        <td class="text-left">@i.Inventory.ItemCategory.name</td>
+                        <td class="text-right">@i.Qty</td>
+                        <td>
+                            <form method="POST">
+                                <button formaction="/PurchaseOrder/RemoveItem/?userid=@userid&&itemId=@i.InventoryId" class="removebtn"><i class="fas fa-minus-circle"></i></button>
+                            </form>
+                        </td>
                     </tr>
-                </thead>
+                }
+            </tbody>
+        </table>
 
-                <tbody>
-                    @foreach (var i in lists)
-                    {
-                        <tr>
-
-                            <td class="text-center">@i.Inventory.itemCode</td>
-                            <td class="text-left">@i.Inventory.ItemCategory.name</td>
-                            <td class="text-right">@i.Qty</td>
-                            <td>
-                                <form method="POST">
-                                    <button value="Add To Cart" formaction="/Department/RemoveItem/?userid=@userid&&itemId=@i.InventoryId" class="btn btn-secondary">Remove</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-
-
-
-            </table>
-            <div class="text-center">
-                <a class="btn btn-primary" asp-controller="Department" asp-action="RaiseRequisition">Submit Requisition</a>
-                <a class="btn btn-primary" asp-controller="Department" asp-action="RemoveAllItems">Cancel</a>
-
-
-
-            </div>
+        <div id="cartFoot">
+            <a asp-controller="PurchaseOrder" asp-action="RemoveAllItems" id="clearcart">Clear All</a>
         </div>
     </div>
-</div>
+</body>
+
+
 
 
 
