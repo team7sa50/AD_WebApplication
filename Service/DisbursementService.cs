@@ -22,6 +22,17 @@ namespace Team7_StationeryStore.Service
             this.invService = invService;
         }
 
+        public List<Disbursement> findLatestDisbursements()
+        {
+            List<Disbursement> rq = (from r in dbcontext.disbursements
+                                    select r).ToList();
+            List<Disbursement> result = new List<Disbursement>();
+            for (int i = 0; i < 5; i++)
+            {
+                result.Add(rq[i]);
+            }
+            return result;
+        }
         public List<Disbursement> retrieveDisbursementByDept(string deptId)
         {
             return dbcontext.disbursements.Where(x => x.DepartmentsId == deptId).ToList();

@@ -64,8 +64,20 @@ namespace Team7_StationeryStore.ApiControllers
         [Route("api/[controller]/viewDepartments")]
         public ActionResult viewDepartments()
         {
-            List<Departments> departments = invService.getAllDepartments();
-            return Content(JsonConvert.SerializeObject(departments, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+            var items = (from d in dbcontext.departments
+                                     select new
+                         {
+                             Id = d.Id,
+                             DeptCode=d.DeptCode,
+                             ContactName=d.ContactName,
+                             Telephone=d.PhoneNumber,
+                             FaxNo=d.FaxNumber,
+                             HeadName=d.DeptHead,
+                             RepName=d.Representative,
+                             CollectionPoint=d.CollectionPoint.Location
+                         }
+          );
+            return Content(JsonConvert.SerializeObject(items, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
         }
         [HttpGet]
         [Route("api/[controller]/viewDepartmentDetail")]

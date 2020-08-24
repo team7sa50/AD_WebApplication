@@ -28,6 +28,18 @@ namespace Team7_StationeryStore.Service
             return dbcontext.requisitions.Where(x => !x.status.Equals(ReqStatus.AWAITING_APPROVAL) && !x.status.Equals(ReqStatus.REJECTED)).ToList();
 
         }
+
+        public List<Requisition> findLatestRequisitions()
+        {
+            List<Requisition> rq = (from r in dbcontext.requisitions
+                                    select r).ToList();
+            List<Requisition> result = new List<Requisition>();
+            for (int i = 0; i < 5; i++)
+            {
+                result.Add(rq[i]);
+            }
+            return result;
+        }
         public List<Requisition> retrieveAllRequisitions()
         {
             return dbcontext.requisitions.ToList();
