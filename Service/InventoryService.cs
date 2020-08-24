@@ -111,6 +111,17 @@ namespace Team7_StationeryStore.Service
             return dbcontext.purchaseOrderDetails.Where(x => x.PurchaseOrderId == poId).ToList();
         }
 
+        public List<PurchaseOrder> findLatestPurchaseOrder()
+        {
+            List<PurchaseOrder> rq = (from r in dbcontext.purchaseOrders
+                                     select r).ToList();
+            List<PurchaseOrder> result = new List<PurchaseOrder>();
+            for (int i = 0; i < 5; i++)
+            {
+                result.Add(rq[i]);
+            }
+            return result;
+        }
 
         public void CreateAdjustmentVoucher(string userId, string invId, int qty, string reason) {
             AdjustmentVoucher newAdjustmentVoucher = new AdjustmentVoucher();

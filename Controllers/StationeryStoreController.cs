@@ -43,7 +43,13 @@ namespace Team7_StationeryStore.Controllers
         {
             string userid = HttpContext.Session.GetString("userId");
             Employee emp = deptService.findEmployeeById(userid);
+            ViewData["requisitions"] = requisitionService.findLatestRequisitions();
+            ViewData["pos"] = invService.findLatestPurchaseOrder();
+            ViewData["disbursement"] = disbService.findLatestDisbursements();
             ViewData["username"] = emp.Name;
+            //Get Latest Requisitions 
+            //Get Latest POs
+            //Get Latest Disbursements 
             return View();
         }
         [HttpPost]

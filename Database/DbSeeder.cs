@@ -457,7 +457,7 @@ namespace Team7_StationeryStore.Database
                 employee4.Name = "tom";
                 employee4.Email = "tom@gmail.com";
                 string emp4psw = MD5Hash.GetMd5Hash(md5Hash, "123");
-                employee4.Password =emp4psw;
+                employee4.Password = emp4psw;
                 employee4.Role = Role.DEPT_HEAD;
                 employee4.DepartmentsId = EN.Id;
                 dbcontext.Add(employee4);
@@ -497,7 +497,7 @@ namespace Team7_StationeryStore.Database
                 employee8.Id = Guid.NewGuid().ToString();
                 employee8.Name = "noah";
                 employee8.Email = "noah@gmail.com";
-                string emp8psw= MD5Hash.GetMd5Hash(md5Hash, "123");
+                string emp8psw = MD5Hash.GetMd5Hash(md5Hash, "123");
                 employee8.Password = emp8psw;
                 employee8.Role = Role.DEPT_REP;
                 employee8.DepartmentsId = CS.Id;
@@ -649,7 +649,7 @@ namespace Team7_StationeryStore.Database
 
 
                 Requisition requisition1 = new Requisition();
-                requisition1.Id = EN.DeptCode+"_"+DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
+                requisition1.Id = EN.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
                 requisition1.DepartmentId = EN.Id;
                 requisition1.EmployeeId = employee6.Id;
                 requisition1.ApprovedEmployeeId = employee4.Id;
@@ -705,7 +705,8 @@ namespace Team7_StationeryStore.Database
 
                 Random rand = new Random();
                 int size = 300;
-                for (int i = 0; i < size; i++) {
+                for (int i = 0; i < size; i++)
+                {
                     DateTime randDate = DateTime.Now.AddDays(-rand.Next(1100));
                     int randomQty = rand.Next(1, 100);
                     int randomItem = rand.Next(arrInv.Length);
@@ -744,7 +745,8 @@ namespace Team7_StationeryStore.Database
                     po11.date = randDate;
                     po11.status = (POStatus)randomPOStatus;
                     dbcontext.Add(po11);
-                    for (int k = 0; k < 5; k++) {
+                    for (int k = 0; k < 5; k++)
+                    {
                         int randomI = rand.Next(arrInv.Length);
                         PurchaseOrderDetails pod1 = new PurchaseOrderDetails();
                         pod1.Id = Guid.NewGuid().ToString();
@@ -754,7 +756,7 @@ namespace Team7_StationeryStore.Database
                         dbcontext.Add(pod1);
                     }
                 }
-               
+
                 //-------------------------------------------------------------Seeding for training model-------------------------------------------------------------------------------------->
 
                 Requisition requisition3 = new Requisition();
@@ -776,10 +778,60 @@ namespace Team7_StationeryStore.Database
                 requisition4.status = ReqStatus.PROCESSING;
                 requisition4.Remarks = "nothing";
                 dbcontext.Add(requisition4);
+
+
+                Disbursement d1 = new Disbursement()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    GeneratedDate = DateTime.Now,
+                    CollectionDate = DateTime.Now,
+                    status = DisbusementStatus.COMPLETED,
+                    Departments = regr
+                };
+                dbcontext.Add(d1);
+
+                Disbursement d2 = new Disbursement()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    GeneratedDate = DateTime.Now,
+                    CollectionDate = DateTime.Now,
+                    status = DisbusementStatus.COMPLETED,
+                    Departments = Comm
+                };
+                dbcontext.Add(d2);
+
+                Disbursement d3 = new Disbursement()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    GeneratedDate = DateTime.Now,
+                    CollectionDate = DateTime.Now,
+                    status = DisbusementStatus.COMPLETED,
+                    Departments = CS
+                };
+                dbcontext.Add(d3);
+
+                Disbursement d4 = new Disbursement()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    GeneratedDate = DateTime.Now,
+                    CollectionDate = DateTime.Now,
+                    status = DisbusementStatus.COMPLETED,
+                    Departments = EN
+                };
+                dbcontext.Add(d4);
+
+                Disbursement d5 = new Disbursement()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    GeneratedDate = DateTime.Now,
+                    CollectionDate = DateTime.Now,
+                    status = DisbusementStatus.COMPLETED,
+                    Departments = Comm
+                };
+                dbcontext.Add(d5);
                 dbcontext.SaveChanges();
 
             }
-
         }
     }
 }

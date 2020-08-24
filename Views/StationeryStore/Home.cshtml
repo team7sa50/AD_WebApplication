@@ -2,48 +2,158 @@
 @{
     ViewData["Title"] = "Home";
     var username = ViewData["username"];
+    var requi = (List<Requisition>)ViewData["requisitions"];
+    var pos = (List<PurchaseOrder>)ViewData["pos"];
+    var disb = (List<Disbursement>)ViewData["disbursement"];
 }
 
-<html>
+
+
 <head>
     <meta charset="utf=8">
     <title>Home</title>
     <link href="~/css/homepage.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
     <script src="https://use.fontawesome.com/973befe495.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
+
 <body>
     <div id="main">
-        <div id="clerkhomebody">
-            <div>
-                <button class="clerkhome-container">Purchase Order</button>
-            </div>
-            <div>
-                <form asp-controller="PurchaseOrder" asp-action="ViewAllPurchaseOrders" method="POST">
-                    <button class="clerkhome-container">Requisitions</button>
-                </form>
-                
-            </div>
-            <div>
-                <form asp-controller="StationeryStore" asp-action="ViewInventory" method="POST">
-                    <button class="clerkhome-container">Requisitions</button>
-                </form>
-            </div>
-            <div>
-                <form asp-controller="StationeryStore" asp-action="ViewRequisitions" method="POST">
-                    <button class="clerkhome-container">Requisitions</button>
-                </form>
-            </div>
+        <div id="clerkhometop">
+            <form asp-controller="PurchaseOrder" asp-action="ViewAllPurchaseOrders" method="POST">
+                <button type="submit" id="PObutton" class="clerkhome-container">
+                    <i class="far fa-file-alt"></i>
+                    <p>Purchase Orders</p>
+                </button>
+            </form>
+            <form asp-controller="Requisition" asp-action="ViewRequisitions" method="POST">
+                <button type="submit" id="Reqbutton" class="clerkhome-container">
+                    <i class="far fa-user"></i>
+                    <p>Requisitions</p>
+                </button>
+            </form>
+            <form asp-controller="StationeryStore" asp-action="ViewInventory" method="POST">
+                <button type="submit" id="Invbutton" class="clerkhome-container">
+                    <i class="fas fa-box-open"></i>
+                    <p>Inventory</p>
+                </button>
+            </form>
+            <form asp-controller="StationeryStore" asp-action="ViewDisbursements" method="POST">
+                <button type="submit" id="Disbbutton" class="clerkhome-container">
+                    <i class="fas fa-truck"></i>
+                    <p>Disbursements</p>
+                </button>
+            </form>
         </div>
 
         <div id="clerkhomelower">
-            <p>Testing Text</p>
+            <div id="clerkhome-left">
+                <div id="overViewTab">
+                    <button onclick="openReq(event, 'requisitions')" id="defaultOpen" class="tablinks"><i class="fas fa-file-import"></i> Requisitions</button>
+                    <button onclick="openReq(event, 'disbursements')" class="tablinks"> <i class="fas fa-calendar-alt"></i> Scheduled</button>
+                    <button onclick="openReq(event, 'purchaseorders')" class="tablinks"><i class="fas fa-store-alt"></i> P.O</button>
+                </div>
+                <table class="overviewTable" id="requisitions">
+                    <thead>
+                        <tr>
+                            <th>Department</th>
+                            <th>Submitted On</th>
+                            <th>Status</th>
+                            <th>Transaction Id</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var r in requi)
+                    {
+                        <tr>
+                            <td class="deptName">@r.Department.DeptName</td>
+                            <td class="subDate">@r.DateSubmitted.Date</td>
+                            <td class="status">@r.status</td>
+                            <td><p class="reqId">@r.Id.Substring(0,6)</p></td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+
+                <table class="overviewTable" id="disbursements">
+                    <thead>
+                        <tr>
+                            <th>Department</th>
+                            <th>Collection Date</th>
+                            <th>Status</th>
+                            <th>Disbursement Id</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var d in disb)
+                        {
+                        <tr>
+                            <td class="deptName">@d.Departments.DeptName</td>
+                            <td class="subDate">@d.CollectionDate.Date</td>
+                            <td class="status">@d.status</td>
+                            <td> <p class="reqId">@d.Id.Substring(0,6)</p></td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <table class="overviewTable" id="purchaseorders">
+                    <thead>
+                        <tr>
+                            <th>Supplier</th>
+                            <th>Submitted On</th>
+                            <th>Status</th>
+                            <th>P.O. Id</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var po in pos)
+                        {
+                        <tr>
+                            <td class="deptName">@po.Supplier.name</td>
+                            <td class="subDate">@po.date.Date</td>
+                            <td class="status">@po.status</td>
+                            <td> <p class="reqId">@po.Id.Substring(0,6)</p></td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
+
+    <script>
+
+        document.getElementById("defaultOpen").click();
+
+        function openReq(evt, cityName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("overviewTable");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        
+    </script>
+
 </body>
-</html>
 
