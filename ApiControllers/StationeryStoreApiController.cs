@@ -69,6 +69,7 @@ namespace Team7_StationeryStore.ApiControllers
                          {
                              Id = d.Id,
                              DeptCode=d.DeptCode,
+                             DepartmentName=d.DeptName,
                              ContactName=d.ContactName,
                              Telephone=d.PhoneNumber,
                              FaxNo=d.FaxNumber,
