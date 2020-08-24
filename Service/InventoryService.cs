@@ -134,6 +134,7 @@ namespace Team7_StationeryStore.Service
             newAdjustmentVoucher.EmEmployeeId = employee.Id;
             newAdjustmentVoucher.appEmEmployee = appemployee;
             newAdjustmentVoucher.appEmEmployeeId = appemployee.Id;
+            newAdjustmentVoucher.qty = qty;
             newAdjustmentVoucher.reason = reason;
             dbcontext.Add(newAdjustmentVoucher);
             dbcontext.SaveChanges();

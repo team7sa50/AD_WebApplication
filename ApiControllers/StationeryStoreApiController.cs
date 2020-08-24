@@ -91,18 +91,7 @@ namespace Team7_StationeryStore.ApiControllers
         [Route("api/[controller]/createAdjustmentVouncher")]
         public ActionResult crateAdjustmentVouncher([FromBody]AdjustmentVoucher value)
         {
-            AdjustmentVoucher adjustmentVoucher = new AdjustmentVoucher();
-            adjustmentVoucher.Id = Guid.NewGuid().ToString();
-            adjustmentVoucher.InventoryId = value.InventoryId;
-            adjustmentVoucher.EmEmployeeId = value.EmEmployeeId;
-            adjustmentVoucher.appEmEmployeeId = value.appEmEmployeeId;
-            adjustmentVoucher.qty = value.qty;
-            adjustmentVoucher.date = value.date;
-            adjustmentVoucher.reason = value.reason;
-            adjustmentVoucher.status = value.status;
-            adjustmentVoucher.remarks = value.remarks;
-            dbcontext.Add(adjustmentVoucher);
-            dbcontext.SaveChanges();
+            invService.CreateAdjustmentVoucher(value.EmEmployeeId, value.InventoryId, value.qty, value.reason);
             Object response = new
             {
                 message = "Successfully created",
