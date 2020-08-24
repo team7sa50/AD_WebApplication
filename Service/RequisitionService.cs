@@ -137,7 +137,7 @@ namespace Team7_StationeryStore.Service
             newRequisition.DepartmentId = emp.Departments.Id;
             foreach (var i in cartList)
             {
-                Inventory inv = dbcontext.inventories.Where(x => x.Id == i.Id).FirstOrDefault();
+/*                Inventory inv = dbcontext.inventories.Where(x => x.Id == i.Id).FirstOrDefault();*/
                 RequisitionDetail requisitionDetail = new RequisitionDetail();
                 requisitionDetail.Id= Guid.NewGuid().ToString();
                 requisitionDetail.RequisitionId = newRequisition.Id;
@@ -154,17 +154,18 @@ namespace Team7_StationeryStore.Service
 
 
         public void CreateRequisition(string userId, List<RequisitionDetail> requisitionDetails) {
-            Requisition newRequisition = new Requisition();
             Employee approver = deptService.setApprover(userId);
+            Requisition newRequisition = new Requisition(approver.Departments.DeptCode);
             newRequisition.ApprovedEmployeeId = approver.Id; 
             newRequisition.EmployeeId = userId;
             newRequisition.DepartmentId = approver.Departments.Id;
-            foreach (var i in requisitionDetails)
+            int k = 0;
+            foreach (var rd in requisitionDetails)
             {
-                RequisitionDetail requisitionDetail = new RequisitionDetail();
-                requisitionDetail.Id = Guid.NewGuid().ToString();
-                requisitionDetail.RequisitionId = newRequisition.Id;
-                dbcontext.Add(requisitionDetail);
+                rd.Id = "00000000-"+k.ToString();
+                rd.RequisitionId = newRequisition.Id;
+                dbcontext.Add(rd);
+                k++;
             }
             dbcontext.Add(newRequisition);
             dbcontext.SaveChanges();

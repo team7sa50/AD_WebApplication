@@ -719,7 +719,6 @@ namespace Team7_StationeryStore.Database
                 {
                     DateTime randDate = DateTime.Now.AddDays(-rand.Next(1100));
                     int randomQty = rand.Next(1, 100);
-                    int randomItem = rand.Next(arrInv.Length);
                     int randomStatus = rand.Next(0, 7);
                     Requisition r1 = new Requisition();
                     r1.Id = EN.DeptCode + "_" + Guid.NewGuid().ToString();
@@ -729,23 +728,29 @@ namespace Team7_StationeryStore.Database
                     r1.DateSubmitted = randDate;
                     r1.status = (ReqStatus)randomStatus;
                     r1.Remarks = "nothing";
-
-                    RequisitionDetail rd1 = new RequisitionDetail();
-                    rd1.Id = Guid.NewGuid().ToString();
-                    rd1.RequisitionId = r1.Id;
-                    rd1.InventoryId = arrInv[randomItem].Id;
-                    rd1.RequestedQty = randomQty;
-                    rd1.DistributedQty = 0;
-
-                    RequisitionDetail rd2 = new RequisitionDetail();
-                    rd2.Id = Guid.NewGuid().ToString();
-                    rd2.RequisitionId = r1.Id;
-                    rd2.InventoryId = arrInv[randomItem].Id;
-                    rd2.RequestedQty = randomQty;
-                    rd2.DistributedQty = 0;
+                    List<string> list = new List<string>();
+                    List<RequisitionDetail> rLists = new List<RequisitionDetail>();
+                    for (int j = 0; j < 3; j++) {
+                        RequisitionDetail rd1 = new RequisitionDetail();
+                        rd1.Id = Guid.NewGuid().ToString();
+                        int randomItem = rand.Next(arrInv.Length);
+                        string item= arrInv[randomItem].Id;
+                        while (list.FirstOrDefault(x => x.Contains(item)) != null)
+                        {
+                            randomItem = rand.Next(arrInv.Length);
+                            item = arrInv[randomItem].Id;
+                        }
+                        rd1.RequisitionId = r1.Id;
+                        rd1.Inventory = arrInv[randomItem];
+                        //rd1.InventoryId = item;
+                        rd1.RequestedQty = randomQty;
+                        rd1.DistributedQty = 0;
+                        list.Add(arrInv[randomItem].Id);
+                        rLists.Add(rd1);
+                    }
+                    list.Clear();
+                    dbcontext.AddRangeAsync(rLists);
                     dbcontext.Add(r1);
-                    dbcontext.Add(rd1);
-                    dbcontext.Add(rd2);
 
                     int randomPOStatus = rand.Next(0, 2);
                     PurchaseOrder po11 = new PurchaseOrder();
@@ -789,7 +794,7 @@ namespace Team7_StationeryStore.Database
                 requisition4.Remarks = "nothing";
                 dbcontext.Add(requisition4);
 
-
+/*
                 Disbursement d1 = new Disbursement()
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -839,6 +844,7 @@ namespace Team7_StationeryStore.Database
                     Departments = Comm
                 };
                 dbcontext.Add(d5);
+*/
                 dbcontext.SaveChanges();
 
             }
