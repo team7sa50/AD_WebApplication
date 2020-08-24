@@ -144,6 +144,15 @@ table.steelBlueCols {
     color: #9c9c9c;
 }
 
+.rstatus {
+    font-weight: 600;
+    border-radius: 50px;
+    width: 70px;
+    letter-spacing: 1px;
+    font-size: 10px;
+    color: white;
+}
+
 .modal-contents {
     min-height: 300px;
     width: 500px;
