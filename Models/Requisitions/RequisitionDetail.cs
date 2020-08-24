@@ -17,5 +17,10 @@ namespace Team7_StationeryStore.Models
         public virtual Requisition Requisition { get; set; }
         public virtual Inventory Inventory { get; set; }
 
+        public RequisitionDetail() { 
+            this.Id = Guid.NewGuid().ToString();
+
+        }
+
     }
 }

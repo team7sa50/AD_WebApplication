@@ -150,9 +150,29 @@ namespace Team7_StationeryStore.Service
             dbcontext.SaveChanges();
 
             notificationService.sendNotification(NotificationType.REQUISITION, newRequisition,null,null);
+        }
 
+
+        public void CreateRequisition(string userId, List<RequisitionDetail> requisitionDetails) {
+            Requisition newRequisition = new Requisition();
+            Employee approver = deptService.setApprover(userId);
+            newRequisition.ApprovedEmployeeId = approver.Id; 
+            newRequisition.EmployeeId = userId;
+            newRequisition.DepartmentId = approver.Departments.Id;
+            foreach (var i in requisitionDetails)
+            {
+                RequisitionDetail requisitionDetail = new RequisitionDetail();
+                requisitionDetail.Id = Guid.NewGuid().ToString();
+                requisitionDetail.RequisitionId = newRequisition.Id;
+                dbcontext.Add(requisitionDetail);
+            }
+            dbcontext.Add(newRequisition);
+            dbcontext.SaveChanges();
+
+            notificationService.sendNotification(NotificationType.REQUISITION, newRequisition, null, null);
 
         }
+
 
         public List<Requisition> getRequisitionsByIds(List<string> req)
         {
