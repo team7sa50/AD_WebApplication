@@ -794,7 +794,7 @@ namespace Team7_StationeryStore.Database
                 requisition4.Remarks = "nothing";
                 dbcontext.Add(requisition4);
 
-/*
+
                 Disbursement d1 = new Disbursement()
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -844,7 +844,7 @@ namespace Team7_StationeryStore.Database
                     Departments = Comm
                 };
                 dbcontext.Add(d5);
-*/
+
                 dbcontext.SaveChanges();
 
             }

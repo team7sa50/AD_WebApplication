@@ -24,14 +24,17 @@ namespace Team7_StationeryStore.Service
 
         public List<Disbursement> findLatestDisbursements()
         {
-            List<Disbursement> rq = (from r in dbcontext.disbursements
+/*            List<Disbursement> rq = (from r in dbcontext.disbursements
                                     select r).ToList();
             List<Disbursement> result = new List<Disbursement>();
             for (int i = 0; i < 5; i++)
             {
                 result.Add(rq[i]);
             }
-            return result;
+
+            return result;*/
+
+            return dbcontext.disbursements.OrderByDescending(x => x.GeneratedDate).Take(5).ToList();
         }
         public List<Disbursement> retrieveDisbursementByDept(string deptId)
         {
