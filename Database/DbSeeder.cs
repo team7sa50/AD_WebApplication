@@ -377,8 +377,8 @@ namespace Team7_StationeryStore.Database
                 EN.DeptCode = "ENGL";
                 EN.DeptName = "English Dept";
                 EN.ContactName = "English";
-                EN.FaxNumber = 0000000;
-                EN.PhoneNumber = 1121231231;
+                EN.FaxNumber = 123456;
+                EN.PhoneNumber = 112124;
                 EN.CollectionPointId = cp1.Id;
                 dbcontext.Add(EN);
 
@@ -387,8 +387,8 @@ namespace Team7_StationeryStore.Database
                 CS.DeptCode = "CPSC";
                 CS.DeptName = "ComputerScience";
                 CS.ContactName = "Computer";
-                CS.FaxNumber = 1111111;
-                CS.PhoneNumber = 116561231;
+                CS.FaxNumber = 111111;
+                CS.PhoneNumber = 1165613;
                 CS.CollectionPointId = cp3.Id;
                 dbcontext.Add(CS);
 
@@ -397,8 +397,8 @@ namespace Team7_StationeryStore.Database
                 Comm.DeptCode = "ENGL";
                 Comm.DeptName = "Commerce Dept";
                 Comm.ContactName = "Commerce";
-                Comm.FaxNumber = 222222;
-                Comm.PhoneNumber = 1121678231;
+                Comm.FaxNumber = 22222;
+                Comm.PhoneNumber = 112164;
                 Comm.CollectionPointId = cp2.Id;
                 dbcontext.Add(Comm);
 
@@ -407,8 +407,8 @@ namespace Team7_StationeryStore.Database
                 regr.DeptCode = "Regr";
                 regr.DeptName = "Registra Dept";
                 regr.ContactName = "Registra";
-                regr.FaxNumber = 3333333;
-                regr.PhoneNumber = 112129955231;
+                regr.FaxNumber = 33333;
+                regr.PhoneNumber = 112231;
                 regr.CollectionPointId = cp5.Id;
                 dbcontext.Add(regr);
 
@@ -417,8 +417,8 @@ namespace Team7_StationeryStore.Database
                 StationeryDept.DeptCode = "STAT";
                 StationeryDept.DeptName = "Stationery Dept";
                 StationeryDept.ContactName = "Stationery";
-                StationeryDept.PhoneNumber = 65899999;
-                StationeryDept.FaxNumber = 444444;
+                StationeryDept.PhoneNumber = 69999;
+                StationeryDept.FaxNumber = 4444;
                 StationeryDept.CollectionPointId = cp1.Id;
                 dbcontext.Add(StationeryDept);
 
