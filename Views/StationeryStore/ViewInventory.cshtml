@@ -48,12 +48,13 @@
             <button id="close" onclick="closePopUp()"><i class="fas fa-window-close"></i></button>
             <div class="modal-header">
                 <p style="letter-spacing: 0px; color: grey;">Adjustment Voucher</p>
-                <p class="title" id="myModalLabel">#Item Code Item Name</p>
+                <span id="item"><p>Item Code:</p><p class="title" id="myModalLabel">#Item Code Item Name</p></span>
             </div>
+            <hr style="margin:unset;" />
             <div class="modal-body">
                 <form asp-controller="StationeryStore" asp-action="CreateAdjustment" method="POST">
                     <label for="quantity">Quantity</label>
-                    <input type="number" id="quantity" name="quantity" maxlength="2">
+                    <input type="number" id="quantity" name="quantity" min="-99" max="99">
 
                     <label for="reason">Reason</label>
                     <textarea placeholder="Reason(s) for adjustment voucher (optional)" id="reason" name="reason"></textarea>

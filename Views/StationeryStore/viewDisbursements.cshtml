@@ -77,7 +77,7 @@
                             <td>@d.CollectionDate.ToShortDateString()</td>
                             <td>@d.Departments.DeptName</td>
                             <td>@d.GeneratedDate.ToShortDateString()</td>
-                            <td>Adam Smith</td>
+                            <td>@d.storeClerk.Name</td>
                             <td><button onclick="" style="color:#1f5f89"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></td>
                         </tr>
                     }
@@ -126,11 +126,11 @@
                 <tbody id="completedUnfiltered">
                     @foreach (var d in completedDisbursement)
                     {
-                        <tr onclick="viewDisDetail()">
+                        <tr onclick="viewDisDetail('@d.Id')">
                             <td>@d.CollectionDate</td>
                             <td>@d.Departments.DeptName</td>
                             <td>@d.GeneratedDate</td>
-                            <td>Adam Smith</td>
+                            <td>@d.storeClerk.Name</td>
                         </tr>
                     }
                 </tbody>
@@ -387,9 +387,11 @@
                 $("#collDateSpec").val(collDateString);
                 $("#collPtSpec").val(jsonObject.Departments.CollectionPoint.Location);
                 var p = document.createElement('p');
-                var deptrep = JSON.parse(response.rep);
-                $("repSpec").innerHTML = deptrep
-                document.getElementById('repSpec').appendChild(p);
+                var deptrep = JSON.parse(response.repName);
+                console.log("representative name is" + deptrep);
+                //$("repSpec").innerHTML = deptrep;
+                document.getElementById('repSpec').innerHTML = deptrep;
+                //document.getElementById('repSpec').appendChild(p);
                 var items = jsonObject.DisbursementDetails;
                 console.log("items is" + items);
                 var tabledisQty = document.getElementById('disbDetailsQty');

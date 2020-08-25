@@ -70,7 +70,7 @@
         </div>
         <div class="modal-body">
             <form asp-controller="PurchaseOrder" asp-action="AddToCart" method="POST">
-                <input type="number" id="quantity" name="quantity" min="1" max="50" style="display: inline-block;" placeholder="1">
+                <input type="number" id="quantity" name="quantity" min="1" max="50" style="display: inline-block;" placeholder="0" >
                 <p id="units" style="display: inline-block;"></p>
                 <input type="hidden" id="itemId" name="itemId">
                 <button id="submitQty" type="submit"><i class="fas fa-arrow-right"></i> </button>
