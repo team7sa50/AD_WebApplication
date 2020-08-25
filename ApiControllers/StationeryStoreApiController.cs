@@ -100,6 +100,22 @@ namespace Team7_StationeryStore.ApiControllers
             return Content(JsonConvert.SerializeObject(items));
         }
         [HttpPost]
+        [Route("api/[controller]/viewPurchaseOrderByEmpId")]
+        public IActionResult viewPurchaseOrderByEmpId([FromBody]PurchaseOrder value)
+        {
+            var po = (from p in dbcontext.purchaseOrders
+                         where p.EmployeeId==value.EmployeeId
+                         select new
+                         {
+                             Id=p.Id,
+                             Supplier = p.Supplier.name,
+                             Date=p.date,
+                             Status=p.status.ToString()
+                         }
+            );
+            return Content(JsonConvert.SerializeObject(po, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+        }
+        [HttpPost]
         [Route("api/[controller]/createAdjustmentVouncher")]
         public ActionResult crateAdjustmentVouncher([FromBody]CreateAdjustmentvouncher value)
         {

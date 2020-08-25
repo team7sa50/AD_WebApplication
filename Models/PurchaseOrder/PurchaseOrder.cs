@@ -16,9 +16,7 @@ namespace Team7_StationeryStore.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; set; }
-        [Required]
         public string SupplierId { get; set; }
-        [Required]
         public string EmployeeId { get; set; }
         public DateTime date { get;  set; }
         public POStatus status { get; set; }
