@@ -96,6 +96,10 @@ namespace Team7_StationeryStore.Service
         {
             return dbcontext.inventories.Where(x => x.Id == invId).FirstOrDefault();
         }
+        public Inventory findInventory(string itemCode)
+        {
+            return dbcontext.inventories.Where(x => x.itemCode == itemCode).FirstOrDefault();
+        }
 
         public AdjustmentVoucher findAdjustmentVoucher(string id)
         {
