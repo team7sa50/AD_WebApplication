@@ -35,6 +35,9 @@ namespace Team7_StationeryStore.Controllers
         {
             Employee employee = dbcontext.employees.Where(x => x.Id == HttpContext.Session.GetString("userId")).FirstOrDefault();
             ViewData["Employee"] = employee;
+            string userid = HttpContext.Session.GetString("userId");
+            Departments dept = deptService.findDepartmentByEmployee(userid);
+            ViewData["dept"] = dept;
             return View();
         }
 
@@ -81,6 +84,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["employeeCarts"] = employeeCarts;
             ViewData["username"] = emp.Name;
             ViewData["userid"] = userid;
+            ViewData["user"] = emp;
             return View();
         }
         public void AddItem(string userid, string itemid, int qty)
@@ -155,6 +159,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["userid"] = userId;
             Employee emp = deptService.findEmployeeById(userId);
             ViewData["username"] = emp.Name;
+            ViewData["user"] = emp;
             return View();
         }
 
@@ -163,6 +168,7 @@ namespace Team7_StationeryStore.Controllers
             string userid = HttpContext.Session.GetString("userId");
             List<RequisitionDetail> requisitionDetails = reqService.retrieveRequisitionDetailList(reqid);
             Employee emp = deptService.findEmployeeById(userid);
+            ViewData["user"] = emp;
             ViewData["requisitionDetail"] = requisitionDetails;
             ViewData["username"] = emp.Name;
             ViewData["userid"] = userid;
