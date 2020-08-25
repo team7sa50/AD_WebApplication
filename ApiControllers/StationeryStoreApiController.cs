@@ -87,11 +87,24 @@ namespace Team7_StationeryStore.ApiControllers
             Departments department = invService.getDepartmentDetail(deptId);
             return Content(JsonConvert.SerializeObject(department, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
         }
+        [HttpGet]
+        [Route("api/[controller]/viewAllItemCodes")]
+        public IActionResult viewAllItemCodes()
+        {
+            var items = (from i in dbcontext.inventories
+                         select new
+                         {
+                           ItemCode=i.itemCode
+                         }
+                        );
+            return Content(JsonConvert.SerializeObject(items));
+        }
         [HttpPost]
         [Route("api/[controller]/createAdjustmentVouncher")]
-        public ActionResult crateAdjustmentVouncher([FromBody]AdjustmentVoucher value)
+        public ActionResult crateAdjustmentVouncher([FromBody]CreateAdjustmentvouncher value)
         {
-            invService.CreateAdjustmentVoucher(value.EmEmployeeId, value.InventoryId, value.qty, value.reason);
+            Inventory inventory = invService.findInventory(value.ItemCode);
+            invService.CreateAdjustmentVoucher(value.EmEmployeeId,inventory.Id, value.qty, value.reason);
             Object response = new
             {
                 message = "Successfully created",
