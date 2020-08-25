@@ -269,5 +269,29 @@ namespace Team7_StationeryStore.Service
             top3Result = top3.OrderByDescending(x=>x.Value).Take(3).ToDictionary(x=>x.Key,x=>x.Value);
             return top3Result;
         }
+        public List<PurchaseOrderQuantity> startPurchaseOrderAnalysis(ItemCategory cat)
+        {
+            var past4Month = DateTime.Now.AddMonths(-4).Month;
+            var Year = DateTime.Now.Year;
+            var po = from p in dbcontext.purchaseOrders
+                     join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
+                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
+                     where (h.Key.Month >= past4Month && h.Key.Year == Year && h.Key.name == cat.name)
+                     orderby (h.Key.Month)
+                     select new
+                     {
+                         Month = h.Key.Month,
+                         Qty = h.Sum(x => x.quantity)
+                     };
+            List<PurchaseOrderQuantity> poQ = new List<PurchaseOrderQuantity>();
+            foreach (var c in po)
+            {
+                PurchaseOrderQuantity p = new PurchaseOrderQuantity();
+                p.Month = c.Month;
+                p.quantity = c.Qty;
+                poQ.Add(p);
+            }
+            return poQ;
+        }
     }   
 }

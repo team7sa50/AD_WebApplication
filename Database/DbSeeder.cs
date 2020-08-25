@@ -800,16 +800,25 @@ namespace Team7_StationeryStore.Database
                     Id = Guid.NewGuid().ToString(),
                     GeneratedDate = DateTime.Now,
                     CollectionDate = DateTime.Now,
-                    status = DisbusementStatus.COMPLETED,
+                    status = DisbusementStatus.PENDING,
+                    storeClerk = employee1,
                     Departments = regr
                 };
                 dbcontext.Add(d1);
+                DisbursementDetail d1detail1 = new DisbursementDetail();
+                d1detail1.Id = Guid.NewGuid().ToString();
+                d1detail1.DisbursementId = d1.Id;
+                d1detail1.RequisitionDetailId = requisition1Detail.Id;
+                d1detail1.disbursedQty = 20;
+                dbcontext.Add(d1detail1);
+
 
                 Disbursement d2 = new Disbursement()
                 {
                     Id = Guid.NewGuid().ToString(),
                     GeneratedDate = DateTime.Now,
                     CollectionDate = DateTime.Now,
+                    storeClerk=employee1,
                     status = DisbusementStatus.COMPLETED,
                     Departments = Comm
                 };
@@ -820,6 +829,7 @@ namespace Team7_StationeryStore.Database
                     Id = Guid.NewGuid().ToString(),
                     GeneratedDate = DateTime.Now,
                     CollectionDate = DateTime.Now,
+                    storeClerk=employee1,
                     status = DisbusementStatus.COMPLETED,
                     Departments = CS
                 };
@@ -830,6 +840,7 @@ namespace Team7_StationeryStore.Database
                     Id = Guid.NewGuid().ToString(),
                     GeneratedDate = DateTime.Now,
                     CollectionDate = DateTime.Now,
+                    storeClerk=employee1,
                     status = DisbusementStatus.COMPLETED,
                     Departments = EN
                 };
@@ -840,6 +851,7 @@ namespace Team7_StationeryStore.Database
                     Id = Guid.NewGuid().ToString(),
                     GeneratedDate = DateTime.Now,
                     CollectionDate = DateTime.Now,
+                    storeClerk=employee1,
                     status = DisbusementStatus.COMPLETED,
                     Departments = Comm
                 };

@@ -40,7 +40,7 @@
                     @foreach (var i in lists)
                     {
                         <tr>
-                            <td>@i.Inventory.ItemCategory.name</td>
+                            <td>@i.Inventory.description</td>
                             <td>@i.Qty @i.Inventory.measurementUnit</td>
                             <td>
                                 <form method="POST">
@@ -51,12 +51,12 @@
                     }
                 </tbody>
             </table>
-            <div class="btn_align">
+            <div class="btn_align " id="poBtn">
                 <form asp-controller="PurchaseOrder" asp-action="RaisePurchaseOrder" method="POST" class="form-inline my-2 my-lg-0">
                     <input type="hidden" value="@supplier.Id" name="supplier" />
                     <input class="btn btn-outline-success btn-sm" type="submit" value="Submit Purchase Order">
                 </form>
-                <a class="btn btn-outline-danger btn-sm" asp-controller="PurchaseOrder" asp-action="RemoveAllItems">Cancel</a>
+                <a class="btn btn-outline-danger btn-sm" style="margin-left:2%;" asp-controller="PurchaseOrder" asp-action="RemoveAllItems">Remove All</a>
             </div>
         </div>
     </div>

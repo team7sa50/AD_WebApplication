@@ -85,9 +85,7 @@ body {
 }
 
 .modal-contents {
-    height: 400px;
     width: 500px;
-    top: 100;
     background-color: white;
     position: absolute;
     border-radius: 4px;
@@ -95,23 +93,24 @@ body {
 
 #close {
     float: right;
-    margin-right: 30px;
     margin-top: 20px;
     background: none;
     border: none;
     font-size: 16px;
     color: #9c9c9c;
 }
-
+#item{
+    display:flex;
+}
 .modal-header {
-    width: 500px;
-    margin: auto;
+    flex-direction: column;
+    display: flex;
     text-align: center;
-    padding-top: 60px;
     font-size: 18px;
     color: #36498f;
     letter-spacing: 2px;
     font-weight: 600;
+     border:none;
 }
 
 .modal-body {
@@ -121,6 +120,8 @@ body {
 }
 
     .modal-body form {
+        display: flex;
+        flex-direction: column;
         width: 200px;
         margin: auto;
         align-content: center;
@@ -148,6 +149,7 @@ body {
     border: none;
     font-size: 12px;
     padding: 5px;
+    margin-left: 30%;
     background: #36498f;
     color: white;
 }

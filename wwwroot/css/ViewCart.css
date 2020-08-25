@@ -142,3 +142,7 @@ table.cartTable {
     letter-spacing: 1px border-bottom: 1px solid #4E67EB;
     text-decoration: underline;
 }
+#poBtn {
+    display: flex;
+    justify-content: flex-start;
+}
