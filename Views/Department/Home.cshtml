@@ -70,6 +70,12 @@
                     <br />
                 }
 
+                @if (emp.Role == Role.DEPT_REP)
+                {
+                    <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="viewDepartment">VIEW DEPARTMENT LIST</a>
+                    <br />
+                }
+
                 @if (emp.Role == Role.DEPT_HEAD)
                 {
                     <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="viewDepartmentRequisition">VIEW DEPARTMENT REQUISITION</a>

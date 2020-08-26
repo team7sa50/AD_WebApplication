@@ -190,6 +190,7 @@ namespace Team7_StationeryStore.Service
             }
             return dbcontext.adjustmentVouchers.ToList();
         }
+
         public bool updateInventory(string invId, int qty) {
             bool editable = true;
             Inventory inv = retrieveInventory(invId);
