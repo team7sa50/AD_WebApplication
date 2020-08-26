@@ -29,16 +29,22 @@ namespace Team7_StationeryStore.Service
 
         }
 
+        public List<Requisition> findPendingREquisitionsFromStationery()
+        {
+            return dbcontext.requisitions.Where(x => x.status.Equals(ReqStatus.APPROVED) || x.status.Equals(ReqStatus.OUTSTAND)).OrderBy(x => x.status).ThenBy(x => x.DateSubmitted).ToList();
+        }
+
+
         public List<Requisition> findLatestRequisitions()
         {
-            List<Requisition> rq = (from r in dbcontext.requisitions
-                                    select r).ToList();
-            List<Requisition> result = new List<Requisition>();
-            for (int i = 0; i < 5; i++)
-            {
-                result.Add(rq[i]);
-            }
-            return result;
+            //Sort by status then by Date decending
+            /*  return dbcontext.requisitions.Where(x => x.status.Equals(ReqStatus.OUTSTAND) || x.status.Equals(ReqStatus.APPROVED))
+                                                 .OrderBy(x => x.DateSubmitted)
+                                                 .ThenBy(x => x.status).Take(5).ToList();*/
+            //Sort by Date decending
+            return dbcontext.requisitions.Where(x => x.status.Equals(ReqStatus.OUTSTAND) || x.status.Equals(ReqStatus.APPROVED))
+                                   .OrderBy(x => x.DateSubmitted).Take(5).ToList();
+
         }
         public List<Requisition> retrieveAllRequisitions()
         {

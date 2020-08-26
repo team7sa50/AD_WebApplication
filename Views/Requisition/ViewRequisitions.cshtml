@@ -46,21 +46,22 @@
                             @foreach (var d in departments)
                             {
                                 <option value="@d.DeptName">@d.DeptName</option>
-
-                            }
-                        </select>
-                    </div>
-                    <div style="float:left;">
-                        <label for="Status">Status</label>
-                        <select id="statusAll" name="Status">
-                            @foreach (var s in statuses)
-                            {
-                                <option value=@s>@s</option>
-                            }
-                        </select>
-                    </div>
-                </fieldset>
-            </div>
+                                }
+                            </select>
+                        </div>
+                        <div style="float:left;">
+                            <label for="Status">Status</label>
+                            <select id="statusAll" name="Status">
+                                <option value="a" selected>All</option>
+                                @foreach (var s in statuses)
+                                {
+                                    <option value=@s>@s</option>
+                                }
+                            </select>
+                        </div>
+                    </fieldset>
+                </div>
+               
             <form asp-controller="StationeryStore" asp-action="viewRetrieval" method="POST">
                 <table class="requisitiontable table" id="AllReqTable" cellspacing="0" width="100%">
                     <tr>
@@ -80,7 +81,7 @@
                                 <td>
                                     <input type=checkbox value="@c.Id" name="req">
                                 </td>
-                                <td>@c.Id.Substring(0, 9)</td>
+                                <td>@c.Id</td>
                                 <td>@c.Department.DeptName</td>
                                 <td>@c.DateSubmitted</td>
                                 <td class="rstatus">@c.status</td>
@@ -304,6 +305,21 @@
                                             </td>
                                             </tr>`;
                 tableOld.innerHTML += row;
+            $('#statusAll').change('keyup', function () {
+                /*get the value selected*/
+                var value = $(this).val();
+                console.log(value + " selected");
+                if (value.length < 2) {
+                    console.log("All status selected");
+                    var data1 = getAll(tableJson);
+                    console.log("Data to be passed into buildTable: " + data1);
+                    buildTable(data1, "AllReq");
+                }
+                else if (value.length > 1) {
+                    var data2 = searchTableByStatus(value, tableJson);
+                    console.log("Data to be passed in to buildTable: " + data2);
+                    buildTable(data2, "AllReq");
+                }
             }
         }
 
@@ -315,6 +331,14 @@
             }
             return filteredData;
         }
+            $('#dateOfReq').change('keyup', function () {
+                var value = $(this).val();
+                var inputDate = new Date(value);
+                console.log(inputDate);
+                var dataByDate = searchTableByDate(inputDate, comTableJSON);
+                buildTable(dataByDate, "AllReq");
+                $(this).value = "";
+            });
 
         $('#statusAll').change('keyup', function () {
             /*get the value selected*/
@@ -349,7 +373,6 @@
             }
             return filteredData;
         }
-
         $(document).ready(function () {
             $('.rstatus').each(function () {
                 switch ($(this).text()) {
