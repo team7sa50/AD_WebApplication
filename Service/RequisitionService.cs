@@ -31,14 +31,21 @@ namespace Team7_StationeryStore.Service
 
         public List<Requisition> findLatestRequisitions()
         {
-            List<Requisition> rq = (from r in dbcontext.requisitions
-                                    select r).ToList();
-            List<Requisition> result = new List<Requisition>();
-            for (int i = 0; i < 5; i++)
-            {
-                result.Add(rq[i]);
-            }
-            return result;
+            /*            List<Requisition> rq = (from r in dbcontext.requisitions
+                                                select r).ToList();
+                        List<Requisition> result = new List<Requisition>();
+                        for (int i = 0; i < 5; i++)
+                        {
+                            result.Add(rq[i]);
+                        }*/
+            //Sort by status then by Date decending
+            /*  return dbcontext.requisitions.Where(x => x.status.Equals(ReqStatus.OUTSTAND) || x.status.Equals(ReqStatus.APPROVED))
+                                                 .OrderBy(x => x.status)
+                                                 .ThenByDescending(x => x.DateSubmitted).Take(5).ToList();*/
+            //Sort by Date decending
+            return dbcontext.requisitions.Where(x => x.status.Equals(ReqStatus.OUTSTAND) || x.status.Equals(ReqStatus.APPROVED))
+                                   .OrderBy(x => x.DateSubmitted).Take(5).ToList();
+
         }
         public List<Requisition> retrieveAllRequisitions()
         {

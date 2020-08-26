@@ -161,28 +161,31 @@ table.overviewTable {
 .rstatus {
     font-weight: 600;
     border-radius: 50px;
-    width: 70px;
+    width: 50%;
     letter-spacing: 1px; 
     font-size: 10px;
     color: white;
+    margin: auto;
 }
 
 .dstatus {
     font-weight: 600;
     border-radius: 50px;
-    width: 70px;
+    width: 50%;
     letter-spacing: 1px;
     font-size: 10px;
     color: white;
+    margin: auto;
 }
 
 .postatus {
     font-weight: 600;
     border-radius: 50px;
-    width: 70px;
+    width: 50%;
     letter-spacing: 1px;
     font-size: 10px;
     color: white;
+    margin: auto;
 }
 
 #clerkhome-left {
