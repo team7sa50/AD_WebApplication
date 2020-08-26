@@ -6,8 +6,13 @@
     var categories = (List<ItemCategory>)ViewData["categories"];
     var userid = TempData["userid"];
     var username = ViewData["username"];
+    var user = (Employee)ViewData["user"];
 }
+@if(user.Role== Role.STORE_MANAGER || user.Role == Role.STORE_SUPERVISOR)
+{
+    Layout = "~/Views/Shared/_StoreManagerandSupervisor.cshtml";
 
+}
     <head>
 
         <title>View Inventory</title>
@@ -25,19 +30,24 @@
                     <th>Item Code</th>
                     <th>Description</th>
                     <th>Stock</th>
-                    <th>Adjustment Voucher</th>
+                    @if (user.Role == Role.STORE_CLERK) { 
+                        <th>Adjustment Voucher</th>
+                    }
                 </tr>
             </thead>
 
             <tbody>
                 @foreach (var i in lists)
                 {
-                    <tr>
-                        <td><p class="code">@i.itemCode</p></td>
-                        <td class="itemdescri">@i.description</td>
-                        <td>@i.stock</td>
+                <tr>
+                    <td><p class="code">@i.itemCode</p></td>
+                    <td class="itemdescri">@i.description</td>
+                    <td>@i.stock</td>
+                    @if (user.Role == Role.STORE_CLERK)
+                    {
                         <td><button class="btnadju" onclick="createAdjustment('@i.Id','@i.itemCode')"><i class="fas fa-pencil-alt"></i></button></td>
-                    </tr>
+                    }
+                </tr>
                 }
             </tbody>
         </table>

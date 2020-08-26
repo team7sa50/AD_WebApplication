@@ -106,3 +106,31 @@ for details on configuring this project to bundle and minify static web assets. 
         padding: 8px;
         text-align: center;
     }
+.vounchertable {
+    width: 100%;
+    padding: 15px;
+    font-size: 11px;
+    border-collapse: collapse;
+    background: white;
+}
+
+    .vounchertable th {
+        border-top: 2px solid #ddd;
+        padding: 20px 10px;
+        border-right: 2px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        color: #028c6A;
+        text-align:center;
+    }
+
+    .vounchertable td {
+        border-right: 2px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+#main {
+    width: 60%;
+    margin: auto;
+}

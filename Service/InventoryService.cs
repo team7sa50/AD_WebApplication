@@ -190,6 +190,10 @@ namespace Team7_StationeryStore.Service
             }
             return dbcontext.adjustmentVouchers.ToList();
         }
+        public List<AdjustmentVoucher> findAdjustmentVoucherToApprove(string userId)
+        {
+            return dbcontext.adjustmentVouchers.Where(x => x.appEmEmployeeId == userId ).ToList();
+        }
 
         public bool updateInventory(string invId, int qty) {
             bool editable = true;

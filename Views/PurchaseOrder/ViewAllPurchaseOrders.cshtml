@@ -3,14 +3,19 @@
     ViewData["Title"] = "ViewAllPurchaseOrders";
     var lists = (List<PurchaseOrder>)ViewData["purchaseOrders"];
     var username = ViewData["username"];
+    var user = (Employee)ViewData["user"];
 }
+@if (user.Role == Role.STORE_MANAGER || user.Role == Role.STORE_SUPERVISOR)
+{
+    Layout = "~/Views/Shared/_StoreManagerandSupervisor.cshtml";
 
-    <head>
-        <title>Purchase Orders</title>
-        <link href="https://fonts.googleapis.com/css2?family=Alata&family=Raleway:wght@300;400&display=swap" rel="stylesheet">
-        <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
-        <link href="~/css/ViewAllPurchaseO.css" rel="stylesheet" />
-    </head>
+}
+<head>
+    <title>Purchase Orders</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Raleway:wght@300;400&display=swap" rel="stylesheet">
+    <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <link href="~/css/ViewAllPurchaseO.css" rel="stylesheet" />
+</head>
 
 <div id="main">
     <div id="POheader">
@@ -22,9 +27,13 @@
     <div class="requisitioncontainer">
         <div class="requisitionfilter">
             <p>Purchase Orders</p>
-            <form asp-controller="PurchaseOrder" asp-action="SelectSupplier" method="POST">
-                <button style="display: inline-block; float: right;" type="submit" id="createPO"><i class="fas fa-plus-square"></i> Create New PO</button>
-            </form>
+            @if (user.Role == Role.STORE_CLERK)
+            {
+                <form asp-controller="PurchaseOrder" asp-action="SelectSupplier" method="POST">
+                    <button style="display: inline-block; float: right;" type="submit" id="createPO"><i class="fas fa-plus-square"></i> Create New PO</button>
+                </form>
+            }
+
         </div>
         <table class="requisitiontable table" cellspacing="0" width="100%">
             <tr>
@@ -32,22 +41,32 @@
                 <th>Supplier</th>
                 <th>Status</th>
                 <th>Details</th>
-                <th>Action</th>
+                @if (user.Role == Role.STORE_CLERK)
+                {
+                    <th>Action</th>
+
+                }
             </tr>
             @foreach (var c in lists)
             {
-        <tr>
-            <td class="text-left">@c.date</td>
-            <td class="text-left">@c.Supplier.name</td>
-            <td class="text-left">@c.status</td>
-            <td class="text-left"><a asp-controller="PurchaseOrder" asp-action="PurchaseOrderDetail" asp-route-poid="@c.Id"><i class="fas fa-eye"></i></a></td>
-            <td class="text-left">
-                @if (c.status == POStatus.PENDING)
-                {
-                    <button onclick="updateStatus('@c.Id')" class="updateBtn">Update</button>
-                }
-            </td>
-        </tr>
+                <tr>
+                    <td class="text-left">@c.date</td>
+                    <td class="text-left">@c.Supplier.name</td>
+                    <td class="text-left">@c.status</td>
+                    <td class="text-left"><a asp-controller="PurchaseOrder" asp-action="PurchaseOrderDetail" asp-route-poid="@c.Id"><i class="fas fa-eye"></i></a></td>
+
+                    @if (user.Role == Role.STORE_CLERK)
+                    {
+                        <td class="text-left">
+
+                            @if (c.status == POStatus.PENDING)
+                            {
+                                <button onclick="updateStatus('@c.Id')" class="updateBtn">Update</button>
+                            }
+                        </td>
+
+                    }
+                </tr>
             }
         </table>
     </div>

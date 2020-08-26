@@ -1,16 +1,89 @@
 ﻿
 @{
     ViewData["Title"] = "HomeManagerSupervisor";
-    Layout = "~/Views/Shared/_Department.cshtml";
+    var username = ViewData["username"];
+    var lists = (List<AdjustmentVoucher>)ViewData["adjustmentList"];
+    Layout = "~/Views/Shared/_StoreManagerandSupervisor.cshtml";
+
 
 }
     <head>
-        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+        <link href="~/css/custom.css" rel="stylesheet" />
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     </head>
 
-    <body>
-    <div class="w3-container w3-center w3-animate-zoom">
-        <h1>HomeManagerSupervisor</h1>
-        </div>
-    </body>
+<body>
+    <div id="main">
+        <p>Adjustment Vouncher</p>
+        @if (lists.Count != 0)
+        {
+        <table class="vounchertable">
+            <tr>
+                <th>ItemCode</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Date</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th></th>
+                <th></th>
+            </tr>
+            @foreach (var c in lists)
+            {
+        <tr>
+            <td>@c.Inventory.itemCode</td>
+            <td>@c.Inventory.description</td>
+            <td>@c.qty</td>
+            <td>@c.date</td>
+            <td>@c.reason</td>
+            <td>@c.status</td>
 
+            <td>
+                @if (c.status == Status.PENDING)
+                {
+                    <a onclick="approveAdjustment('@c.Id','approve')"><u>Approve</u></a>
+                }
+            </td>
+            <td>
+                @if (c.status == Status.PENDING)
+                {
+                    <a onclick="approveAdjustment('@c.Id','reject')"><u>Reject</u></a>
+                }
+            </td>
+        </tr>
+            }
+        </table>
+        }
+</body>
+<div class="modal fade" id="approveModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title" id="myModalLabel">Add Remark</h4>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="StationeryStore" asp-action="updateAdjustmentVoucher" method="POST">
+                    <input type="text" name="remarks" placeholder="Add remark" id="remarks" style="height: 80px; width:100%;text-align:start" required>
+                    <input type="hidden" id="adjVoucherId" name="adjVoucherId">
+                    <input type="hidden" id="action" name="action">
+
+                    <br />
+                    <input type="submit" class="btn btn-outline-primary" value="Submit" style="margin-top: 20px">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function approveAdjustment(id,action) {
+        console.log("hello adjustment" + id);
+        $('#approveModel').modal();
+        document.getElementById("adjVoucherId").value = id;
+        document.getElementById("action").value = action;
+
+    }
+</script>
