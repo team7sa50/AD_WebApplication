@@ -42,7 +42,10 @@
             <td class="text-left">@c.status</td>
             <td class="text-left"><a asp-controller="PurchaseOrder" asp-action="PurchaseOrderDetail" asp-route-poid="@c.Id"><i class="fas fa-eye"></i></a></td>
             <td class="text-left">
-                <button onclick="updateStatus('@c.Id')" class="updateBtn">Update</button>
+                @if (c.status == POStatus.PENDING)
+                {
+                    <button onclick="updateStatus('@c.Id')" class="updateBtn">Update</button>
+                }
             </td>
         </tr>
             }
