@@ -8,7 +8,7 @@ namespace Team7_StationeryStore.Models
 {
     public enum ReqStatus
     {
-        AWAITING_APPROVAL, REJECTED,APPROVED,PROCESSING,COLLECTION,OUTSTAND,COMPLETED
+        AWAITING_APPROVAL,REJECTED,APPROVED,PROCESSING,COLLECTION,OUTSTAND,COMPLETED
     }
     public class Requisition
     {
