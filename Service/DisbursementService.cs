@@ -86,8 +86,10 @@ namespace Team7_StationeryStore.Service
             return requisitionsForDepartment;
         }
 
-        public void saveRequisitionsAsDisbursement(Dictionary<Departments, List<RequisitionDetail>> requisitionsForDepartment)
+        public void saveRequisitionsAsDisbursement(string userId,Dictionary<Departments, List<RequisitionDetail>> requisitionsForDepartment)
         {
+            Employee employee = deptService.findEmployeeById(userId);
+
             foreach (var dept in requisitionsForDepartment)
             {
                 //Create new disbursement
@@ -96,6 +98,7 @@ namespace Team7_StationeryStore.Service
                 d.GeneratedDate = DateTime.Now;
                 d.CollectionDate = DateTime.Now.AddDays(1);
                 d.Departments = dept.Key;
+                d.storeClerk = employee;
                 d.DepartmentsId = dept.Key.Id;
                 d.status = DisbusementStatus.PENDING;
                 dbcontext.Add(d);

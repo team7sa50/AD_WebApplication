@@ -71,7 +71,7 @@
                                     <td>@c.Id</td>
                                     <td>@c.Department.DeptName</td>
                                     <td>@c.DateSubmitted</td>
-                                    <td>@c.status</td>
+                                    <td><p class="rstatus">@c.status</p></td>
                                     <td>
                                         <a onclick="openDetail('@c.Id','@c.Department.DeptCode')"><u>View</u></a>
                                     </td>
@@ -325,5 +325,29 @@
                 }
                 return filteredData;
             }
+
+           $(document).ready(function () {
+            $('.rstatus').each(function () {
+                switch ($(this).text()) {
+                    case "AWAITING_APPROVAL":
+                        $(this).css('background-color','#c5d7c0');
+                        break;
+                    case "REJECTED":
+                        $(this).css('background-color','#f17a7e');
+                        break;
+                    case "APPROVED":
+                        $(this).css('background-color','#7fd6bd');
+                        break;
+                    case "PROCESSING":
+                        $(this).css('background-color','#8ec9bb');
+                        break;
+                    case "COLLECTION":
+                        $(this).css('background-color','#ecc558');
+                        break;
+                    case "OUTSTAND":
+                        $(this).css('background-color','#fa6e4f');
+                        break;
+                }
+            });
         </script>
     </body>

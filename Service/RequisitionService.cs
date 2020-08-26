@@ -216,6 +216,30 @@ namespace Team7_StationeryStore.Service
 
             return (Req_Complier) re;
         }
+        public List<PurchaseOrderQuantity> startRequisitionAnalysis(ItemCategory cat,Departments dept)
+        {
+            var past4Month = DateTime.Now.AddMonths(-4).Month;
+            var Year = DateTime.Now.Year;
+            var po = from req in dbcontext.requisitions
+                     join req_d in dbcontext.requisitionDetails on req.Id equals req_d.RequisitionId
+                     group req_d by new { req_d.Inventory.ItemCategory.name, req.Department.DeptName, req.DateSubmitted.Month, req.DateSubmitted.Year } into h
+                     where (h.Key.Month >= past4Month && h.Key.Year == Year && h.Key.DeptName == dept.DeptName && h.Key.name == cat.name)
+                     orderby (h.Key.Month)
+                     select new
+                     {
+                         Month = h.Key.Month,
+                         Qty = h.Sum(x => x.RequestedQty)
+                     };
+            List<PurchaseOrderQuantity> reQ = new List<PurchaseOrderQuantity>();
+            foreach (var c in po)
+            {
+                PurchaseOrderQuantity p = new PurchaseOrderQuantity();
+                p.Month = c.Month;
+                p.quantity = c.Qty;
+                reQ.Add(p);
+            }
+            return reQ;
+        }
 
     }
 }

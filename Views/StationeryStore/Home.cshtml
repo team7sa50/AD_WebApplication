@@ -9,17 +9,17 @@
 
 
 
-<head>
-    <meta charset="utf=8">
-    <title>Home</title>
-    <link href="~/css/homepage.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
-    <script src="https://use.fontawesome.com/973befe495.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <head>
+        <meta charset="utf=8">
+        <title>Home</title>
+        <link href="~/css/homepage.css" rel="stylesheet" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+        <script src="https://use.fontawesome.com/973befe495.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-</head>
+    </head>
 
 <body>
     <div id="main">
@@ -72,7 +72,7 @@
                         <tr>
                             <td class="deptName">@r.Department.DeptName</td>
                             <td class="subDate">@r.DateSubmitted.Date</td>
-                            <td class="status">@r.status</td>
+                            <td><p class="rstatus">@r.status.ToString().ToLower()</p></td>
                             <td><p class="reqId">@r.Id.Substring(0,6)</p></td>
                         </tr>
                     }
@@ -94,7 +94,7 @@
                         <tr>
                             <td class="deptName">@d.Departments.DeptName</td>
                             <td class="subDate">@d.CollectionDate.Date</td>
-                            <td class="status">@d.status</td>
+                            <td><p class="dstatus">@d.status.ToString().ToLower()</p></td>
                             <td> <p class="reqId">@d.Id.Substring(0,6)</p></td>
                         </tr>
                         }
@@ -116,7 +116,7 @@
                         <tr>
                             <td class="deptName">@po.Supplier.name</td>
                             <td class="subDate">@po.date.Date</td>
-                            <td class="status">@po.status</td>
+                            <td><p class="postatus">@po.status.ToString().ToLower()</p></td>
                             <td> <p class="reqId">@po.Id.Substring(0,6)</p></td>
                         </tr>
                         }
@@ -152,6 +152,57 @@
             evt.currentTarget.className += " active";
         }
 
+
+        $(document).ready(function () {
+            $('.rstatus').each(function () {
+                switch ($(this).text()) {
+                    case "AWAITING_APPROVAL":
+                        $(this).css('background-color','#c5d7c0');
+                        break;
+                    case "REJECTED":
+                        $(this).css('background-color','#f17a7e');
+                        break;
+                    case "APPROVED":
+                        $(this).css('background-color','#7fd6bd');
+                        break;
+                    case "PROCESSING":
+                        $(this).css('background-color','#8ec9bb');
+                        break;
+                    case "COLLECTION":
+                        $(this).css('background-color','#ecc558');
+                        break;
+                    case "OUTSTAND":
+                        $(this).css('background-color','#fa6e4f');
+                        break;
+                }
+            });
+
+             $('.dstatus').each(function () {
+                switch ($(this).text()) {
+                    case "PENDING":
+                        $(this).css('background-color','#c5d7c0');
+                        break;
+                    case "REJECT":
+                        $(this).css('background-color','#f17a7e');
+                        break;
+                    case "COMPLETED":
+                        $(this).css('background-color','#7fd6bd');
+                        break;                
+                }
+             });
+
+             $('.postatus').each(function () {
+                switch ($(this).text()) {
+                    case "PENDING":
+                        $(this).css('background-color','#c5d7c0');
+                        break;
+                    case "DELIVERED":
+                        $(this).css('background-color','#7fd6bd');
+                        break;                
+                }
+            });
+
+        });
         
     </script>
 

@@ -148,10 +148,31 @@ table.overviewTable {
     padding: 2px;
 }
 
-.status {
+.rstatus {
     font-weight: 600;
     border-radius: 50px;
-    letter-spacing: 1px
+    width: 70px;
+    letter-spacing: 1px; 
+    font-size: 10px;
+    color: white;
+}
+
+.dstatus {
+    font-weight: 600;
+    border-radius: 50px;
+    width: 70px;
+    letter-spacing: 1px;
+    font-size: 10px;
+    color: white;
+}
+
+.postatus {
+    font-weight: 600;
+    border-radius: 50px;
+    width: 70px;
+    letter-spacing: 1px;
+    font-size: 10px;
+    color: white;
 }
 
 #clerkhome-left {
