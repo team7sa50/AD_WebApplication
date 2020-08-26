@@ -46,27 +46,29 @@
                             @foreach (var d in departments)
                             {
                                 <option value="@d.DeptName">@d.DeptName</option>
-                                }
-                            </select>
-                        </div>
-                        <div style="float:left;">
-                            <label for="Status">Status</label>
-                            <select id="statusAll" name="Status">
-                                <option value="a" selected>All</option>
-                                @foreach (var s in statuses)
-                                {
-                                    <option value=@s>@s</option>
-                                }
-                            </select>
-                        </div>
-                    </fieldset>
-                </div>
-               
+                            }
+                        </select>
+                    </div>
+                    <div style="float:left;">
+                        <label for="Status">Status</label>
+                        <select id="statusAll" name="Status">
+                            <option value="a" selected>All</option>
+                            @foreach (var s in statuses)
+                            {
+                                <option value=@s>@s</option>
+                            }
+                        </select>
+                    </div>
+                </fieldset>
+            </div>
+            <input type="hidden" id="role" value="@user.Role.ToString()">
             <form asp-controller="StationeryStore" asp-action="viewRetrieval" method="POST">
                 <table class="requisitiontable table" id="AllReqTable" cellspacing="0" width="100%">
                     <tr>
-
-                        <th>Checkbox</th>
+                        @if (user.Role == Role.STORE_CLERK)
+                        {
+                            <th>Checkbox</th>
+                        }
                         <th>Id</th>
                         <th>Department</th>
                         <th>Date</th>
@@ -78,9 +80,13 @@
                         @foreach (var c in lists)
                         {
                             <tr>
-                                <td>
-                                    <input type=checkbox value="@c.Id" name="req">
-                                </td>
+                                @if (user.Role == Role.STORE_CLERK)
+                                {
+                                    <td>
+                                        <input type=checkbox value="@c.Id" name="req">
+                                    </td>
+                                }
+
                                 <td>@c.Id</td>
                                 <td>@c.Department.DeptName</td>
                                 <td>@c.DateSubmitted</td>
@@ -210,9 +216,9 @@
                     var tabledisQty = document.getElementById('disbDetailsQty');
                     for (var i = 0; i < items.length; i++) {
                         var rowItem = `<tr>
-                                    <td>${items[i].Inventory.description}</td>
-                                    <td>${items[i].RequestedQty}</td>
-                                     </tr>`;
+                                <td>${items[i].Inventory.description}</td>
+                                <td>${items[i].RequestedQty}</td>
+                                 </tr>`;
                         tabledisQty.innerHTML += rowItem;
                     }
                 }
@@ -291,36 +297,41 @@
 
         function buildTable(data, tableBodyId) {
             var tableOld = document.getElementById(tableBodyId);
+            var role = document.getElementById("role").value;
+            console.log("The user role: " + role);
             tableOld.innerHTML = "";
             for (var i = 0; i < data.length; i++) {
                 console.log(data[i]);
-                var row = `<tr>
-                                            <td><input type=checkbox value=${data[i].id} name="req"></td>
-                                            <td>${data[i].id} </td>
-                                            <td>${data[i].department} </td>
-                                            <td>${data[i].date} </td>
-                                            <td>${data[i].status} </td>
-                                            <td>
-                                            <a onclick="openDetail(${data[i].id}, ${data[i].department})" class="viewDeta"><u>View</u></a>
-                                            </td>
-                                            </tr>`;
-                tableOld.innerHTML += row;
-            $('#statusAll').change('keyup', function () {
-                /*get the value selected*/
-                var value = $(this).val();
-                console.log(value + " selected");
-                if (value.length < 2) {
-                    console.log("All status selected");
-                    var data1 = getAll(tableJson);
-                    console.log("Data to be passed into buildTable: " + data1);
-                    buildTable(data1, "AllReq");
+                if (role == "STORE_CLERK") {
+                    var row = `<tr>
+                                        <td><input type=checkbox value=${data[i].id} name="req"></td>
+                                        <td>${data[i].id} </td>
+                                        <td>${data[i].department} </td>
+                                        <td>${data[i].date} </td>
+                                        <td>${data[i].status} </td>
+                                        <td>
+                                        <a onclick="openDetail(${data[i].id}, ${data[i].department})" class="viewDeta"><u>View</u></a>
+                                        </td>
+                                        </tr>`;
+                    tableOld.innerHTML += row;
                 }
-                else if (value.length > 1) {
-                    var data2 = searchTableByStatus(value, tableJson);
-                    console.log("Data to be passed in to buildTable: " + data2);
-                    buildTable(data2, "AllReq");
+                else {
+                    var row = `<tr>
+                                        <td>${data[i].id} </td>
+                                        <td>${data[i].department} </td>
+                                        <td>${data[i].date} </td>
+                                        <td>${data[i].status} </td>
+                                        <td>
+                                        <a onclick="openDetail(${data[i].id}, ${data[i].department})" class="viewDeta"><u>View</u></a>
+                                        </td>
+                                        </tr>`;
+                    tableOld.innerHTML += row;
+
+
                 }
+                
             }
+
         }
 
         function getAll(alldata) {
@@ -331,24 +342,25 @@
             }
             return filteredData;
         }
-            $('#dateOfReq').change('keyup', function () {
-                var value = $(this).val();
-                var inputDate = new Date(value);
-                console.log(inputDate);
-                var dataByDate = searchTableByDate(inputDate, comTableJSON);
-                buildTable(dataByDate, "AllReq");
-                $(this).value = "";
-            });
 
         $('#statusAll').change('keyup', function () {
             /*get the value selected*/
             var value = $(this).val();
             console.log(value + " selected");
-            var data2 = searchTableByStatus(value, tableJson);
-            console.log("Data to be passed in to buildTable: " + data2);
-            buildTable(data2, "AllReq");
+            if (value.length < 2) {
+                console.log("All status selected");
+                var data1 = getAll(tableJson);
+                console.log("Data to be passed into buildTable: " + data1);
+                buildTable(data1, "AllReq");
+            }
+            else if (value.length > 1) {
+                var data2 = searchTableByStatus(value, tableJson);
+                console.log("Data to be passed in to buildTable: " + data2);
+                buildTable(data2, "AllReq");
+            }
         }
         );
+
 
         $('#dateOfReq').change('keyup', function () {
             var value = $(this).val();
@@ -373,7 +385,13 @@
             }
             return filteredData;
         }
+
         $(document).ready(function () {
+            applyStatusStyle();
+            console.log("Start of page rendering");
+        });
+        function applyStatusStyle() {
+            console.log("Apply status style");
             $('.rstatus').each(function () {
                 switch ($(this).text()) {
                     case "AWAITING_APPROVAL":
@@ -396,6 +414,7 @@
                         break;
                 }
             });
-        });
+        }
+
     </script>
 </body>
