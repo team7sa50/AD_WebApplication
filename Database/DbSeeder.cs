@@ -714,7 +714,7 @@ namespace Team7_StationeryStore.Database
                 Inventory[] arrInv = new Inventory[] { item1, item2, item3, item4, item5, item6, item7, item8, item9, item10 };
 
                 Random rand = new Random();
-                int size = 300;
+                int size = 10;
                 for (int i = 0; i < size; i++)
                 {
                     DateTime randDate = DateTime.Now.AddDays(-rand.Next(1100));

@@ -39,7 +39,7 @@ namespace Team7_StationeryStore.Controllers
         public IActionResult ViewRequisitions()
         {
             List<Departments> departments = deptService.findAllDepartments();
-            List<Requisition> requisitions = reqService.findAllRequisitionsFromStationery();
+            List<Requisition> requisitions = reqService.findPendingREquisitionsFromStationery();
             List<Requisition> oustandingReq = reqService.findOustandingRequisitions();
             List<string> statuses = new List<string>();
             foreach (var e in Enum.GetValues(typeof(ReqStatus)))
