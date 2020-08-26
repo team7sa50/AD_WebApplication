@@ -6,10 +6,17 @@
 @{
     var lists = (List<Inventory>)ViewData["stationeryCatalgoue"];
     var categories = (List<ItemCategory>)ViewData["categories"];
-    var user = (Employee)ViewData["user"];
+    Employee user = (Employee)ViewData["user"];
 }
 
-
+@if (user.Role == Role.EMPLOYEE)
+{
+    Layout = "~/Views/Shared/_departmentemployeehome.cshtml";
+}
+@if (user.Role == Role.DEPT_REP)
+{
+    Layout = "~/Views/Shared/_departmentrepresentativehome.cshtml";
+}
 
 <head>
 
@@ -26,14 +33,6 @@
 
 </head>
 
-<header>
-    <ul>
-        <li class="logo">Logic <span>Stationery</span></li>
-        <li> <button class="menubtn" href="#inventory">Inventory</li>
-        <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
-        <li><p class="userdetails">@user.Name</p> <img src="~/lib/img/employeeicon.jpg"> </li>
-    </ul>
-</header>
 
 
 <h2 style="text-align:center">Stationeries available in Logic University Stationery Store</h2>
@@ -57,18 +56,19 @@
 
                 <tbody>
                     @foreach (var i in lists)
-                     {
+                    {
                         <tr>
 
                             <td class="text-center">@i.itemCode</td>
                             <td class="text-left">@i.description</td>
                             <td class="text-center">@i.measurementUnit</td>
                             <td class="text-center myDIV">@i.price.ToString("0.00")</td>
-                            @if (user.Role != Role.DEPT_HEAD) {
+                            @if (user.Role != Role.DEPT_HEAD)
+                            {
                                 <td class="text-right"><button class="btn btn-secondary" onclick="addToCart('@i.Id','@i.itemCode')">Add to Cart</button></td>
-                             }
+                            }
                         </tr>
-                     }
+                    }
                 </tbody>
 
 
@@ -113,7 +113,7 @@
             .toLocaleString('en');
         x[i].innerHTML = num;
         x[i].classList.add("currSign");
-    } 
+    }
 </script>
 
 

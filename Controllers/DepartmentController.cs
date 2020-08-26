@@ -35,9 +35,13 @@ namespace Team7_StationeryStore.Controllers
         {
             Employee employee = dbcontext.employees.Where(x => x.Id == HttpContext.Session.GetString("userId")).FirstOrDefault();
             ViewData["Employee"] = employee;
+            string userid = HttpContext.Session.GetString("userId");
+            Departments dept = deptService.findDepartmentByEmployee(userid);
+            ViewData["dept"] = dept;
             return View();
         }
 
+        
         public IActionResult viewCatalogue()
         {
             string userid = HttpContext.Session.GetString("userId");
@@ -81,6 +85,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["employeeCarts"] = employeeCarts;
             ViewData["username"] = emp.Name;
             ViewData["userid"] = userid;
+            ViewData["user"] = emp;
             return View();
         }
         public void AddItem(string userid, string itemid, int qty)
@@ -155,6 +160,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["userid"] = userId;
             Employee emp = deptService.findEmployeeById(userId);
             ViewData["username"] = emp.Name;
+            ViewData["user"] = emp;
             return View();
         }
 
@@ -163,6 +169,7 @@ namespace Team7_StationeryStore.Controllers
             string userid = HttpContext.Session.GetString("userId");
             List<RequisitionDetail> requisitionDetails = reqService.retrieveRequisitionDetailList(reqid);
             Employee emp = deptService.findEmployeeById(userid);
+            ViewData["user"] = emp;
             ViewData["requisitionDetail"] = requisitionDetails;
             ViewData["username"] = emp.Name;
             ViewData["userid"] = userid;
@@ -274,6 +281,55 @@ namespace Team7_StationeryStore.Controllers
             ViewData["requisitionDetail"] = requisitionDetails;
             return View();
         }
+
+        public IActionResult viewDepartment()
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            Departments dept = deptService.findDepartmentByEmployee(userid);
+            ViewData["department"] = dept;
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["username"] = emp.Name;
+            CollectionPoint c = dbcontext.collectionPoints.Where(x => x.Id == dept.CollectionPointId).FirstOrDefault();
+            ViewData["collectionpoint"] = c;
+            return View();
+        }
+
+        
+        public IActionResult editDepartmentDetail()
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            Departments dept = deptService.findDepartmentByEmployee(userid);
+            ViewData["department"] = dept;
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["username"] = emp.Name;
+            return View();
+        }
+
+        
+        public IActionResult submit(string Location, string Time)
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            
+            
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["username"] = emp.Name;
+            Departments dept = deptService.findDepartmentByEmployee(userid);
+            ViewData["department"] = dept;
+            if (dept != null)
+            {
+                CollectionPoint c = dbcontext.collectionPoints.Where(x => x.Id == dept.CollectionPointId).FirstOrDefault();
+                c.Location = Location;
+                c.Time = Time;
+                dbcontext.SaveChanges();
+            }
+            return RedirectToAction("viewDepartment");
+        }
+
+        public IActionResult back()
+        {
+            return RedirectToAction("Home");
+        }
+
 
     }
 }

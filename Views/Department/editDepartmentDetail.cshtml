@@ -1,0 +1,106 @@
+﻿@model Team7_StationeryStore.Models.CollectionPoint
+@{
+    ViewData["Title"] = "editDepartmentDetail";
+    var username = ViewData["username"];
+    var department = (Departments)ViewData["department"];
+}
+
+<head>
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+
+<header>
+    <ul>
+        <li class="logo">Logic <span>Stationery</span></li>
+        <li> <button class="menubtn" href="#inventory">Inventory</li>
+        <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
+        <li><p class="userdetails">AA</p> <img src="~/lib/img/employeeicon.jpg"> </li>
+    </ul>
+</header>
+
+<h2 style="text-align:center">Your Cart</h2>
+
+<div class="container">
+
+    <div align=center>
+        <div>
+            @using (Html.BeginForm("submit", "Department", FormMethod.Post))
+            {
+            <table class="table table-bordered table-striped">
+
+
+                <tr>
+                    <td>Department Code</td>
+                    <td class="text-center">
+                        <input type="text" value="@department.DeptCode" readonly />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Department Name</td>
+                    <td class="text-center">
+                        <input type="text" value="@department.DeptName" readonly />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Contact Name</td>
+                    <td class="text-center">
+                        <input type="text" value="@department.ContactName" readonly />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Telephone Number</td>
+                    <td class="text-center">
+                        <input type="text" value="@department.PhoneNumber" readonly />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Fax Number</td>
+                    <td class="text-center">
+                        <input type="text" value="@department.FaxNumber" readonly />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Department Head</td>
+                    <td class="text-center">
+                        <input type="text" value="@department.DeptHead" readonly />
+                    </td>
+                </tr>
+
+                <tr>
+
+
+                    <td>@Html.LabelFor(x => x.Location)</td>
+                    <td><input type="text" name="Location" id="collectionlocation" /></td>
+
+                </tr>
+                <tr>
+
+                    <td>@Html.LabelFor(x => x.Time)</td>
+                    <td><input type="text" name="Time" id="collectiontime" /></td>
+                </tr>
+
+
+                <tr>
+                    <td></td>
+                    <td><input type="Submit" value="submit" id="submit" /></td>
+                </tr>
+
+
+
+            </table>
+
+            
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

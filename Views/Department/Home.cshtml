@@ -1,7 +1,24 @@
 ﻿@model Team7_StationeryStore.Models.Employee
+
+
 @{
     Employee emp = (Employee)ViewData["Employee"];
+    Departments dept = (Departments)ViewData["dept"];
 }
+@if (emp.Role == Role.EMPLOYEE)
+{
+    Layout = "~/Views/Shared/_departmentemployeehome.cshtml";
+}
+@if (emp.Role == Role.DEPT_HEAD)
+{
+    Layout = "~/Views/Shared/_departmentheadhome.cshtml";
+}
+@if (emp.Role == Role.DEPT_REP)
+{
+    Layout = "~/Views/Shared/_departmentrepresentativehome.cshtml";
+}
+
+
 <!DOCTYPE html>
 <head>
     <meta charset="utf-8">
@@ -9,80 +26,49 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="~/css/custom.css" />
+
+    <link rel="stylesheet" href="~/css/profile.css" />
+
 </head>
 <body>
 
-    <header>
-        <ul>
-            <li class="logo">Logic <span>Stationery</span></li>
-            <li> <button class="menubtn" href="#inventory">Inventory</li>
-            <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
-            <li>
-                <p class="userdetails">@emp.Name</p> <img src="~/lib/img/employeeicon.jpg">
-                <button onclick="myFunction()"><img src="~/lib/img/notification.png" /></button>
-            </li>
+    <div class="container emp-profile">
+        <form method="post">
+            <div class="row" style="margin-top:100px">
+                <div class="col-md-6">
+                    <div class="profile-img" style="margin-left:200px">
+                        <img src="~/lib/img/employeeicon.jpg">
 
-        </ul>
-
-
-
-    </header>
-
-    @*Notification *@
-    <div class="noti-container">
-        <div id="myDIV">
-            <table>
-                <tbody class="table-body-noti-detail"></tbody>
-            </table>
-        </div>
-    </div>
-    <div class="app" style="padding-left:50px">
-        <div style="float:left;">
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-
-                    <div class="card" style="width: 20rem;">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Name:@emp.Name</li>
-                            <li class="list-group-item">Role:@emp.Role</li>
-                            <li class="list-group-item">Dept name:@emp.Departments.DeptName</li>
-                        </ul>
                     </div>
                 </div>
-            </div>
-            <div align=center>
-                <img src="" class="img-rounded">
+                <div class="col-md-6">
+                    <div class="profile-head">
+                        <h5>
+                            Name:
+                        </h5>
+                        <h6>
+                            @emp.Name
+                        </h6>
+                        <br />
+                        <h5>
+                            E-mail:
+                        </h5>
+                        <h6>
+                            @emp.Email
+                        </h6>
+                        <br />
+                        <h5>
+                            Dept Name:
+                        </h5>
+                        <h6>
+                            @dept.DeptName
+                        </h6>
+                    </div>
+                </div>
 
             </div>
-        </div>
-    </div>
-    <div style="float:center;margin-left:100px;">
-        <div align=center>
-            <h2>Stationery Store</h2>
-            <div class="list group">
 
-                <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="viewCatalogue">VIEW CATALOGUE</a>
-                <br />
-                @if (emp.Role != Role.DEPT_HEAD)
-                {
-                    <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="viewRequisitionList">VIEW MY REQUISITION HISTORY</a>
-                    <br />
-                }
-
-                @if (emp.Role == Role.DEPT_HEAD)
-                {
-                    <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="viewDepartmentRequisition">VIEW DEPARTMENT REQUISITION</a>
-                    <br />
-                    <a class="btn btn-outline-primary btn-lg" asp-controller="Department" asp-action="delegateAuthority">DELEGATE AUTHORITY</a>
-                    @*                    <form method="POST">
-                <button value="View" class="btn btn-outline-primary" formaction="/Department/viewDeptartmentRequisition/">View Pending Requisitions</button>
-            </form>
-                    *@
-                }
-                <br>
-            </div>
-        </div>
+        </form>
     </div>
 </body>
 
@@ -106,7 +92,7 @@
                 console.log("count is" + count);
                 for (const item of response) {
                     $('.table-body-noti-detail').append(`<tr><td><button onclick="clickDetail('${item.reqId}')">${item.Name} sends new requisition at ${item.date}</button></td></tr>`)
-                 }
+                }
             }
         });
     }
@@ -119,7 +105,7 @@
             method: "POST",
             data: { reqId: id },
             success: function () {
-                window.location.href = "/Department/viewNewRequisition?reqId="+id;
+                window.location.href = "/Department/viewNewRequisition?reqId=" + id;
             }
         });
     }
@@ -154,7 +140,7 @@
                 //  console.log(response[i]);
             }
         }
-        });
-    }
+            });
+        }
 </script>
 

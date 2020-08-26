@@ -6,6 +6,16 @@
     var userid = ViewData["userid"];
     var reqid = ViewData["reqid"];
     var reqstatus = ViewData["reqstatus"];
+    Employee emp = (Employee)ViewData["user"];
+}
+
+@if (emp.Role == Role.EMPLOYEE)
+{
+    Layout = "~/Views/Shared/_departmentemployeehome.cshtml";
+}
+@if (emp.Role == Role.DEPT_REP)
+{
+    Layout = "~/Views/Shared/_departmentrepresentativehome.cshtml";
 }
 
 <head>
@@ -16,14 +26,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
 
-<header>
-    <ul>
-        <li class="logo">Logic <span>Stationery</span></li>
-        <li> <button class="menubtn" href="#inventory">Inventory</li>
-        <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
-        <li><p class="userdetails">@username</p> <img src="~/lib/img/employeeicon.jpg"> </li>
-    </ul>
-</header>
 
 <h2 style="text-align:center">Your Requisition Detail</h2>
 <br />
