@@ -108,6 +108,16 @@ body {
     box-shadow: 2px -5px 44px -35px rgba(0,0,0,0.81);
 }
 
+#genretrieval {
+    float: right;
+    font-size: 11px;
+    margin: 10px 0px;
+    padding: 10px;
+    background: #4877bd;
+    border: none;
+    color: white;
+}
+
 table.overviewTable {
     background-color: #FFFFFF;
     height: 150px;

@@ -57,71 +57,80 @@
                     <button onclick="openReq(event, 'disbursements')" class="tablinks"> <i class="fas fa-calendar-alt"></i> Scheduled</button>
                     <button onclick="openReq(event, 'purchaseorders')" class="tablinks"><i class="fas fa-store-alt"></i> P.O</button>
                 </div>
-                <table class="overviewTable" id="requisitions">
-                    <thead>
-                        <tr>
-                            <th>Department</th>
-                            <th>Submitted On</th>
-                            <th>Status</th>
-                            <th>Transaction Id</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var r in requi)
-                    {
-                        <tr>
-                            <td class="deptName">@r.Department.DeptName</td>
-                            <td class="subDate">@r.DateSubmitted.Date</td>
-                            <td><p class="rstatus">@r.status.ToString().ToLower()</p></td>
-                            <td><p class="reqId">@r.Id.Substring(0,6)</p></td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
+                <form asp-controller="StationeryStore" asp-action="viewRetrieval" method="POST">
+                    <table class="overviewTable" id="requisitions">
+                        <thead>
+                            <tr>
+                                <th>  </th>
+                                <th>Department</th>
+                                <th>Submitted On</th>
+                                <th>Status</th>
+                                <th>Transaction Id</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in requi)
+                            {
+                            <tr>
+                                <td><input type=checkbox value="@r.Id" name="req"></td>
+                                <td class="deptName">@r.Department.DeptName</td>
+                                <td class="subDate">@r.DateSubmitted.ToShortDateString()</td>
+                                <td><p class="rstatus">@r.status</p></td>
+                                <td><p class="reqId">@r.Id.Substring(0, 6)</p></td>
+                            </tr>
+                            }
+                            <tr>
+                                <td colspan="5">
+                                    <input id="genretrieval" type="submit" value="Retrieve" style="font-size:10px" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </form>
 
-                <table class="overviewTable" id="disbursements">
-                    <thead>
-                        <tr>
-                            <th>Department</th>
-                            <th>Collection Date</th>
-                            <th>Status</th>
-                            <th>Disbursement Id</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var d in disb)
-                        {
-                        <tr>
-                            <td class="deptName">@d.Departments.DeptName</td>
-                            <td class="subDate">@d.CollectionDate.Date</td>
-                            <td><p class="dstatus">@d.status.ToString().ToLower()</p></td>
-                            <td> <p class="reqId">@d.Id.Substring(0,6)</p></td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
+                    <table class="overviewTable" id="disbursements">
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Collection Date</th>
+                                <th>Status</th>
+                                <th>Disbursement Id</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var d in disb)
+                            {
+                                <tr>
+                                    <td class="deptName">@d.Departments.DeptName</td>
+                                    <td class="subDate">@d.CollectionDate.Date</td>
+                                    <td><p class="dstatus">@d.status</p></td>
+                                    <td> <p class="reqId">@d.Id.Substring(0, 6)</p></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
 
-                <table class="overviewTable" id="purchaseorders">
-                    <thead>
-                        <tr>
-                            <th>Supplier</th>
-                            <th>Submitted On</th>
-                            <th>Status</th>
-                            <th>P.O. Id</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var po in pos)
-                        {
-                        <tr>
-                            <td class="deptName">@po.Supplier.name</td>
-                            <td class="subDate">@po.date.Date</td>
-                            <td><p class="postatus">@po.status.ToString().ToLower()</p></td>
-                            <td> <p class="reqId">@po.Id.Substring(0,6)</p></td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
+                    <table class="overviewTable" id="purchaseorders">
+                        <thead>
+                            <tr>
+                                <th>Supplier</th>
+                                <th>Submitted On</th>
+                                <th>Status</th>
+                                <th>P.O. Id</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var po in pos)
+                            {
+                                <tr>
+                                    <td class="deptName">@po.Supplier.name</td>
+                                    <td class="subDate">@po.date.Date</td>
+                                    <td><p class="postatus">@po.status</p></td>
+                                    <td> <p class="reqId">@po.Id.Substring(0, 6)</p></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
             </div>
         </div>
     </div>
