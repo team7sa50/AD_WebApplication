@@ -3,9 +3,13 @@
 @{
     var plists = (List<Requisition>)ViewData["PendingRequisitions"];
     var lists = (List<Requisition>)ViewData["AllRequisitions"];
-    bool IsAuthorized = (Boolean) ViewData["Authorizer"];
+    bool IsAuthorized = (Boolean)ViewData["Authorizer"];
 
 }
+@{
+    Layout = "~/Views/Shared/_departmentheadhome.cshtml";
+}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,8 +18,7 @@
     <title>Home</title>
     <link rel="stylesheet" type="text/css" href="~/css/viewReq.css">
     <link rel="stylesheet" type="text/css" href="~/css/site.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
-    <script src="https://use.fontawesome.com/973befe495.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
 </head>
 
@@ -23,7 +26,7 @@
 
     <div class="requisitionmenu">
         <button class="tablinks" onclick="openReq(event, 'All')">All</button>
-        <button class="tablinks" onclick="openReq(event, 'Pending')"id="defaultOpen">Pending</button>
+        <button class="tablinks" onclick="openReq(event, 'Pending')" id="defaultOpen">Pending</button>
     </div>
 
     <!--Tab for All Requisitions-->
@@ -181,7 +184,7 @@
         </div>
 
         <script>
-            function openDetail(id, department,status) {
+            function openDetail(id, department, status) {
                 document.getElementById("dept").innerHTML = department;
                 document.getElementById("reqid").innerHTML = id;
                 console.log(status);

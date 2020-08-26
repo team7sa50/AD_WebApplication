@@ -5,11 +5,19 @@
 *@
 @{
     var lists = (List<Requisition>)ViewData["Requisitions"];
-    var userid= ViewData["userid"];
+    var userid = ViewData["userid"];
     var username = ViewData["username"];
+    Employee emp = (Employee)ViewData["user"];
 }
 
-
+@if (emp.Role == Role.EMPLOYEE)
+{
+    Layout = "~/Views/Shared/_departmentemployeehome.cshtml";
+}
+@if (emp.Role == Role.DEPT_REP)
+{
+    Layout = "~/Views/Shared/_departmentrepresentativehome.cshtml";
+}
 
 <head>
 
@@ -23,15 +31,6 @@
 </head>
 
 
-<header style="background-color:#ECF3F3;">
-    <ul>
-        <li class="logo">Logic <span>Stationery</span></li>
-        <li> <button class="menubtn" href="#inventory">Inventory</li>
-        <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
-        <li><p class="userdetails">@username</p> <img src="~/lib/img/employeeicon.jpg"> </li>
-    </ul>
-</header>
-
 
 
 <h2 style="text-align:center">Your Requisition History</h2>
@@ -44,7 +43,7 @@
                     <tr>
                         <th>Requisition</th>
                         <th>Status</th>
-                        
+
                     </tr>
                 </thead>
 
@@ -55,7 +54,7 @@
 
                             <td class="text-left"><a asp-controller="Department" asp-action="ViewRequisitionDetail" asp-route-reqid="@i.Id">@i.Id</a></td>
                             <td class="text-left">@i.status</td>
-                            
+
                         </tr>
                     }
                 </tbody>
