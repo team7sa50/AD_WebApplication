@@ -71,7 +71,7 @@
                                     <td>@c.Id.Substring(0,9)</td>
                                     <td>@c.Department.DeptName</td>
                                     <td>@c.DateSubmitted</td>
-                                    <td><p class="rstatus">@c.status</p></td>
+                                    <td class="rstatus">@c.status</td>
                                     <td>
                                         <a onclick="openDetail('@c.Id','@c.Department.DeptCode')" class="viewDeta"><u>View</u></a>
                                     </td>
@@ -284,7 +284,7 @@
                                     <td>${data[i].id} </td>
                                     <td>${data[i].department} </td>
                                     <td>${data[i].date} </td>
-                                    <td>${data[i].status.toLowerCase()} </td>
+                                    <td>${data[i].status} </td>
                                     <td>
                                     <a onclick="openDetail(${data[i].id}, ${data[i].department})" class="viewDeta"><u>View</u></a>
                                     </td>
@@ -323,8 +323,8 @@
 
             function searchTableByStatus(value, data) {
                 console.log("Reached searchTable");
-                console.log("Printing value:", value);
-                console.log("Printing data: ", data);
+                console.log("Printing value:",value);
+                console.log("Printing data: ",data);
                 var obj = JSON.parse(data);
                 var filteredData = [];
                 for (var i = 0; i < obj.length; i++) {
