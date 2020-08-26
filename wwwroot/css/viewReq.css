@@ -1,11 +1,5 @@
-﻿
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: white !important;
-    height: 100%;
-    background: linear-gradient(180deg, #77bfe2 60%, white 50%);
-    margin: 0;
-    background-repeat: no-repeat;
+﻿body {
+    font-family: 'Source Sans Pro', sans-serif;
 }
 
 * {
@@ -16,112 +10,215 @@ body {
     box-sizing: border-box;
 }
 
-#main {
-    width: 700px;
-    margin: auto;
-    margin-top: 20px;
+
+
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: #f3f3f3 !important;
 }
 
-table.steelBlueCols {
-    font-family: 'Roboto', sans-serif;
-    border: 0px solid #DFDCE3;
-    background-color: #DFDCE3;
-    width: 700px;
-    text-align: center;
-    border-collapse: collapse;
-    margin: auto;
-    z-index: 200;
-    margin-top: 20px;
+.main {
+    transition: margin-left .5s;
+    padding: 16px;
 }
 
-    table.steelBlueCols td, table.steelBlueCols th {
-        border: 1px solid #DDDDDD;
-        padding: 10px 0px;
-        font-size: 15px;
-    }
-
-    table.steelBlueCols tbody td {
-        font-size: 12px;
-        color: #000000;
-    }
-
-    table.steelBlueCols tr:nth-child(even) {
-        background: #DFDCE3;
-    }
-
-    table.steelBlueCols td:nth-child(even) {
-        background: #DFDCE3;
-    }
-
-    table.steelBlueCols thead {
-        background: #DFDCE3;
-        border-bottom: 2px solid grey;
-    }
-
-        table.steelBlueCols thead th {
-            font-size: 15px;
-            color: #3B988A;
-            text-align: center;
-            border-left: 0px solid #398AA4;
-            font-weight: 600;
-        }
-
-            table.steelBlueCols thead th:first-child {
-                border-left: none;
-            }
-
-    table.steelBlueCols tfoot td {
-        font-size: 15px;
-        font-weight: 400;
-    }
-
-    table.steelBlueCols tfoot .links {
-        text-align: right;
-    }
-
-        table.steelBlueCols tfoot .links a {
-            display: inline-block;
-            background: #FFFFFF;
-            color: #398AA4;
-            padding: 2px 8px;
-            border-radius: 5px;
-        }
-
-.btnCart {
-    font-size: 10px;
-    padding: 5px;
-    margin: 5px;
-    height: 25px;
+.requisitionfilter form {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    padding-left: 40px;
     border: none;
 }
 
-.ViewCartBtn {
+.requisitionfilter fieldset {
+    width: 80%;
+    border: none;
+}
+
+.requisitionfilter input, label {
+    display: block;
+}
+
+    .requisitionfilter input[type=submit] {
+        width: 100px;
+        border-radius: 8px;
+        font-size: 10px;
+        padding: 5px;
+        text-align: center;
+        border: none;
+        background: #0B87A6;
+        color: white;
+        margin-left: 30px;
+        margin-top: 35px;
+    }
+
+.requisitionfilter label {
+    font-size: 11px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    color: rgb(31,77,137);
+    margin-top: 15px;
+}
+
+.requisitionfilter select, input[type=date] {
+    font-size: 11px;
+    font-family: 'Source Sans Pro', sans-serif;
+    padding: 5px;
+    width: 200px;
+}
+
+.requisitioncontainer {
+    background: white;
+    min-height: 100px;
+    max-width: 70%;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    border: none;
+}
+
+    .requisitioncontainer h1 {
+        font-size: 16px;
+        color: #a9a9a9;
+    }
+
+.requisitiontable {
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    font-size: 11px;
+    border-collapse: collapse;
+    background: white;
+}
+
+    .requisitiontable th {
+        border-top: 2px solid #ddd;
+        padding: 20px 10px;
+        border-right: 2px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        color: rgb(31,77,137);
+    }
+
+    .requisitiontable td {
+        border-right: 2px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .requisitiontable button {
+        font-size: 10px;
+        border: none;
+        padding: 5px 10px;
+    }
+
+#genretrieval {
     float: right;
-    font-size: 14px;
+    font-size: 11px;
+    margin: 10px 0px;
     padding: 10px;
-    font-weight: 600;
-    background: none;
+    background: #4877bd;
     border: none;
     color: white;
 }
 
-    .ViewCartBtn:hover {
-        background: #FC4a1a;
-    }
-
-#backToSuppl {
-    border: none;
-    background: none;
-    font-size: 11px;
-    font-weight: 400;
-    padding: 10px;
-    color: #192841;
-    margin-bottom: 15px;
+#myDetail {
+    height: 80%; /* 100% Full-height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 50px;
+    right: 0;
+    background-color: white; /* Black*/
+    -webkit-box-shadow: -6px 10px 8px 0px rgba(185,183,194,1);
+    -moz-box-shadow: -6px 10px 8px 0px rgba(185,183,194,1);
+    box-shadow: -6px 10px 8px 0px rgba(185,183,194,1);
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 20px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
 }
 
-    #backToSuppl:hover {
-        background: #f2d468;
+#detailclosebtn {
+    float: right;
+    padding-right: 10px;
+    font-size: 20px;
+    color: black;
+}
+
+.detailRForm {
+    margin-top: 10px;
+}
+
+    .detailRForm table {
+        font-size: 12px;
+        margin-left: 60px;
+        margin-top: 10px;
+        width: 200px;
     }
+
+#detailReqView {
+    padding: 10px 15px;
+}
+
+.detailRForm th {
+    font-weight: 600;
+    font-size: 10px;
+    color: rgb(31,77,137);
+    text-align: left;
+    padding-top: 8px;
+}
+
+.detailRForm td {
+    padding: 10px;
+    font-size: 11px;
+    border-bottom: 1px solid #b9b7c2;
+    color: grey;
+}
+
+.editbtn {
+    background: none;
+    border: none;
+    padding-left: 5px;
+    color: grey;
+}
+
+#changeStatus {
+    display: none;
+}
+
+#requisitionmenu {
+    height: 80px;
+    max-width: 70%;
+    margin: auto;
+    padding: 0;
+    padding-top: 40px;
+    border-bottom: 2px solid #9c9c9c;
+}
+
+    #requisitionmenu button {
+        height: 40px;
+        width: 100px;
+        margin-left: 0;
+        display: inline-block;
+        border: none;
+        background: none;
+        font-size: 11px;
+        font-weight: 700;
+        color: #9c9c9c;
+    }
+
+        #requisitionmenu button:hover {
+            background-color: rgb(31,77,137);
+            border: none;
+            color: white;
+        }
+
+        #requisitionmenu button.active {
+            border-bottom: 3px solid rgb(31,77,137);
+        }
+
+#maindisbursements tr:hover {
+    background-color: #f5f5f5;
+}
+
 
 .bg-modal {
     background-color: rgba(0, 0, 0, 0.3);
@@ -134,87 +231,63 @@ table.steelBlueCols {
     align-items: center;
 }
 
-#close {
-    float: right;
-    margin-right: 30px;
-    margin-top: 20px;
-    background: none;
-    border: none;
-    font-size: 16px;
-    color: #9c9c9c;
-}
-
-.rstatus {
-    font-weight: 600;
-    border-radius: 50px;
-    width: 70px;
-    letter-spacing: 1px;
-    font-size: 10px;
-    color: white;
-}
-
 .modal-contents {
-    min-height: 300px;
+    height: 600px;
     width: 500px;
-    top: 200;
     background-color: white;
+    text-align: center;
+    margin-top: 100px;
     position: absolute;
     border-radius: 4px;
 }
 
-.modal-header {
-    width: 500px;
-    margin: auto;
-    text-align: center;
-    padding-top: 60px;
-    font-size: 15px;
-    color: #36498f;
-    letter-spacing: 1px;
+input.modal-contents {
+    margin: 15px auto;
+    display: block;
+    width: 50%;
+    padding: 8px;
+    border: 1px solid gray;
 }
 
-.modal-body {
-    width: 200px;
-    margin: auto;
-    padding-top: 20px;
-    text-align: center;
+.close {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 42px;
+    color: #333;
+    transform: rotate(45deg);
+    cursor: pointer;
+}
+
+
+#myDetail h1 {
     font-size: 13px;
-    color: #36498f;
+    color: #2B2D2F;
+    margin-top: 30px;
+    margin-left: 20px;
+    padding-left: 18px;
+    width: 180px;
 }
 
-    .modal-body input {
-        width: 50px;
-        height: 30px;
-        font-size: 12px;
-        border: none;
-        border-bottom: 1px solid grey;
-        text-align: center;
-        padding-left: 8px;
-    }
-
-#units {
-    font-size: 14px;
-}
-
-.modal-body p {
+.modal-contents {
     font-size: 11px;
 }
 
-#submitQty {
+table.modal-table {
     margin: auto;
-    margin-top: 8px;
-    margin-left: 10px;
-    border: none;
-    background: none;
-    padding: 5px;
-    font-size: 12px;
+    height: 180px;
+    width: 180px;
+    overflow: auto;
+    padding: 0px;
+    border: 1px solid gray;
+    margin-top: 0px;
 }
 
-    #submitQty:hover {
-        color: orange;
-    }
+th.modal-table {
+    color: rgb(31,77,137);
+    border-bottom: 1px solid gray;
+}
 
-#myModalLabel {
-    color: orange;
-    font-weight: 600;
-    font-style: italic;
+#disbDetailsQty td {
+    font-size: 10px;
 }

@@ -79,78 +79,17 @@ namespace Team7_StationeryStore.Controllers
         }
 
         [HttpPost]
-       /* public IActionResult StartAnalytics()
+        public IActionResult updateRetrievalQty(string rqId, string itemId, string newQty, List<string> requi)
         {
-            int Year = DateTime.Now.Year;
-            int currentMonth = DateTime.Now.Month; // Auguest
-            int past1Month = currentMonth - 1; // July
-            int past2Month = currentMonth - 2; // June
-
-            var po = from p in dbcontext.purchaseOrders
-                     join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
-                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
-                     orderby h.Key.Year,h.Key.Month
-                     where (h.Key.Month >= past2Month && h.Key.Year == Year)
-                     select new
-                     {
-                         ItemCat = h.Key.name,
-                         Month = h.Key.Month.ToString("MMM"),
-                         Qty = h.Sum(x => x.quantity)
-                     };
-
-            
-
-
-
-
-            // Gathering of data
-            IEnumerable <Req> requisitionTable = from req in dbcontext.requisitions
-                                                   join req_d in dbcontext.requisitionDetails
-                                                   on req.Id equals req_d.RequisitionId into g
-                                                   from d in g.DefaultIfEmpty()
-                                                   orderby req.DateSubmitted
-                                                   select new Req_Complier
-                                                   {
-                                                       Date = req.DateSubmitted,
-                                                       /* Department = req.DepartmentId,
-                                                          Item = d.InventoryId,
-                                                       Qty = (float)d.RequestedQty
-                                                   };
-
-
-            trainer.TimeSeriesForcasting(requisitionTable);
-            string traindata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\sampledata.csv";
-            string testdata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\testdata.csv";
-            System.Diagnostics.Debug.WriteLine("Starting Training");
-            trainer.Train(traindata, testdata);           
-            System.Diagnostics.Debug.WriteLine("Finished Training");
-        public IActionResult HomeManagerSupervisor()
-        {
-            Employee employee = dbcontext.employees.Where(x => x.Id == HttpContext.Session.GetString("userId")).FirstOrDefault();
-            ViewData["user"] = employee;
-            return View();
+            RequisitionDetail rd = (from r in dbcontext.requisitionDetails
+                                    where r.Inventory.description == itemId &&
+                                    r.Requisition.Id == rqId
+                                    select r).FirstOrDefault();
+            rd.DistributedQty = int.Parse(newQty);
+            dbcontext.SaveChanges();
+            System.Diagnostics.Debug.WriteLine("updateRetrievalQty reqlist: " + requi.Count);
+            return RedirectToAction("viewRetrieval", new { req = requi }) ;
         }
-        
-        [HttpPost]
-        public JsonResult AnalyzeResults(int requestedQty, int stockQty, string dateT)
-        {
-            string month = dateT.Substring(5, 2);
-            string year = dateT.Substring(0, 4);
-            System.Diagnostics.Debug.WriteLine("Month: " + month);
-            System.Diagnostics.Debug.WriteLine("Year" + year);
-            Req_Complier rrn = new Req_Complier()
-            {
-                RequestedQty = requestedQty.ToString(),
-                InventoryQty = stockQty.ToString(),
-                Month = month,
-                Year = year
-            };
-            string inputJson = JsonConvert.SerializeObject(rrn, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-            System.Diagnostics.Debug.WriteLine("Results:" + inputJson);
-            CarInventoryPrediction cp = predictor.Predict(inputJson);
-            string results = JsonConvert.SerializeObject(cp, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });           
-            return Json(results);
-        }*/
 
         [HttpPost]
         public JsonResult GetEmployeeTest(string id)
@@ -211,7 +150,6 @@ namespace Team7_StationeryStore.Controllers
             dbcontext.SaveChanges();
             return Json("1");
         }
-
         [HttpPost]
         public IActionResult getDisbursementsByDepartment(string id)
         {
@@ -220,7 +158,6 @@ namespace Team7_StationeryStore.Controllers
                                                select d).ToList();
             return Json(disbursements);
         }
-
         public IActionResult ViewInventory()
         {
             string userid = HttpContext.Session.GetString("userId");
@@ -237,8 +174,6 @@ namespace Team7_StationeryStore.Controllers
         {
             List<Requisition> selectedReq = requisitionService.getRequisitionsByIds(req);
             System.Diagnostics.Debug.WriteLine("Selected Requests: " + selectedReq.Count);
-            /*List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);
-            System.Diagnostics.Debug.WriteLine("Selected Requests: " + selectedReqDetail.Count);*/
             ViewData["Requisitions"] = selectedReq;
 
             List<RequisitionDetail> selectedReqD = new List<RequisitionDetail>();
@@ -313,102 +248,5 @@ namespace Team7_StationeryStore.Controllers
             notifService.sendNotification(NotificationType.DISBURSEMENT, null, dis, null);
             return Json(new { msg = "Sent to Dept Rep: {0}",deptRep.Name });
         }
-
-        /*
-        [HttpPost]
-        public IActionResult Export(){
-            List<Employee> employees = (from er in dbcontext.employees
-                                 select er).ToList();
-
-            List<object> emps = new List<object>();
-            int k = 0;
-            foreach(Employee e in employees){
-                k++;
-                emps.Add(new string[6] { e.Id, e.Name , e.Email, e.Password, e.Role.ToString(), e.DepartmentsId});
-            }
-            emps.Insert(0, new string[6] {"emp_id", "name", "email", "password", "role", "departmentId"});
-            StringBuilder sb = new StringBuilder(); 
-
-            for (int i = 0; i < emps.Count; i++)
-			{
-                string[] employe = (string[])emps[i];
-
-                for(int j=0; j< employe.Length;j++){
-                sb.Append(employe[j] +',');
-                }
-                sb.Append("\r\n");
-			}
-            return File(Encoding.UTF8.GetBytes(sb.ToString()),"text/csv", "Grid.csv");
-        }
-
-        [HttpPost]
-        public IActionResult StartAnalytics()
-        {
-            int Year = DateTime.Now.Year;
-            int currentMonth = DateTime.Now.Month; // Auguest
-            int past1Month = currentMonth - 1; // July
-            int past2Month = currentMonth - 2; // June
-
-            var po = from p in dbcontext.purchaseOrders
-                     join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
-                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
-                     orderby h.Key.Year,h.Key.Month
-                     where (h.Key.Month >= past2Month && h.Key.Year == Year)
-                     select new
-                     {
-                         ItemCat = h.Key.name,
-                         Month = h.Key.Month.ToString("MMM"),
-                         Qty = h.Sum(x => x.quantity)
-                     };
-
-
-
-
-            // Gathering of data
-            IEnumerable <Req> requisitionTable = from req in dbcontext.requisitions
-                                                   join req_d in dbcontext.requisitionDetails
-                                                   on req.Id equals req_d.RequisitionId into g
-                                                   from d in g.DefaultIfEmpty()
-                                                   orderby req.DateSubmitted
-                                                   select new Req
-                                                   {
-                                                       Date = req.DateSubmitted,
-                                                       /* Department = req.DepartmentId,
-                                                          Item = d.InventoryId,
-                                                       Qty = (float) d.RequestedQty
-                                                   };
-
-
-            trainer.TimeSeriesForcasting(requisitionTable);
-            string traindata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\sampledata.csv";
-            string testdata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\testdata.csv";
-            System.Diagnostics.Debug.WriteLine("Starting Training");
-            trainer.Train(traindata, testdata);           
-            System.Diagnostics.Debug.WriteLine("Finished Training");
-            return View();
-        }
-*/
-
-      /*  [HttpPost]
-        public JsonResult AnalyzeResults(int requestedQty, int stockQty, string dateT)
-        {
-            string month = dateT.Substring(5, 2);
-            string year = dateT.Substring(0, 4);
-            System.Diagnostics.Debug.WriteLine("Month: " + month);
-            System.Diagnostics.Debug.WriteLine("Year" + year);
-            Req_Complier rrn = new Req_Complier()
-            {
-                RequestedQty = requestedQty.ToString(),
-                InventoryQty = stockQty.ToString(),
-                Month = month,
-                Year = year
-            };
-            string inputJson = JsonConvert.SerializeObject(rrn, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-            System.Diagnostics.Debug.WriteLine("Results:" + inputJson);
-            CarInventoryPrediction cp = predictor.Predict(inputJson);
-            string results = JsonConvert.SerializeObject(cp, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });           
-            return Json(results);
-        }*/
-
     }
 }

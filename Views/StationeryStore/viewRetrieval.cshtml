@@ -43,36 +43,42 @@
                 totalQtyPerDept = 0;
                 identi = r.Key + rd.Key;
                 result = string.Concat(identi.Where(c => !char.IsWhiteSpace(c)));
-            <tbody id="@result">
-                @foreach (var rz in rd.Value)
+        <tbody id="@result">
+            @foreach (var rz in rd.Value)
+            {
+                if (rz.Inventory.description == r.Key)
                 {
-                    if (rz.Inventory.description == r.Key)
+                    totalQtyPerDept += rz.RequestedQty;
+                    if (i == 0)
                     {
-                        totalQtyPerDept += rz.RequestedQty;
-                        if (i == 0)
-                        {
-                            identi = "";
-                            identi = r.Key + rd.Key;
-                            result = string.Concat(identi.Where(c => !char.IsWhiteSpace(c)));
-                            <tr class="departmentOverview" onclick="showRequests('@result')">
-                                <td class="departmentName">@rd.Key</td>
-                                <td>@totalQtyPerDept</td>
-                                <td></td>
-                            </tr>
-                        }
-            <tr class="requestdetail" style=" visibility:collapse;">
-             <td class="requestId">@rz.Requisition.Id</td>
-             <td class="requestedQty">@rz.RequestedQty</td>
-             <td class="recommendedQty">
-                <p id="originalQty">@rz.DistributedQty  <i class="fas fa-edit" onclick="showChangeQty()"></i></p>
-                <input id="newQty" type="text" placeholder="@rz.DistributedQty" />
-                <button id="newQtySub" style="font-size:11px"><i class="fas fa-arrow-right"></i></button>
-             </td>
-             </tr>
-                        i++;
+                        identi = "";
+                        identi = r.Key + rd.Key;
+                        result = string.Concat(identi.Where(c => !char.IsWhiteSpace(c)));
+                        <tr class="departmentOverview" onclick="showRequests('@result')">
+                            <td class="departmentName">@rd.Key</td>
+                            <td>@totalQtyPerDept</td>
+                            <td></td>
+                        </tr>
                     }
-                }
-            </tbody>
+                    <tr class="requestdetail" style=" visibility:collapse;">
+                        <td class="requestId">@rz.Requisition.Id</td>
+                        <td class="requestedQty">@rz.RequestedQty</td>
+                        <td class="recommendedQty">
+                            <p id="originalQty">@rz.DistributedQty  <i class="fas fa-edit" onclick="showChangeQty()"></i></p>
+                            <form asp-controller="StationeryStore" asp-action="updateRetrievalQty" method="POST">
+                                <input type="hidden" id="rqId" name="rqId" value="@rz.Requisition.Id" />
+                                <input type="hidden" id="itemId" name="itemId" value="@r.Key" />
+                                @foreach (var rqs in requis)
+                                {<input type=hidden value="@rqs.Id" name="requi"> }
+                                <input id="newQty" name="newQty" type="text" placeholder="@rz.DistributedQty" />
+                                <button type="submit" id="newQtySub" name="newQtySub" style="font-size:11px"><i class="fas fa-arrow-right"></i></button>
+                                </form>
+                                </td>
+                                </tr>
+                                i++;
+                            }
+                        }
+        </tbody>
             }
         </table>
     </div>
