@@ -44,6 +44,7 @@
                         <div style="float:left;">
                             <label for="Status">Status</label>
                             <select id="statusAll" name="Status">
+                                <option value="a" selected>All</option>
                                 @foreach (var s in statuses)
                                 {
                                     <option value=@s>@s</option>
@@ -290,6 +291,7 @@
                                     </tr>`;
                     tableOld.innerHTML += row;
                 }
+                
             }
 
             function getAll(alldata) {
@@ -305,11 +307,20 @@
                 /*get the value selected*/
                 var value = $(this).val();
                 console.log(value + " selected");
-                var data2 = searchTableByStatus(value, tableJson);
-                console.log("Data to be passed in to buildTable: " + data2);
-                buildTable(data2, "AllReq");
+                if (value.length < 2) {
+                    console.log("All status selected");
+                    var data1 = getAll(tableJson);
+                    console.log("Data to be passed into buildTable: " + data1);
+                    buildTable(data1, "AllReq");
+                }
+                else if (value.length > 1) {
+                    var data2 = searchTableByStatus(value, tableJson);
+                    console.log("Data to be passed in to buildTable: " + data2);
+                    buildTable(data2, "AllReq");
+                }
             }
             );
+
 
             $('#dateOfReq').change('keyup', function () {
                 var value = $(this).val();
@@ -336,28 +347,34 @@
             }
 
            $(document).ready(function () {
-            $('.rstatus').each(function () {
-                switch ($(this).text()) {
-                    case "AWAITING_APPROVAL":
-                        $(this).css('color','#c5d7c0');
-                        break;
-                    case "REJECTED":
-                        $(this).css('color','#f17a7e');
-                        break;
-                    case "APPROVED":
-                        $(this).css('color','#7fd6bd');
-                        break;
-                    case "PROCESSING":
-                        $(this).css('color','#8ec9bb');
-                        break;
-                    case "COLLECTION":
-                        $(this).css('color','#ecc558');
-                        break;
-                    case "OUTSTAND":
-                        $(this).css('color','#fa6e4f');
-                        break;
-                }
-            });
+               applyStatusStyle();
+               console.log("Start of page rendering");
            });
+            function applyStatusStyle() {
+                console.log("Apply status style");
+                $('.rstatus').each(function () {
+                    switch ($(this).text()) {
+                        case "AWAITING_APPROVAL":
+                            $(this).css('color', '#c5d7c0');
+                            break;
+                        case "REJECTED":
+                            $(this).css('color', '#f17a7e');
+                            break;
+                        case "APPROVED":
+                            $(this).css('color', '#7fd6bd');
+                            break;
+                        case "PROCESSING":
+                            $(this).css('color', '#8ec9bb');
+                            break;
+                        case "COLLECTION":
+                            $(this).css('color', '#ecc558');
+                            break;
+                        case "OUTSTAND":
+                            $(this).css('color', '#fa6e4f');
+                            break;
+                    }
+                });
+            }
+
         </script>
     </body>
