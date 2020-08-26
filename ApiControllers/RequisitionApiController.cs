@@ -70,6 +70,28 @@ namespace Team7_StationeryStore.ApiControllers
 
         }
 
+        [HttpGet]
+        [Route("api/[controller]/getAllPendingRequisitionsByAppEmpId")]
+        public ActionResult GetAllPendingRequisitionsByAppEmpId(string empId)
+        {
+
+            var items = (from c in dbcontext.requisitions
+                         where c.ApprovedEmployeeId == empId && c.status==ReqStatus.AWAITING_APPROVAL
+                         orderby c.DateSubmitted descending
+                         select new
+                         {
+                             Id = c.Id,
+                             DateSubmitted = c.DateSubmitted,
+                             status = c.status.ToString(),
+                             remarks = c.Remarks
+                         }
+          );
+
+            return Content(JsonConvert.SerializeObject(items, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+
+        }
+
+
         // GET api/<controller>/5
         [HttpGet("{id}")]
         [Route("api/[controller]")]

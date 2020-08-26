@@ -64,8 +64,21 @@ namespace Team7_StationeryStore.ApiControllers
         [Route("api/[controller]/viewDepartments")]
         public ActionResult viewDepartments()
         {
-            List<Departments> departments = invService.getAllDepartments();
-            return Content(JsonConvert.SerializeObject(departments, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+            var items = (from d in dbcontext.departments
+                                     select new
+                         {
+                             Id = d.Id,
+                             DeptCode=d.DeptCode,
+                             DepartmentName=d.DeptName,
+                             ContactName=d.ContactName,
+                             Telephone=d.PhoneNumber,
+                             FaxNo=d.FaxNumber,
+                             HeadName=d.DeptHead,
+                             RepName=d.Representative,
+                             CollectionPoint=d.CollectionPoint.Location
+                         }
+          );
+            return Content(JsonConvert.SerializeObject(items, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
         }
         [HttpGet]
         [Route("api/[controller]/viewDepartmentDetail")]
@@ -74,22 +87,40 @@ namespace Team7_StationeryStore.ApiControllers
             Departments department = invService.getDepartmentDetail(deptId);
             return Content(JsonConvert.SerializeObject(department, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
         }
+        [HttpGet]
+        [Route("api/[controller]/viewAllItemCodes")]
+        public IActionResult viewAllItemCodes()
+        {
+            var items = (from i in dbcontext.inventories
+                         select new
+                         {
+                           ItemCode=i.itemCode
+                         }
+                        );
+            return Content(JsonConvert.SerializeObject(items));
+        }
+        [HttpPost]
+        [Route("api/[controller]/viewPurchaseOrderByEmpId")]
+        public IActionResult viewPurchaseOrderByEmpId([FromBody]PurchaseOrder value)
+        {
+            var po = (from p in dbcontext.purchaseOrders
+                         where p.EmployeeId==value.EmployeeId
+                         select new
+                         {
+                             Id=p.Id,
+                             Supplier = p.Supplier.name,
+                             Date=p.date,
+                             Status=p.status.ToString()
+                         }
+            );
+            return Content(JsonConvert.SerializeObject(po, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+        }
         [HttpPost]
         [Route("api/[controller]/createAdjustmentVouncher")]
-        public ActionResult crateAdjustmentVouncher([FromBody]AdjustmentVoucher value)
+        public ActionResult crateAdjustmentVouncher([FromBody]CreateAdjustmentvouncher value)
         {
-            AdjustmentVoucher adjustmentVoucher = new AdjustmentVoucher();
-            adjustmentVoucher.Id = Guid.NewGuid().ToString();
-            adjustmentVoucher.InventoryId = value.InventoryId;
-            adjustmentVoucher.EmEmployeeId = value.EmEmployeeId;
-            adjustmentVoucher.appEmEmployeeId = value.appEmEmployeeId;
-            adjustmentVoucher.qty = value.qty;
-            adjustmentVoucher.date = value.date;
-            adjustmentVoucher.reason = value.reason;
-            adjustmentVoucher.status = value.status;
-            adjustmentVoucher.remarks = value.remarks;
-            dbcontext.Add(adjustmentVoucher);
-            dbcontext.SaveChanges();
+            Inventory inventory = invService.findInventory(value.ItemCode);
+            invService.CreateAdjustmentVoucher(value.EmEmployeeId,inventory.Id, value.qty, value.reason);
             Object response = new
             {
                 message = "Successfully created",

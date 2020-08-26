@@ -137,7 +137,7 @@ namespace Team7_StationeryStore.Service
             newRequisition.DepartmentId = emp.Departments.Id;
             foreach (var i in cartList)
             {
-                Inventory inv = dbcontext.inventories.Where(x => x.Id == i.Id).FirstOrDefault();
+/*                Inventory inv = dbcontext.inventories.Where(x => x.Id == i.Id).FirstOrDefault();*/
                 RequisitionDetail requisitionDetail = new RequisitionDetail();
                 requisitionDetail.Id= Guid.NewGuid().ToString();
                 requisitionDetail.RequisitionId = newRequisition.Id;
@@ -154,17 +154,18 @@ namespace Team7_StationeryStore.Service
 
 
         public void CreateRequisition(string userId, List<RequisitionDetail> requisitionDetails) {
-            Requisition newRequisition = new Requisition();
             Employee approver = deptService.setApprover(userId);
+            Requisition newRequisition = new Requisition(approver.Departments.DeptCode);
             newRequisition.ApprovedEmployeeId = approver.Id; 
             newRequisition.EmployeeId = userId;
             newRequisition.DepartmentId = approver.Departments.Id;
-            foreach (var i in requisitionDetails)
+            int k = 0;
+            foreach (var rd in requisitionDetails)
             {
-                RequisitionDetail requisitionDetail = new RequisitionDetail();
-                requisitionDetail.Id = Guid.NewGuid().ToString();
-                requisitionDetail.RequisitionId = newRequisition.Id;
-                dbcontext.Add(requisitionDetail);
+                rd.Id = "00000000-"+k.ToString();
+                rd.RequisitionId = newRequisition.Id;
+                dbcontext.Add(rd);
+                k++;
             }
             dbcontext.Add(newRequisition);
             dbcontext.SaveChanges();
@@ -214,6 +215,30 @@ namespace Team7_StationeryStore.Service
                      };
 
             return (Req_Complier) re;
+        }
+        public List<PurchaseOrderQuantity> startRequisitionAnalysis(ItemCategory cat,Departments dept)
+        {
+            var past4Month = DateTime.Now.AddMonths(-4).Month;
+            var Year = DateTime.Now.Year;
+            var po = from req in dbcontext.requisitions
+                     join req_d in dbcontext.requisitionDetails on req.Id equals req_d.RequisitionId
+                     group req_d by new { req_d.Inventory.ItemCategory.name, req.Department.DeptName, req.DateSubmitted.Month, req.DateSubmitted.Year } into h
+                     where (h.Key.Month >= past4Month && h.Key.Year == Year && h.Key.DeptName == dept.DeptName && h.Key.name == cat.name)
+                     orderby (h.Key.Month)
+                     select new
+                     {
+                         Month = h.Key.Month,
+                         Qty = h.Sum(x => x.RequestedQty)
+                     };
+            List<PurchaseOrderQuantity> reQ = new List<PurchaseOrderQuantity>();
+            foreach (var c in po)
+            {
+                PurchaseOrderQuantity p = new PurchaseOrderQuantity();
+                p.Month = c.Month;
+                p.quantity = c.Qty;
+                reQ.Add(p);
+            }
+            return reQ;
         }
 
     }

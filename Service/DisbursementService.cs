@@ -24,14 +24,17 @@ namespace Team7_StationeryStore.Service
 
         public List<Disbursement> findLatestDisbursements()
         {
-            List<Disbursement> rq = (from r in dbcontext.disbursements
+/*            List<Disbursement> rq = (from r in dbcontext.disbursements
                                     select r).ToList();
             List<Disbursement> result = new List<Disbursement>();
             for (int i = 0; i < 5; i++)
             {
                 result.Add(rq[i]);
             }
-            return result;
+
+            return result;*/
+
+            return dbcontext.disbursements.OrderByDescending(x => x.GeneratedDate).Take(5).ToList();
         }
         public List<Disbursement> retrieveDisbursementByDept(string deptId)
         {
@@ -83,8 +86,10 @@ namespace Team7_StationeryStore.Service
             return requisitionsForDepartment;
         }
 
-        public void saveRequisitionsAsDisbursement(Dictionary<Departments, List<RequisitionDetail>> requisitionsForDepartment)
+        public void saveRequisitionsAsDisbursement(string userId,Dictionary<Departments, List<RequisitionDetail>> requisitionsForDepartment)
         {
+            Employee employee = deptService.findEmployeeById(userId);
+
             foreach (var dept in requisitionsForDepartment)
             {
                 //Create new disbursement
@@ -93,6 +98,7 @@ namespace Team7_StationeryStore.Service
                 d.GeneratedDate = DateTime.Now;
                 d.CollectionDate = DateTime.Now.AddDays(1);
                 d.Departments = dept.Key;
+                d.storeClerk = employee;
                 d.DepartmentsId = dept.Key.Id;
                 d.status = DisbusementStatus.PENDING;
                 dbcontext.Add(d);
