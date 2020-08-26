@@ -1,0 +1,138 @@
+﻿@using Team7_StationeryStore.Models;
+@{ 
+    var user =(Employee) ViewData["user"];
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/css/sharedlayout.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <script src="https://use.fontawesome.com/973befe495.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div>
+        <header>
+            <ul>
+                <li class="logo">Logic <span>Stationery</span></li>
+                <li> <button class="openbtn" onclick="openNav()"><i class="fas fa-bars" id="sidebar_btn"></i></button></li>
+                <li>
+                    <span style="display:flex; flex-direction:row; margin-left:80% !important;">
+                        <p class="userdetails" style="margin-top:8%">@user.Name</p>
+                        <!--
+                           <button onclick="clickNoti()" style="border:none; width:25px; ">
+                            <img src="~/lib/img/notification.png" style="width:25px">
+                        </button> 
+                        -->
+                    </span>
+
+                </li>
+
+
+            </ul>
+        </header>
+
+        <!-- Sidebar Area-->
+        <div id="mySidebar" class="sidebar" onclick="closeNav()">
+            <button class="closebtn"><i class="fas fa-times"></i></button>
+            <form asp-controller="StationeryStore" asp-action="HomeManagerSupervisor" method="POST">
+                <button type="submit" id="Invbutton">
+                    <i class="fas fa-box-open"></i>
+                    <p>AdjustmentVoucher</p>
+                </button>
+            </form>
+            <form asp-controller="PurchaseOrder" asp-action="ViewAllPurchaseOrders" method="POST">
+                <button type="submit" id="PObutton">
+                    <i class="far fa-file-alt"></i>
+                    <p>Purchase Orders</p>
+                </button>
+            </form>
+            <form asp-controller="Requisition" asp-action="ViewRequisitions" method="POST">
+                <button type="submit" id="Reqbutton">
+                    <i class="far fa-user"></i>
+                    <p>Requisitions</p>
+                </button>
+            </form>
+            <form asp-controller="StationeryStore" asp-action="ViewInventory" method="POST">
+                <button type="submit" id="Invbutton">
+                    <i class="fas fa-box-open"></i>
+                    <p>Inventory</p>
+                </button>
+            </form>
+
+            <form asp-controller="Home" asp-action="Logout" method="Post">
+                <button type="submit" class="logout_btn">Logout</button>
+
+            </form>
+        </div>
+
+
+
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <div id="myDIV">
+        <table>
+            <tbody class="table-body-noti-detail">
+
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "200px";
+            document.getElementById("main").style.marginLeft = "auto";
+        }
+
+        function closeNav() {
+            console.log("closing nav...")
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("main").style.margin = "auto";
+        }
+
+        function clickNoti() {
+            console.log("hello myfunction");
+            var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            $.ajax({
+                url: "/StationeryStore/getLatestNotifications",
+                method: "POST",
+                dataType: 'json',
+                success: function (response) {
+                    $('.table-body-noti-detail').html("");
+                    var today = new Date();
+                    var count = response.length;
+                    console.log("count is" + count);
+                    for (const item of response) {
+                        $('.table-body-noti-detail').append(`<tr><td><button onclick="clickDetail('${item.reqId}')">${item.Name} sends new requisition at ${item.date}</button></td></tr>`)
+                    }
+                }
+            });
+        }
+        function clickDetail(id) {
+            console.log("detail id" + id);
+            $.ajax({
+                url: "/Department/viewNewRequisition",
+                method: "POST",
+                data: { reqId: id },
+                success: function () {
+                    window.location.href = "/Department/viewNewRequisition?reqId=" + id;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

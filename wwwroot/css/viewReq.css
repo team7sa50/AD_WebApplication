@@ -302,3 +302,15 @@ th.modal-table {
 .rstatus{
     font-weight: 600;
 }
+#analyze {
+    padding: 3px;
+    border: none;
+    color: orange;
+    background: none;
+    color: #028090;
+    font-weight: 600;
+}
+
+    #analyze:hover {
+        border: 2px solid #028090;
+    }

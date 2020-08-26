@@ -29,7 +29,7 @@ namespace Team7_StationeryStore.Controllers
         protected DepartmentService deptService;
         protected DisbursementService disbService;
         protected NotificationService notifService;
-        public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService,InventoryService invService,DepartmentService deptService, DisbursementService disbService)
+        public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService,InventoryService invService,DepartmentService deptService, DisbursementService disbService,NotificationService notifService)
         {
             this.dbcontext = dbcontext;
             this.rservice = rservice;
@@ -37,6 +37,7 @@ namespace Team7_StationeryStore.Controllers
             this.invService = invService;
             this.deptService = deptService;
             this.disbService = disbService;
+            this.notifService = notifService;
         }
 
         public IActionResult Home()
@@ -50,6 +51,16 @@ namespace Team7_StationeryStore.Controllers
             //Get Latest Requisitions 
             //Get Latest POs
             //Get Latest Disbursements 
+            return View();
+        }
+        public IActionResult HomeManagerSupervisor()
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+            List<AdjustmentVoucher> adList = invService.findAdjustmentVoucherToApprove(userid);
+            ViewData["adjustmentList"] = adList;
+            ViewData["username"] = emp.Name;
+            ViewData["user"] = emp;
             return View();
         }
         [HttpPost]
@@ -104,11 +115,17 @@ namespace Team7_StationeryStore.Controllers
         }
         public IActionResult startPurchaseOrderAnalysis()
         {
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["user"] = emp;
             ViewData["categories"] = invService.retrieveCategories();
             return View();
         }
         public IActionResult ViewAnalysis(string category)
         {
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["user"] = emp;
             ItemCategory cat = invService.retrieveCategory(category);
             List<PurchaseOrderQuantity> poQ = invService.startPurchaseOrderAnalysis(cat);
             ViewData["dict"] = poQ;
@@ -117,13 +134,18 @@ namespace Team7_StationeryStore.Controllers
         }
         public IActionResult startRequisitionAnalysis()
         {
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["user"] = emp;
             ViewData["categories"] = invService.retrieveCategories();
             ViewData["departments"] = invService.getAllDepartments();
             return View();
         }
         public IActionResult ViewRequisitionAnalysis(string category,string department)
         {
-
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["user"] = emp;
             ItemCategory cat = invService.retrieveCategory(category);
             Departments dept = invService.getDepartmentDetail(department);
             List<PurchaseOrderQuantity> reQ = requisitionService.startRequisitionAnalysis(cat, dept);
@@ -167,6 +189,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["stationeryCatalgoue"] = stationeryCatalogue;
             ViewData["categories"] = categories;
             ViewData["username"] = emp.Name;
+            ViewData["user"] = emp;
             return View();
         }
 
@@ -227,7 +250,7 @@ namespace Team7_StationeryStore.Controllers
         public IActionResult updateAdjustmentVoucher(string adjVoucherId,string action,string remarks) {
             string userId = HttpContext.Session.GetString("userId");
             ViewData["response"] = invService.UpdateAdjustmentVoucher(adjVoucherId, action, remarks);
-            return RedirectToAction("viewAdjustmentVouchers");
+            return RedirectToAction("HomeManagerSupervisor");
         }
        
 
@@ -236,7 +259,22 @@ namespace Team7_StationeryStore.Controllers
             ViewData["PendingAdjList"] = invService.findAdjustmentVoucherList(Status.PENDING);
             return View();
         }
-
+        [HttpPost]
+        public ActionResult getLatestNotifications()
+        {
+            string emp = HttpContext.Session.GetString("userId");
+            List<Notification> notifications = notifService.retrieveLatestNotifications(emp);
+            List<NotifcationString> strings = new List<NotifcationString>();
+            foreach (var not in notifications)
+            {
+                NotifcationString s = new NotifcationString();
+                s.Name = not.Sender.Name;
+                s.reqId = not.typeId;
+                s.date = not.date.ToString("MM / dd / yyyy h:mm");
+                strings.Add(s);
+            }
+            return Content(JsonConvert.SerializeObject(strings));
+        }
         public IActionResult sendDisbursement(string disId) {
             Disbursement dis = disbService.findDisbursementById(disId);
             Employee deptRep = deptService.findDeptRepresentative(dis.Departments.Id);

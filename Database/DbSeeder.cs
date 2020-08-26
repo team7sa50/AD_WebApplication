@@ -890,6 +890,15 @@ namespace Team7_StationeryStore.Database
                 disb1Detail.Id = Guid.NewGuid().ToString();
                 disb1Detail.Disbursement = disb1;
                 dbcontext.Add(disb1Detail);*/
+                AdjustmentVoucher vouncher = new AdjustmentVoucher();
+                vouncher.Id = Guid.NewGuid().ToString();
+                vouncher.EmEmployeeId = employee1.Id;
+                vouncher.appEmEmployeeId = employee2.Id;
+                vouncher.InventoryId = item1.Id;
+                vouncher.status = Status.PENDING;
+                vouncher.qty = -5;
+                vouncher.reason = "missing";
+                dbcontext.Add(vouncher);
                 Disbursement d1 = new Disbursement()
                 {
                     Id = Guid.NewGuid().ToString(),

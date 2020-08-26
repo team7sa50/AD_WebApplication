@@ -8,6 +8,7 @@ using Team7_StationeryStore.Database;
 using Team7_StationeryStore.Models;
 using Team7_StationeryStore.Models.Requisitions;
 using Team7_StationeryStore.Service;
+using Microsoft.AspNetCore.Http;
 
 namespace Team7_StationeryStore.Controllers
 {
@@ -38,6 +39,8 @@ namespace Team7_StationeryStore.Controllers
         }
         public IActionResult ViewRequisitions()
         {
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
             List<Departments> departments = deptService.findAllDepartments();
             List<Requisition> requisitions = reqService.findAllRequisitionsFromStationery();
             List<Requisition> oustandingReq = reqService.findOustandingRequisitions();
@@ -54,6 +57,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["outsandingReq"] = oustandingReq;
             ViewData["departments"] = departments; 
             ViewData["requisitions"] = requisitions;
+            ViewData["user"] = emp;
             return View();
         }
         public IActionResult ViewRequisitionsByFilter(string Department)
