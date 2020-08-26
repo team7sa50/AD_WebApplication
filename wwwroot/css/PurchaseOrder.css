@@ -1,9 +1,10 @@
 ﻿
+
 body {
     font-family: 'Roboto', sans-serif;
     background-color: white !important;
     height: 100%;
-    background: linear-gradient(180deg, #77bfe2 60%, white 50%);
+    background: linear-gradient(180deg, #77bfe2 60%, white 40%);
     margin: 0;
     background-repeat: no-repeat;
 }
@@ -19,7 +20,6 @@ body {
 #main {
     width: 700px;
     margin: auto;
-    margin-top: 20px;
 }
 
 table.steelBlueCols {
@@ -56,6 +56,7 @@ table.steelBlueCols {
     table.steelBlueCols thead {
         background: #DFDCE3;
         border-bottom: 2px solid grey;
+        padding: 8px;
     }
 
         table.steelBlueCols thead th {
@@ -73,26 +74,29 @@ table.steelBlueCols {
     table.steelBlueCols tfoot td {
         font-size: 15px;
         font-weight: 400;
+        text-align: center;
     }
 
     table.steelBlueCols tfoot .links {
-        text-align: right;
+        text-align: center;
     }
 
         table.steelBlueCols tfoot .links a {
             display: inline-block;
             background: #FFFFFF;
             color: #398AA4;
-            padding: 2px 8px;
+            padding-top: 3px;
+            padding-bottom: 3px;
             border-radius: 5px;
         }
 
 .btnCart {
     font-size: 10px;
     padding: 5px;
-    margin: 5px;
+    margin: auto;
     height: 25px;
     border: none;
+
 }
 
 .ViewCartBtn {
@@ -141,20 +145,13 @@ table.steelBlueCols {
     background: none;
     border: none;
     font-size: 16px;
+    width: 60px;
+    display:block;
     color: #9c9c9c;
 }
 
-.rstatus {
-    font-weight: 600;
-    border-radius: 50px;
-    width: 70px;
-    letter-spacing: 1px;
-    font-size: 10px;
-    color: white;
-}
-
 .modal-contents {
-    min-height: 300px;
+    height: 250px;
     width: 500px;
     top: 200;
     background-color: white;
@@ -166,8 +163,9 @@ table.steelBlueCols {
     width: 500px;
     margin: auto;
     text-align: center;
-    padding-top: 60px;
-    font-size: 15px;
+    padding-top: 10px;
+    font-size: 18px;
+    float: left;
     color: #36498f;
     letter-spacing: 1px;
 }

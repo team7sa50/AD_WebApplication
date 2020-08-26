@@ -28,7 +28,10 @@ namespace Team7_StationeryStore.Models
 
         public virtual List<RequisitionDetail> RequisitionDetails { get; set; }
 
-        public Requisition() { }
+        public Requisition() {
+            this.DateSubmitted = DateTime.Now;
+            this.status = ReqStatus.AWAITING_APPROVAL;
+        }
 
         public Requisition(string DeptCode)
         {

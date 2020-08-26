@@ -1,83 +1,10 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-header {
-    z-index: 1;
-    background: white;
-    height: 60px;
-    padding-top: 5px;
-    font-family: 'Source Sans Pro', sans-serif;
-}
-
-.logo {
-    color: #1e459c;
-    width: 200px;
-    height: 60px;
-    font-size: 20px;
-    padding-top: 15px;
-    padding-left: 15px;
-    display: inline-block;
-    float: left;
-}
-
-    .logo span {
-        color: #4877bd;
-    }
-
-header ul {
-    list-style-type: none;
-}
-
-
-/* The button used to open the sidebar */
-header .menubtn {
-    font-size: 15px;
-    position: relative;
-    cursor: pointer;
-    background: white;
-    color: rgb(31,77,137);
-    float: left;
-    text-align: center;
-    display: inline-block;
-    border: none;
-    width: 150px;
-    height: 55px;
-    font-weight: 700;
-    padding-left: 10px;
-}
-
-    header .menubtn:hover {
-        color: #4877bd;
-        border: none;
-    }
-
-header .userdetails {
-    display: inline-block;
-    float: right;
-    width: 150px;
-    text-align: center;
-    border-left-style: solid;
-    border-left-color: grey;
-    font-size: 15px;
-    margin: 15px 15px;
-    color: rgb(31,77,137);
-    font-weight: 700;
-}
-
-header img {
-    display: inline-block;
-    float: right;
-    margin-top: 5px;
-    max-width: 40px;
-}
-
+﻿
 
 /*Login Page CSS*/
-@charset "utf=8"
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: black !important;
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: #f3f3f3 !important;
 }
 
 * {
@@ -95,7 +22,7 @@ body {
     min-height: 400px;
     margin: 0 auto;
     margin-top: 100px;
-    background: url('~/lib/img/loginbg.jpg');
+    background: linear-gradient(280deg, #1F4D89 50%, white 40%);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -105,12 +32,11 @@ body {
 .logocontainer {
     float: left;
     width: 40%;
-    ;
     margin-left: 10px;
     margin-top: 20%;
     padding-left: 30px;
     font-size: 11px;
-    font-family: Arial, Helvetica;
+    font-family: 'Source Sans Pro', sans-serif;
     color: #1F4D89;
     text-align: center;
 }
@@ -138,15 +64,14 @@ body {
 }
 
     .logincontainer h5 {
-        color: #1F4D89;
+        color: white;
         padding: 10px 0px;
         font-size: 12px;
-        font-family: Arial, Helvetica;
+        font-family: 'Source Sans Pro', sans-serif;
     }
 
 
     .logincontainer input[type=text] {
-        border: 1px solid gray;
         padding: 6px 10px;
         margin-bottom: 4px;
         width: 100%;
@@ -157,7 +82,6 @@ body {
         box-sizing: border-box;
     }
     .logincontainer input[type=password] {
-        border: 1px solid gray;
         padding: 6px 10px;
         margin-bottom: 4px;
         width: 100%;

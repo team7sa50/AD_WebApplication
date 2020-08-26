@@ -1,0 +1,212 @@
+﻿
+
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f6f7fb !important;
+}
+
+#main {
+    width: 850px;
+    margin: auto;
+    margin-top: 20px;
+}
+
+#clerkhometop {
+    padding-bottom: 10px;
+}
+
+#clerkhomelower {
+    width: 850px;
+    margin-left: 200px;
+    height: 500px;
+    margin: auto;
+    padding-top: 120px;
+}
+
+
+.clerkhome-container {
+    width: 190px;
+    height: 60px;
+    background-color: white;
+    color: white;
+    border: none;
+    float: left;
+    display: inline-block;
+    margin-left: 15px;
+    text-align: right;
+    font-size: 14px;
+    letter-spacing: 1px;
+    ;
+    margin-top: 30px;
+    vertical-align: bottom;
+}
+
+#PObutton {
+    background-image: linear-gradient(to right top, #62a6f1, #67a9f1, #6bacf1, #70aff1, #75b2f1);
+    border-radius: 5px;
+}
+
+    #PObutton:hover {
+        opacity: 0.8;
+    }
+
+.clerkhome-container i {
+    font-size: 55px;
+    z-index: 10;
+    float: left;
+    color: #f3f3f3;
+    display: inline-block;
+    transform: translate(0%,10%);
+}
+
+.clerkhome-container p {
+    font-size: 18px;
+    font-weight: 600;
+    padding-top: 30px;
+    letter-spacing: -1;
+    transform: translate(0%,-60%);
+}
+
+#overViewTab {
+    -webkit-box-shadow: 2px -5px 162px -57px rgba(0,0,0,0.81);
+    -moz-box-shadow: 2px -5px 162px -57px rgba(0,0,0,0.81);
+    box-shadow: 2px -5px 162px -57px rgba(0,0,0,0.81);
+}
+
+#Reqbutton {
+    background-image: linear-gradient(to right top, #80d5b8, #80d6bb, #81d8bd, #81d9c0, #82dac2);
+}
+
+    #Reqbutton:hover {
+        opacity: 0.8;
+    }
+
+#Invbutton {
+    background-image: linear-gradient(to right top, #f0b865, #f1bc6d, #f2c076, #f3c37e, #f4c786);
+}
+
+    #Invbutton:hover {
+        opacity: 0.8;
+    }
+
+#Disbbutton {
+    background-image: linear-gradient(to right top, #db6b7f, #db6b7f, #db6b7f, #db6b7f, #db6b7f);
+}
+
+    #Disbbutton:hover {
+        opacity: 0.8;
+    }
+
+
+.overviewTable {
+    width: 850px;
+    background: white;
+    border-bottom: 3px solid #eaebee;
+    -webkit-box-shadow: 2px -5px 44px -35px rgba(0,0,0,0.81);
+    -moz-box-shadow: 2px -5px 44px -35px rgba(0,0,0,0.81);
+    box-shadow: 2px -5px 44px -35px rgba(0,0,0,0.81);
+}
+
+table.overviewTable {
+    background-color: #FFFFFF;
+    height: 150px;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+    table.overviewTable td, table.overviewTable th {
+        width: 850px;
+    }
+
+    table.overviewTable tbody td {
+        font-size: 11px;
+        color: #333333;
+        padding: 10px;
+        background: white;
+    }
+
+    table.overviewTable thead {
+    }
+
+        table.overviewTable thead th {
+            font-size: 12px;
+            font-weight: bold;
+            color: #000000;
+            text-align: center;
+            padding-top: 25px;
+        }
+
+.reqId {
+    background: #D3D3D3;
+    font-size: 10px;
+    min-width: 80px;
+    max-width: 120px;
+    margin: auto;
+    color: #545454;
+    border-radius: 50px;
+    padding: 2px;
+}
+
+.rstatus {
+    font-weight: 600;
+    border-radius: 50px;
+    width: 70px;
+    letter-spacing: 1px; 
+    font-size: 10px;
+    color: white;
+}
+
+.dstatus {
+    font-weight: 600;
+    border-radius: 50px;
+    width: 70px;
+    letter-spacing: 1px;
+    font-size: 10px;
+    color: white;
+}
+
+.postatus {
+    font-weight: 600;
+    border-radius: 50px;
+    width: 70px;
+    letter-spacing: 1px;
+    font-size: 10px;
+    color: white;
+}
+
+#clerkhome-left {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    background: white;
+}
+
+#overViewTab {
+    background: white;
+    height: 40px;
+    width: 100%;
+    margin: 0;
+    border-bottom: 1px solid rgb(193, 200, 203);
+}
+
+    #overViewTab button {
+        width: 32%;
+        height: 100%;
+        font-size: 13px;
+        background: none;
+        border: none;
+        font-weight: 600;
+        padding: 10px;
+        letter-spacing: 1px;
+    }
+
+        #overViewTab button:hover {
+            background: #8dc2f4;
+            color: white;
+        }
+
+        #overViewTab button.active {
+            color: rgb(31, 77, 137);
+            border-bottom: 2px solid;
+        }

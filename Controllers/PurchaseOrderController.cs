@@ -27,16 +27,13 @@ namespace Team7_StationeryStore.Controllers
             this.disService = disService;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
         public IActionResult SelectSupplier()
         {
             string userid = HttpContext.Session.GetString("userId");
             List<Supplier> suppliers = invService.getAllSuppliers();
             Employee emp = deptService.findEmployeeById(userid);
-            ViewData["username"] = emp.Name;
+            
+           /* ViewData["username"] = emp.Name;*/
             ViewData["suppliers"] = suppliers;
             return View();
 
@@ -54,12 +51,16 @@ namespace Team7_StationeryStore.Controllers
             HttpContext.Session.SetString("supplier", s.Id);
             ViewData["stationeryCatalgoue"] = stationeryCatalogue;
             ViewData["categories"] = categories;
-            ViewData["username"] = emp.Name;
+            /*ViewData["username"] = emp.Name;*/
             ViewData["supplier"] = s;
             return View();
         }
         public IActionResult ViewCart(string supplier)
         {
+            if (supplier == null)
+            {
+                supplier = HttpContext.Session.GetString("supplier");
+            }
             Supplier s = invService.getSupplier(supplier);
             string userid = HttpContext.Session.GetString("userId");
             List<PurchaseCart> purchaseCarts = invService.retrievePurchaseCart(userid);
@@ -103,12 +104,18 @@ namespace Team7_StationeryStore.Controllers
                 dbcontext.SaveChanges();
             }
         }
+
         public IActionResult RaisePurchaseOrder(string supplier)
         {
+            if (supplier == null)
+            {
+                supplier = HttpContext.Session.GetString("supplier");
+            }
             invService.CreatePurchaseOrder(HttpContext.Session.GetString("userId"),supplier);
             HttpContext.Session.Remove("supplier");
             return RedirectToAction("ViewAllPurchaseOrders");
         }
+
         public IActionResult RemoveItem(string userid, string itemId)
         {
             var cartItem = dbcontext.purchaseCarts
@@ -141,7 +148,7 @@ namespace Team7_StationeryStore.Controllers
         {
             string userid = HttpContext.Session.GetString("userId");
             Employee user = dbcontext.employees.Where(x => x.Id == userid).FirstOrDefault();
-            List<PurchaseOrder> purchaseOrders = dbcontext.purchaseOrders.ToList();
+            List<PurchaseOrder> purchaseOrders = dbcontext.purchaseOrders.OrderByDescending(x=>x.date).ToList();
             ViewData["purchaseOrders"] = purchaseOrders;
             ViewData["username"] = user.Name;
             return View();

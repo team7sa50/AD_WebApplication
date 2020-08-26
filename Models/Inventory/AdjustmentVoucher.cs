@@ -16,11 +16,8 @@ namespace Team7_StationeryStore.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; set; }
-        [Required]
         public string InventoryId { get; set; }
-        [Required]
         public string EmEmployeeId { get; set; }
-        [Required]
         public string appEmEmployeeId { get; set; }
         public int qty { get;  set; }
         public DateTime date { get;  set; }

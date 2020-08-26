@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewData["Title"] = "startPurchaseOrderAnalysis";
+    var categories = (List<ItemCategory>)ViewData["categories"];
+}
+
+
+    <head>
+        <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet">
+        <link href="~/css/POAnalytics.css" rel="stylesheet" />
+    </head>
+<body>
+    <div id="main">
+        <div id="selectForm">
+            <p style="display: inline-block; color: #f7b733;"><i class="fas fa-calculator"></i></p>
+            <p style="display: inline-block;" id="title">Purchase Order Analytics</p>
+            <form asp-controller="StationeryStore" asp-action="ViewAnalysis" method="POST">
+                <label>Select an item category</label>
+                <select name="category" id="category">
+                    @foreach (var c in categories)
+                    {
+                        <option value="@c.Id"> @c.name</option>
+
+                    }
+                </select>
+                <button id="submitBtn" type="submit"><i class="fas fa-arrow-right"></i></button>
+            </form>
+        </div>
+    </div>
+</body>
+

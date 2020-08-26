@@ -234,6 +234,32 @@ namespace Team7_StationeryStore.Database
                 item10.price = 1.1;
                 dbcontext.Add(item10);
 
+                Inventory item11 = new Inventory();
+                item11.Id = Guid.NewGuid().ToString();
+                item11.ItemCategoryId = category7.Id;
+                item11.itemCode = "P004";
+                item11.description = "Pancer Brown(5x7) w/Window";
+                item11.stock = 1000;
+                item11.measurementUnit = "Each";
+                item11.location = "bin07";
+                item11.reorderLevel = 600;
+                item11.reorderQty = 400;
+                item11.price = 1.1;
+                dbcontext.Add(item11);
+
+                Inventory item12 = new Inventory();
+                item12.Id = Guid.NewGuid().ToString();
+                item12.ItemCategoryId = category6.Id;
+                item12.itemCode = "PE004";
+                item12.description = "Pen red";
+                item12.stock = 1000;
+                item12.measurementUnit = "Each";
+                item12.location = "bin07";
+                item12.reorderLevel = 600;
+                item12.reorderQty = 400;
+                item12.price = 1.1;
+                dbcontext.Add(item12);
+
                 Supplier supplier1 = new Supplier();
                 supplier1.Id = Guid.NewGuid().ToString();
                 supplier1.supplierCode = "ALPA";
@@ -332,16 +358,27 @@ namespace Team7_StationeryStore.Database
                 dbcontext.Add(inventory_Supplier10);
 
 
+                Inventory_Supplier inventory_Supplier11 = new Inventory_Supplier();
+                inventory_Supplier11.Id = Guid.NewGuid().ToString();
+                inventory_Supplier11.InventoryItemId = item11.Id;
+                inventory_Supplier11.SupplierId = supplier1.Id;
+                inventory_Supplier11.qtyOrdered = 300;
+                dbcontext.Add(inventory_Supplier11);
 
+                Inventory_Supplier inventory_Supplier12 = new Inventory_Supplier();
+                inventory_Supplier12.Id = Guid.NewGuid().ToString();
+                inventory_Supplier12.InventoryItemId = item12.Id;
+                inventory_Supplier12.SupplierId = supplier1.Id;
+                inventory_Supplier12.qtyOrdered = 300;
+                dbcontext.Add(inventory_Supplier12);
 
                 Departments EN = new Departments();
                 EN.Id = Guid.NewGuid().ToString();
                 EN.DeptCode = "ENGL";
                 EN.DeptName = "English Dept";
-                EN.DeptHead = "marine";
-                EN.FaxNumber = 0000000;
-                EN.PhoneNumber = 1121231231;
-                EN.ContactName = "Mrs Pamela Kow";
+                EN.ContactName = "English";
+                EN.FaxNumber = 123456;
+                EN.PhoneNumber = 112124;
                 EN.CollectionPointId = cp1.Id;
                 dbcontext.Add(EN);
 
@@ -349,9 +386,9 @@ namespace Team7_StationeryStore.Database
                 CS.Id = Guid.NewGuid().ToString();
                 CS.DeptCode = "CPSC";
                 CS.DeptName = "ComputerScience";
-                CS.DeptHead = "tom";
-                CS.FaxNumber = 1111111;
-                CS.PhoneNumber = 116561231;
+                CS.ContactName = "Computer";
+                CS.FaxNumber = 111111;
+                CS.PhoneNumber = 1165613;
                 CS.CollectionPointId = cp3.Id;
                 dbcontext.Add(CS);
 
@@ -359,9 +396,9 @@ namespace Team7_StationeryStore.Database
                 Comm.Id = Guid.NewGuid().ToString();
                 Comm.DeptCode = "ENGL";
                 Comm.DeptName = "Commerce Dept";
-                Comm.DeptHead = "emma";
-                Comm.FaxNumber = 222222;
-                Comm.PhoneNumber = 1121678231;
+                Comm.ContactName = "Commerce";
+                Comm.FaxNumber = 22222;
+                Comm.PhoneNumber = 112164;
                 Comm.CollectionPointId = cp2.Id;
                 dbcontext.Add(Comm);
 
@@ -369,9 +406,9 @@ namespace Team7_StationeryStore.Database
                 regr.Id = Guid.NewGuid().ToString();
                 regr.DeptCode = "Regr";
                 regr.DeptName = "Registra Dept";
-                regr.DeptHead = "ava";
-                regr.FaxNumber = 3333333;
-                regr.PhoneNumber = 112129955231;
+                regr.ContactName = "Registra";
+                regr.FaxNumber = 33333;
+                regr.PhoneNumber = 112231;
                 regr.CollectionPointId = cp5.Id;
                 dbcontext.Add(regr);
 
@@ -379,9 +416,9 @@ namespace Team7_StationeryStore.Database
                 StationeryDept.Id = Guid.NewGuid().ToString();
                 StationeryDept.DeptCode = "STAT";
                 StationeryDept.DeptName = "Stationery Dept";
-                StationeryDept.DeptHead = "marine";
-                StationeryDept.PhoneNumber = 65899999;
-                StationeryDept.FaxNumber = 444444;
+                StationeryDept.ContactName = "Stationery";
+                StationeryDept.PhoneNumber = 69999;
+                StationeryDept.FaxNumber = 4444;
                 StationeryDept.CollectionPointId = cp1.Id;
                 dbcontext.Add(StationeryDept);
 
@@ -414,13 +451,15 @@ namespace Team7_StationeryStore.Database
                 employee3.Role = Role.STORE_MANAGER;
                 employee3.DepartmentsId = StationeryDept.Id;
                 dbcontext.Add(employee3);
+                StationeryDept.DeptHead = employee3.Name;
+                StationeryDept.Representative = employee2.Name;
 
                 Employee employee4 = new Employee();
                 employee4.Id = Guid.NewGuid().ToString();
                 employee4.Name = "tom";
                 employee4.Email = "tom@gmail.com";
                 string emp4psw = MD5Hash.GetMd5Hash(md5Hash, "123");
-                employee4.Password =emp4psw;
+                employee4.Password = emp4psw;
                 employee4.Role = Role.DEPT_HEAD;
                 employee4.DepartmentsId = EN.Id;
                 dbcontext.Add(employee4);
@@ -434,6 +473,8 @@ namespace Team7_StationeryStore.Database
                 employee5.Role = Role.DEPT_REP;
                 employee5.DepartmentsId = EN.Id;
                 dbcontext.Add(employee5);
+                EN.Representative = employee5.Name;
+                EN.DeptHead = employee4.Name;
 
                 Employee employee6 = new Employee();
                 employee6.Id = Guid.NewGuid().ToString();
@@ -460,11 +501,13 @@ namespace Team7_StationeryStore.Database
                 employee8.Id = Guid.NewGuid().ToString();
                 employee8.Name = "noah";
                 employee8.Email = "noah@gmail.com";
-                string emp8psw= MD5Hash.GetMd5Hash(md5Hash, "123");
+                string emp8psw = MD5Hash.GetMd5Hash(md5Hash, "123");
                 employee8.Password = emp8psw;
                 employee8.Role = Role.DEPT_REP;
                 employee8.DepartmentsId = CS.Id;
                 dbcontext.Add(employee8);
+                CS.DeptHead = employee7.Name;
+                CS.Representative = employee8.Name;
 
                 Employee employee9 = new Employee();
                 employee9.Id = Guid.NewGuid().ToString();
@@ -496,6 +539,8 @@ namespace Team7_StationeryStore.Database
                 employee11.Role = Role.DEPT_REP;
                 employee11.DepartmentsId = Comm.Id;
                 dbcontext.Add(employee11);
+                Comm.DeptHead = employee10.Name;
+                Comm.Representative = employee11.Name;
 
                 Employee employee12 = new Employee();
                 employee12.Id = Guid.NewGuid().ToString();
@@ -527,6 +572,8 @@ namespace Team7_StationeryStore.Database
                 employee14.Role = Role.DEPT_REP;
                 employee14.DepartmentsId = regr.Id;
                 dbcontext.Add(employee14);
+                regr.DeptHead = employee13.Name;
+                regr.Representative = employee14.Name;
 
                 Employee employee15 = new Employee();
                 employee15.Id = Guid.NewGuid().ToString();
@@ -537,9 +584,82 @@ namespace Team7_StationeryStore.Database
                 employee15.Role = Role.EMPLOYEE;
                 employee15.DepartmentsId = regr.Id;
                 dbcontext.Add(employee15);
-                
+
+                PurchaseOrder po1 = new PurchaseOrder();
+                po1.Id = Guid.NewGuid().ToString();
+                po1.SupplierId = supplier1.Id;
+                po1.EmployeeId = employee1.Id;
+                po1.date = DateTime.Now;
+                po1.status = POStatus.PENDING;
+                dbcontext.Add(po1);
+
+                PurchaseOrderDetails po1detail1 = new PurchaseOrderDetails();
+                po1detail1.Id = Guid.NewGuid().ToString();
+                po1detail1.PurchaseOrderId = po1.Id;
+                po1detail1.InventoryId = item1.Id;
+                po1detail1.quantity = 20;
+                dbcontext.Add(po1detail1);
+
+                PurchaseOrderDetails po1detail2 = new PurchaseOrderDetails();
+                po1detail2.Id = Guid.NewGuid().ToString();
+                po1detail2.PurchaseOrderId = po1.Id;
+                po1detail2.InventoryId = item3.Id;
+                po1detail2.quantity = 20;
+                dbcontext.Add(po1detail2);
+
+                PurchaseOrderDetails po1detail3 = new PurchaseOrderDetails();
+                po1detail3.Id = Guid.NewGuid().ToString();
+                po1detail3.PurchaseOrderId = po1.Id;
+                po1detail3.InventoryId = item4.Id;
+                po1detail3.quantity = 20;
+                dbcontext.Add(po1detail3);
+
+                PurchaseOrder po2 = new PurchaseOrder();
+                po2.Id = Guid.NewGuid().ToString();
+                po2.SupplierId = supplier2.Id;
+                po2.EmployeeId = employee1.Id;
+                po2.date = DateTime.Now.AddMonths(-1);
+                po2.status = POStatus.PENDING;
+                dbcontext.Add(po2);
+
+                PurchaseOrderDetails po2detail1 = new PurchaseOrderDetails();
+                po2detail1.Id = Guid.NewGuid().ToString();
+                po2detail1.PurchaseOrderId = po2.Id;
+                po2detail1.InventoryId = item2.Id;
+                po2detail1.quantity = 20;
+                dbcontext.Add(po2detail1);
+
+                PurchaseOrderDetails po2detail2 = new PurchaseOrderDetails();
+                po2detail2.Id = Guid.NewGuid().ToString();
+                po2detail2.PurchaseOrderId = po2.Id;
+                po2detail2.InventoryId = item7.Id;
+                po2detail2.quantity = 20;
+                dbcontext.Add(po2detail2);
+
+                PurchaseOrderDetails po2detail3 = new PurchaseOrderDetails();
+                po2detail3.Id = Guid.NewGuid().ToString();
+                po2detail3.PurchaseOrderId = po2.Id;
+                po2detail3.InventoryId = item5.Id;
+                po2detail3.quantity = 20;
+                dbcontext.Add(po2detail3);
+
+                PurchaseOrderDetails po2detail4 = new PurchaseOrderDetails();
+                po2detail4.Id = Guid.NewGuid().ToString();
+                po2detail4.PurchaseOrderId = po2.Id;
+                po2detail4.InventoryId = item11.Id;
+                po2detail4.quantity = 10;
+                dbcontext.Add(po2detail4);
+
+                PurchaseOrderDetails po2detail5 = new PurchaseOrderDetails();
+                po2detail5.Id = Guid.NewGuid().ToString();
+                po2detail5.PurchaseOrderId = po2.Id;
+                po2detail5.InventoryId = item12.Id;
+                po2detail5.quantity = 15;
+                dbcontext.Add(po2detail5);
+
+
                 Requisition requisition1 = new Requisition();
-                requisition1.Id = EN.DeptCode+"_"+DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
+                requisition1.Id = EN.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
                 requisition1.DepartmentId = EN.Id;
                 requisition1.EmployeeId = employee6.Id;
                 requisition1.ApprovedEmployeeId = employee4.Id;
@@ -563,34 +683,7 @@ namespace Team7_StationeryStore.Database
                 requisition1Detail2.RequestedQty = 20;
                 requisition1Detail2.DistributedQty = 0;
                 dbcontext.Add(requisition1Detail2);
-//----------------------------------------------------------------------------------------------------------------------------------> Keith
-                /*
-                Requisition requisition11 = new Requisition();
-                requisition11.Id = EN.DeptCode + "_" + DateTime.Now;
-                requisition11.DepartmentId = EN.Id;
-                requisition11.EmployeeId = employee6.Id;
-                requisition11.ApprovedEmployeeId = employee4.Id;
-                requisition11.DateSubmitted = DateTime.Now;
-                requisition11.status = ReqStatus.APPROVED;
-                requisition11.Remarks = "nothing";
-                dbcontext.Add(requisition11);
 
-                RequisitionDetail requisition1Detail11 = new RequisitionDetail();
-                requisition1Detail.Id = Guid.NewGuid().ToString();
-                requisition1Detail.RequisitionId = requisition11.Id;
-                requisition1Detail.InventoryId = item1.Id;
-                requisition1Detail.RequestedQty = 20;
-                requisition1Detail.DistributedQty = 0;
-                dbcontext.Add(requisition1Detail);
-
-                RequisitionDetail requisition1Detail12 = new RequisitionDetail();
-                requisition1Detail2.Id = Guid.NewGuid().ToString();
-                requisition1Detail2.RequisitionId = requisition11.Id;
-                requisition1Detail2.InventoryId = item2.Id;
-                requisition1Detail2.RequestedQty = 20;
-                requisition1Detail2.DistributedQty = 0;
-                dbcontext.Add(requisition1Detail2);*/
-//----------------------------------------------------------------------------------------------------------------------------------> Keith
                 Requisition requisition2 = new Requisition();
                 requisition2.Id = CS.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
                 requisition2.DepartmentId = CS.Id;
@@ -617,7 +710,69 @@ namespace Team7_StationeryStore.Database
                 requisition2Detail2.DistributedQty = 0;
                 dbcontext.Add(requisition2Detail2);
 
-                /*
+                //-------------------------------------------------------------Seeding for training model-------------------------------------------------------------------------------------->
+                Inventory[] arrInv = new Inventory[] { item1, item2, item3, item4, item5, item6, item7, item8, item9, item10 };
+
+                Random rand = new Random();
+                int size = 300;
+                for (int i = 0; i < size; i++)
+                {
+                    DateTime randDate = DateTime.Now.AddDays(-rand.Next(1100));
+                    int randomQty = rand.Next(1, 100);
+                    int randomStatus = rand.Next(0, 7);
+                    Requisition r1 = new Requisition();
+                    r1.Id = EN.DeptCode + "_" + Guid.NewGuid().ToString();
+                    r1.DepartmentId = EN.Id;
+                    r1.EmployeeId = employee6.Id;
+                    r1.ApprovedEmployeeId = employee4.Id;
+                    r1.DateSubmitted = randDate;
+                    r1.status = (ReqStatus)randomStatus;
+                    r1.Remarks = "nothing";
+                    List<string> list = new List<string>();
+                    List<RequisitionDetail> rLists = new List<RequisitionDetail>();
+                    for (int j = 0; j < 3; j++) {
+                        RequisitionDetail rd1 = new RequisitionDetail();
+                        rd1.Id = Guid.NewGuid().ToString();
+                        int randomItem = rand.Next(arrInv.Length);
+                        string item= arrInv[randomItem].Id;
+                        while (list.FirstOrDefault(x => x.Contains(item)) != null)
+                        {
+                            randomItem = rand.Next(arrInv.Length);
+                            item = arrInv[randomItem].Id;
+                        }
+                        rd1.RequisitionId = r1.Id;
+                        rd1.Inventory = arrInv[randomItem];
+                        //rd1.InventoryId = item;
+                        rd1.RequestedQty = randomQty;
+                        rd1.DistributedQty = 0;
+                        list.Add(arrInv[randomItem].Id);
+                        rLists.Add(rd1);
+                    }
+                    list.Clear();
+                    dbcontext.AddRangeAsync(rLists);
+                    dbcontext.Add(r1);
+
+                    int randomPOStatus = rand.Next(0, 2);
+                    PurchaseOrder po11 = new PurchaseOrder();
+                    po11.Id = Guid.NewGuid().ToString();
+                    po11.SupplierId = supplier1.Id;
+                    po11.EmployeeId = employee1.Id;
+                    po11.date = randDate;
+                    po11.status = (POStatus)randomPOStatus;
+                    dbcontext.Add(po11);
+                    for (int k = 0; k < 5; k++)
+                    {
+                        int randomI = rand.Next(arrInv.Length);
+                        PurchaseOrderDetails pod1 = new PurchaseOrderDetails();
+                        pod1.Id = Guid.NewGuid().ToString();
+                        pod1.PurchaseOrderId = po11.Id;
+                        pod1.InventoryId = arrInv[randomI].Id;
+                        pod1.quantity = randomQty;
+                        dbcontext.Add(pod1);
+                    }
+                }
+
+                //-------------------------------------------------------------Seeding for training model-------------------------------------------------------------------------------------->
 
                 Requisition requisition3 = new Requisition();
                 requisition3.Id = regr.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");
@@ -735,7 +890,67 @@ namespace Team7_StationeryStore.Database
                 disb1Detail.Id = Guid.NewGuid().ToString();
                 disb1Detail.Disbursement = disb1;
                 dbcontext.Add(disb1Detail);*/
+                Disbursement d1 = new Disbursement()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    GeneratedDate = DateTime.Now,
+                    CollectionDate = DateTime.Now,
+                    status = DisbusementStatus.PENDING,
+                    storeClerk = employee1,
+                    Departments = regr
+                };
+                dbcontext.Add(d1);
+                DisbursementDetail d1detail1 = new DisbursementDetail();
+                d1detail1.Id = Guid.NewGuid().ToString();
+                d1detail1.DisbursementId = d1.Id;
+                d1detail1.RequisitionDetailId = requisition1Detail.Id;
+                d1detail1.disbursedQty = 20;
+                dbcontext.Add(d1detail1);
 
+
+                Disbursement d2 = new Disbursement()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    GeneratedDate = DateTime.Now,
+                    CollectionDate = DateTime.Now,
+                    storeClerk=employee1,
+                    status = DisbusementStatus.COMPLETED,
+                    Departments = Comm
+                };
+                dbcontext.Add(d2);
+
+                Disbursement d3 = new Disbursement()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    GeneratedDate = DateTime.Now,
+                    CollectionDate = DateTime.Now,
+                    storeClerk=employee1,
+                    status = DisbusementStatus.COMPLETED,
+                    Departments = CS
+                };
+                dbcontext.Add(d3);
+
+                Disbursement d4 = new Disbursement()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    GeneratedDate = DateTime.Now,
+                    CollectionDate = DateTime.Now,
+                    storeClerk=employee1,
+                    status = DisbusementStatus.COMPLETED,
+                    Departments = EN
+                };
+                dbcontext.Add(d4);
+
+                Disbursement d5 = new Disbursement()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    GeneratedDate = DateTime.Now,
+                    CollectionDate = DateTime.Now,
+                    storeClerk=employee1,
+                    status = DisbusementStatus.COMPLETED,
+                    Departments = Comm
+                };
+                dbcontext.Add(d5);
                 dbcontext.SaveChanges();
 
             }

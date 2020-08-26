@@ -33,9 +33,64 @@ namespace Team7_StationeryStore.ApiControllers
         [Route("api/[controller]/get-detail-information-by-req-id")]
         public ActionResult GetDetail(String id)
         {
-            List<RequisitionDetailView> requisitionDetails = reqService.findRequisitionDetail(id);
-            return Content(JsonConvert.SerializeObject(requisitionDetails));
+            var details = reqService.retrieveRequisitionDetailList(id).Select(x => new
+            {
+                itemCode = x.Inventory.itemCode,
+                description = x.Inventory.description,
+                qty = x.RequestedQty
+            });
+            return Content(JsonConvert.SerializeObject(details, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
         }
+        [HttpGet]
+        [Route("api/[controller]/getAllRequisitions")]
+        public ActionResult GetAllRequisitions()
+        {
+            List<Requisition> requisitions = reqService.retrieveAllRequisitions();
+            return Content(JsonConvert.SerializeObject(requisitions, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+
+        }
+        [HttpGet]
+        [Route("api/[controller]/getAllRequisitionsByEmpId")]
+        public ActionResult GetAllRequisitionsBYEmpId(string empId)
+        {
+
+            var items = (from c in dbcontext.requisitions
+                         where c.EmployeeId == empId
+                         orderby c.DateSubmitted descending
+                         select new
+                         {
+                             Id = c.Id,
+                             DateSubmitted = c.DateSubmitted,
+                             status=c.status.ToString(),
+                             remarks=c.Remarks
+                         }
+          );
+
+            return Content(JsonConvert.SerializeObject(items, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+
+        }
+
+        [HttpGet]
+        [Route("api/[controller]/getAllPendingRequisitionsByAppEmpId")]
+        public ActionResult GetAllPendingRequisitionsByAppEmpId(string empId)
+        {
+
+            var items = (from c in dbcontext.requisitions
+                         where c.ApprovedEmployeeId == empId && c.status==ReqStatus.AWAITING_APPROVAL
+                         orderby c.DateSubmitted descending
+                         select new
+                         {
+                             Id = c.Id,
+                             DateSubmitted = c.DateSubmitted,
+                             status = c.status.ToString(),
+                             remarks = c.Remarks
+                         }
+          );
+
+            return Content(JsonConvert.SerializeObject(items, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+
+        }
+
 
         // GET api/<controller>/5
         [HttpGet("{id}")]

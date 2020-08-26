@@ -10,7 +10,6 @@ namespace Team7_StationeryStore.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; set; }
-        [Required]
         public string ItemCategoryId { get; set; }
         public string itemCode { get; set; }
         public string description { get;  set; }

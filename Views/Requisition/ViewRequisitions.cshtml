@@ -11,127 +11,113 @@
         <meta charset="utf=8">
         <title>Home</title>
         <link rel="stylesheet" type="text/css" href="~/css/viewReq.css">
-        <link rel="stylesheet" type="text/css" href="~/css/site.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
         <script src="https://use.fontawesome.com/973befe495.js"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
         <link href="https://code.jquery.com/jquery-3.3.1.js" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="~/js/viewRequisition.js"></script>
+        <!-- <script src="~/js/viewRequisition.js"></script>-->
     </head>
 
     <body>
-
-        <div class="requisitionmenu">
+        <div id="requisitionmenu">
             <button class="tablinks" onclick="openReq(event, 'All')" id="defaultOpen">All</button>
-            <!-- <button class="tablinks" onclick="openReq(event, 'New')">New</button>
-            <button class="tablinks" onclick="openReq(event, 'Outstanding')">Outstanding</button>-->
-            <div class="btn-container">
-                <form asp-controller="PurchaseOrder" asp-action="SelectSupplier" method="POST">
-                    <input type="submit" value="Create Purchase Order" class="btn btn-outline-info" />
-                </form>
-                <form asp-controller="PurchaseOrder" asp-action="ViewAllPurchaseOrders" method="POST">
-                    <input type="submit" value="View All Purchase Orders" class="btn btn-outline-info" />
-                </form>
-                <form asp-controller="StationeryStore" asp-action="StartAnalytics" method="POST">
-                    <input type="submit" value="Analytics" class="btn btn-outline-info" />
-                </form>
-            </div>
-
         </div>
-       
-            <!--Tab for All Requisitions-->
-            <div id="main">
-                <div class="requisitioncontainer" id="All">
-                    <div class="requisitionfilter">
-                            <h1>Requisitions</h1>
-                            <fieldset>
-                                <div style="float:left;margin-right:20px;">
-                                    <label for="Department">Department name</label>
-                                    <select id="deptAll" name="Department">
-                                        <option value="a" selected>All Departments</option>
-                                        @foreach (var d in departments)
-                                        {
-                                            <option value="@d.DeptName">@d.DeptName</option>
 
-                                        }
-                                    </select>
-                                </div>
-                                <div style="float:left;">
-                                    <label for="Status">Status</label>
-                                    <select id="statusAll" name="Status">
-                                        @foreach (var s in statuses)
-                                        {
-                                        <option value=@s>@s</option>
-                                        }
-                                    </select>
-                                </div>
-                                <!--<div style="float:left;">
-                                    <label for="StartDate">Date</label>
-                                    <input type="Date" name="StartDate" id="dateOfReq">
-                                </div>-->
-                            </fieldset>
-                    </div>
-                   <form asp-controller="StationeryStore" asp-action="viewRetrieval" method="POST">
-                        <table class="requisitiontable table" id="AllReqTable" cellspacing="0" width="100%">
-                            <tr>
-                                <th>Checkbox</th>
-                                <th>Id</th>
-                                <th>Department</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Details</th>
-                            </tr>
-
-                            <tbody id="AllReq">
-                                @foreach (var c in lists)
+        <!--Tab for All Requisitions-->
+        <div id="main">
+            <div class="requisitioncontainer" id="All">
+                <div class="requisitionfilter">
+                    <h1>Requisitions</h1>
+                    <fieldset>
+                        <div style="float:left;margin-right:20px;">
+                            <label for="Department">Department name</label>
+                            <select id="deptAll" name="Department">
+                                <option value="a" selected>All Departments</option>
+                                @foreach (var d in departments)
                                 {
-                                    <tr>
-                                        <td><input type=checkbox value="@c.Id" name="req"></td>
-                                        <td>@c.Id</td>
-                                        <td>@c.Department.DeptName</td>
-                                        <td>@c.DateSubmitted</td>
-                                        <td>@c.status</td>
-                                        <td>
-                                            <a onclick="openDetail('@c.Id','@c.Department.DeptCode')"><u>View</u></a>
-                                        </td>
-                                    </tr>
+                                    <option value="@d.DeptName">@d.DeptName</option>
+
                                 }
-                            </tbody>
-                        </table>
-                        <input id="genretrieval" type="submit" value="Generate Retrieval List" style="font-size:11px"></input>
-                    </form>
+                            </select>
+                        </div>
+                        <div style="float:left;">
+                            <label for="Status">Status</label>
+                            <select id="statusAll" name="Status">
+                                @foreach (var s in statuses)
+                                {
+                                    <option value=@s>@s</option>
+                                }
+                            </select>
+                        </div>
+                    </fieldset>
                 </div>
+                <form asp-controller="StationeryStore" asp-action="viewRetrieval" method="POST">
+                    <table class="requisitiontable table" id="AllReqTable" cellspacing="0" width="100%">
+                        <tr>
+                            <th>Checkbox</th>
+                            <th>Id</th>
+                            <th>Department</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Details</th>
+                        </tr>
+
+                        <tbody id="AllReq">
+                            @foreach (var c in lists)
+                            {
+                                <tr>
+                                    <td><input type=checkbox value="@c.Id" name="req"></td>
+                                    <td>@c.Id</td>
+                                    <td>@c.Department.DeptName</td>
+                                    <td>@c.DateSubmitted</td>
+                                    <td><p class="rstatus">@c.status</p></td>
+                                    <td>
+                                        <a onclick="openDetail('@c.Id','@c.Department.DeptCode')"><u>View</u></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <input id="genretrieval" type="submit" value="Generate Retrieval List" style="font-size:11px"></input>
+                </form>
             </div>
+        </div>
 
-
-            <div id="myDetail" class="detail">
-                <a href="javascript:void(0)" id="detailclosebtn" onclick="closeDetail()">&times;</a>
-
-                <table class="detailRForm">
+        <div id="myDetail" class="detail">
+            <a href="javascript:void(0)" id="detailclosebtn" onclick="closeDetail()">&times;</a>
+            <div class="detailRForm">
+                <table>
                     <tr>
                         <th style="font-size: 14px;" id="reqId"></th>
                     </tr>
                     <tbody id="detailReqView">
-                        <tr style="border-top: 1px solid gray;">
+                        <tr>
                             <th>Department</th>
+                        </tr>
+                        <tr>
                             <td id="reqDeptName"></td>
                         </tr>
                         <tr>
                             <th>Date</th>
+                        </tr>
+                        <tr>
                             <td id="reqDate"></td>
                         </tr>
                         <tr>
                             <th>Recieved By</th>
+                        </tr>
+                        <tr>
                             <td id="reqClerk"></td>
                         </tr>
-
                         <tr>
                             <th>Status</th>
+                        </tr>
+                        <tr>
                             <td>
-                                <p id="originalStatus"></p>
+                                <p id="originalStatus">Approved <i class="fas fa-edit" onclick="showChangeStatus()"></i></p>
 
-                                <form id="changeStatus">                                
+                                <form id="changeStatus">
                                     <select>
                                         @foreach (var s in statuses)
                                         {
@@ -144,181 +130,224 @@
                         </tr>
                     </tbody>
                 </table>
-
+                <div class="modal-table">
+                    <table>
+                        <tr style="border-bottom: 1px solid gray;">
+                            <th>Item</th>
+                            <th>Requested</th>
+                        </tr>
+                        <tbody id="disbDetailsQty">
+                            <tr>
+                                <td>Pen Paper Clip</td>
+                                <td>100</td>
+                            </tr>
+                            <tr>
+                                <td>Pen Paper Clip</td>
+                                <td>100</td>
+                            </tr>
+                            <tr>
+                                <td>Pen Paper Clip</td>
+                                <td>100</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-<script>
+        </div>
+        <script>
 
-function openDetail(id, department) {
-    console.log(department, id);
-    document.getElementById("myDetail").style.width = "300px";
-    document.getElementById("All").style.marginRight = "250px";
+            function openDetail(id, department) {
+                console.log(department, id);
+                document.getElementById("myDetail").style.width = "300px";
+                document.getElementById("All").style.marginRight = "350px";
+                document.getElementById("requisitionmenu").style.marginRight = "350px";
 
-    $.ajax({
-        url: "/Requisition/GetRequisitionDetail/",
-        method: "POST",
-        data: { reqId: id },
-        dataType: 'json',
-        success: function (response) {
-            console.log("hello detail");
-            var jsonObject = JSON.parse(response);
-            console.log(response);
-            var p = document.createElement('p');
-            p.innerHTML = jsonObject.Department.DeptName;
-            console.log(jsonObject.Department.DeptName);
-            document.getElementById('reqDeptName').appendChild(p);
+                $.ajax({
+                    url: "/Requisition/GetRequisitionDetail/",
+                    method: "POST",
+                    data: { reqId: id },
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log("hello detail");
+                        var jsonObject = JSON.parse(response);
+                        console.log(response);
+                        var p = document.createElement('p');
+                        p.innerHTML = jsonObject.Department.DeptName;
+                        console.log(jsonObject.Department.DeptName);
+                        document.getElementById('reqDeptName').appendChild(p);
 
-            var xo = document.createElement('p');
-            xo.innerHTML = jsonObject.DateSubmitted;
-            console.log(jsonObject.DateSubmitted);
-            document.getElementById('reqDate').appendChild(xo);
+                        var xo = document.createElement('p');
+                        xo.innerHTML = jsonObject.DateSubmitted;
+                        console.log(jsonObject.DateSubmitted);
+                        document.getElementById('reqDate').appendChild(xo);
 
-            var titleDetail = document.createElement('h5');
-            titleDetail.innerHTML = jsonObject.Id;
-            var reId = document.getElementById('reqId');
-            reId.appendChild(titleDetail);
+                        var titleDetail = document.createElement('p');
+                        titleDetail.innerHTML = jsonObject.Id;
+                        var reId = document.getElementById('reqId');
+                        reId.appendChild(titleDetail);
 
-            var os = document.getElementById('originalStatus');
-            os.innerHTML = ` ${jsonObject.status} < button class="editbtn" onclick = "showChangeStatus()" > <i class="far fa-edit"></i></button >`;
-        }
-    });
-}
+                        var os = document.getElementById('originalStatus');
+                        os.innerHTML = ` <p id="originalStatus"> ${jsonObject.status} <i class="fas fa-edit" onclick="showChangeStatus()"></i></p>`;
+                    }
+                });
+            }
 
-var pretable = document.getElementById('AllReqTable');
-var tableJson = JSON.stringify(tableToJson(pretable));
-console.log("running Javascript....");
-console.log("JSON DATA: " + tableJson);
+            function showChangeStatus() {
+                document.getElementById("changeStatus").style.display = "block";
+                document.getElementById("originalStatus").style.display = "none";
+            }
 
-$('#deptAll').change('keyup', function () {
-    /*get the value selected*/
-    var value = $(this).val();
-    /* search the html table for the matching dept name */
-    if (value.length < 2) {
-        console.log("All dept selected");
-        var data1 = getAll(tableJson);
-        console.log("Data to be passed in to buildTable: " + data1);
-        buildTable(data1, "AllReq");
-    }
-    else if (value.length > 1) {
-        console.log(value + " selected");
-        var data2 = searchTable(value, tableJson);
-        console.log("Data to be passed in to buildTable: " + data2);
-        buildTable(data2, "AllReq");
-    }
-});
 
-function tableToJson(table) {
-    console.log("converting table to JSON");
-    var data = [];
-    // first row needs to be headers
-    var headers = [];
-    for (var i = 0; i < table.rows[0].cells.length; i++) {
-        headers[i] = table.rows[0].cells[i].innerHTML.toLowerCase().replace(/ /gi, '');
-    }
-    // go through cells
-    for (var i = 1; i < table.rows.length; i++) {
-        var tableRow = table.rows[i];
-        console.log("Getting the rows....");
-        var rowData = {};
+            function closeDetail() {
+                document.getElementById("myDetail").style.width = "0px";
+                document.getElementById("All").style.marginRight = "auto";
+                document.getElementById("requisitionmenu").style.marginRight = "auto";
+            }
 
-        for (var j = 0; j < tableRow.cells.length; j++) {
-            rowData[headers[j]] = tableRow.cells[j].innerHTML;
-        }
-        data.push(rowData);
-    }
-    return data;
-}
+            var pretable = document.getElementById('AllReqTable');
+            var tableJson = JSON.stringify(tableToJson(pretable));
+            console.log("running Javascript....");
+            console.log("JSON DATA: " + tableJson);
 
-function searchTable(value, data) {
-    console.log("Reached searchTable");
-    console.log("Printing value:", value);
-    console.log("Printing data: ", data);
-    var obj = JSON.parse(data);
-    var filteredData = [];
-    for (var i = 0; i < obj.length; i++) {
-        var name = obj[i].department;
-        if (name == value) {
-            filteredData.push(obj[i]);
-        }
-    }
-    return filteredData;
-}
+            $('#deptAll').change('keyup', function () {
+                /*get the value selected*/
+                var value = $(this).val();
+                /* search the html table for the matching dept name */
+                if (value.length < 2) {
+                    console.log("All dept selected");
+                    var data1 = getAll(tableJson);
+                    console.log("Data to be passed in to buildTable: " + data1);
+                    buildTable(data1, "AllReq");
+                }
+                else if (value.length > 1) {
+                    console.log(value + " selected");
+                    var data2 = searchTable(value, tableJson);
+                    console.log("Data to be passed in to buildTable: " + data2);
+                    buildTable(data2, "AllReq");
+                }
+            });
 
-function buildTable(data, tableBodyId) {
-    var tableOld = document.getElementById(tableBodyId);
-    tableOld.innerHTML = "";
-    for (var i = 0; i < data.length; i++) {
-        console.log(data[i]);
-        var row = `<tr>
-                    <td><input type=checkbox value=${data[i].id} name="req"></td>
-                    <td>${data[i].id} </td>
-                    <td>${data[i].department} </td>
-                    <td>${data[i].date} </td>
-                    <td>${data[i].status} </td>
-                    <td>
-                    <a onclick="openDetail(${data[i].id}, ${data[i].department})"><u>View</u></a>
-                    </td>
-                    </tr>`;
-        tableOld.innerHTML += row;
-    }
-}
+            function tableToJson(table) {
+                console.log("converting table to JSON");
+                var data = [];
+                // first row needs to be headers
+                var headers = [];
+                for (var i = 0; i < table.rows[0].cells.length; i++) {
+                    headers[i] = table.rows[0].cells[i].innerHTML.toLowerCase().replace(/ /gi, '');
+                }
+                // go through cells
+                for (var i = 1; i < table.rows.length; i++) {
+                    var tableRow = table.rows[i];
+                    console.log("Getting the rows....");
+                    var rowData = {};
 
-function getAll(alldata) {
-    var obj = JSON.parse(alldata);
-    var filteredData = [];
-    for (var i = 0; i < obj.length; i++) {
-        filteredData.push(obj[i]);
-    }
-    return filteredData;
-}
+                    for (var j = 0; j < tableRow.cells.length; j++) {
+                        rowData[headers[j]] = tableRow.cells[j].innerHTML;
+                    }
+                    data.push(rowData);
+                }
+                return data;
+            }
 
-$('#statusAll').change('keyup', function () {
-    /*get the value selected*/
-        var value = $(this).val();
-        console.log(value + " selected");
-        var data2 = searchTableByStatus(value, tableJson);
-        console.log("Data to be passed in to buildTable: " + data2);
-        buildTable(data2, "AllReq");
-    }
-);
+            function searchTable(value, data) {
+                console.log("Reached searchTable");
+                console.log("Printing value:", value);
+                console.log("Printing data: ", data);
+                var obj = JSON.parse(data);
+                var filteredData = [];
+                for (var i = 0; i < obj.length; i++) {
+                    var name = obj[i].department;
+                    if (name == value) {
+                        filteredData.push(obj[i]);
+                    }
+                }
+                return filteredData;
+            }
 
-$('#dateOfReq').change('keyup', function () {
-    var value = $(this).val();
-    var inputDate = new Date(value);
-    console.log(inputDate);
-    var dataByDate = searchTableByDate(inputDate, comTableJSON);
-    buildTable(dataByDate, "AllReq");
-    $(this).value = "";
-});
+            function buildTable(data, tableBodyId) {
+                var tableOld = document.getElementById(tableBodyId);
+                tableOld.innerHTML = "";
+                for (var i = 0; i < data.length; i++) {
+                    console.log(data[i]);
+                    var row = `<tr>
+                                    <td><input type=checkbox value=${data[i].id} name="req"></td>
+                                    <td>${data[i].id} </td>
+                                    <td>${data[i].department} </td>
+                                    <td>${data[i].date} </td>
+                                    <td>${data[i].status} </td>
+                                    <td>
+                                    <a onclick="openDetail(${data[i].id}, ${data[i].department})"><u>View</u></a>
+                                    </td>
+                                    </tr>`;
+                    tableOld.innerHTML += row;
+                }
+            }
 
-function searchTableByStatus(value, data) {
-    console.log("Reached searchTable");
-    console.log("Printing value:", value);
-    console.log("Printing data: ", data);
-    var obj = JSON.parse(data);
-    var filteredData = [];
-    for (var i = 0; i < obj.length; i++) {
-        var name = obj[i].status;
-        if (name == value) {
-            filteredData.push(obj[i]);
-        }
-    }
-    return filteredData;
-    }
-/*
-function searchTableByDate(value, data) {
-     var obj = JSON.parse(data);
-    console.log("Date input:", inputDate);
-    var filteredData = [];
-    for (var i = 0; i < obj.length; i++) {
-        var name = obj[i].date;
-        var rowDate = new Date(name);
+            function getAll(alldata) {
+                var obj = JSON.parse(alldata);
+                var filteredData = [];
+                for (var i = 0; i < obj.length; i++) {
+                    filteredData.push(obj[i]);
+                }
+                return filteredData;
+            }
 
-        if (rowDate.toDateString() == inputDate.toDateString()) {
-            console.log("found a record with matching date");
-            filteredData.push(obj[i]);
-        }
-    }
-    return filteredData;
-}*/
-</script>
-</body>
+            $('#statusAll').change('keyup', function () {
+                /*get the value selected*/
+                var value = $(this).val();
+                console.log(value + " selected");
+                var data2 = searchTableByStatus(value, tableJson);
+                console.log("Data to be passed in to buildTable: " + data2);
+                buildTable(data2, "AllReq");
+            }
+            );
+
+            $('#dateOfReq').change('keyup', function () {
+                var value = $(this).val();
+                var inputDate = new Date(value);
+                console.log(inputDate);
+                var dataByDate = searchTableByDate(inputDate, comTableJSON);
+                buildTable(dataByDate, "AllReq");
+                $(this).value = "";
+            });
+
+            function searchTableByStatus(value, data) {
+                console.log("Reached searchTable");
+                console.log("Printing value:", value);
+                console.log("Printing data: ", data);
+                var obj = JSON.parse(data);
+                var filteredData = [];
+                for (var i = 0; i < obj.length; i++) {
+                    var name = obj[i].status;
+                    if (name == value) {
+                        filteredData.push(obj[i]);
+                    }
+                }
+                return filteredData;
+            }
+
+           $(document).ready(function () {
+            $('.rstatus').each(function () {
+                switch ($(this).text()) {
+                    case "AWAITING_APPROVAL":
+                        $(this).css('background-color','#c5d7c0');
+                        break;
+                    case "REJECTED":
+                        $(this).css('background-color','#f17a7e');
+                        break;
+                    case "APPROVED":
+                        $(this).css('background-color','#7fd6bd');
+                        break;
+                    case "PROCESSING":
+                        $(this).css('background-color','#8ec9bb');
+                        break;
+                    case "COLLECTION":
+                        $(this).css('background-color','#ecc558');
+                        break;
+                    case "OUTSTAND":
+                        $(this).css('background-color','#fa6e4f');
+                        break;
+                }
+            });
+        </script>
+    </body>

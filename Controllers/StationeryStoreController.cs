@@ -15,6 +15,8 @@ using System.Text;
 using Team7_StationeryStore.Analytics;
 using Team7_StationeryStore.Analytics.ML.Objects;
 using Team7_StationeryStore.Analytics.ML;
+using System.Collections;
+using System.Security.Cryptography;
 
 namespace Team7_StationeryStore.Controllers
 {
@@ -26,9 +28,8 @@ namespace Team7_StationeryStore.Controllers
         protected InventoryService invService;
         protected DepartmentService deptService;
         protected DisbursementService disbService;
-        protected Trainer trainer;
-        protected Predictor predictor;
-        public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService,InventoryService invService,DepartmentService deptService, DisbursementService disbService, Trainer trainer, Predictor predictor)
+        protected NotificationService notifService;
+        public StationeryStoreController(StationeryContext dbcontext, RetrievalService rservice,RequisitionService requisitionService,InventoryService invService,DepartmentService deptService, DisbursementService disbService)
         {
             this.dbcontext = dbcontext;
             this.rservice = rservice;
@@ -36,23 +37,21 @@ namespace Team7_StationeryStore.Controllers
             this.invService = invService;
             this.deptService = deptService;
             this.disbService = disbService;
-            this.trainer = trainer;
-            this.predictor = predictor;
         }
 
-        public IActionResult Index()
-        {
-            System.Diagnostics.Debug.WriteLine("List Employee Method reached");
-            return View();
-        }
         public IActionResult Home()
         {
             string userid = HttpContext.Session.GetString("userId");
             Employee emp = deptService.findEmployeeById(userid);
+            ViewData["requisitions"] = requisitionService.findLatestRequisitions();
+            ViewData["pos"] = invService.findLatestPurchaseOrder();
+            ViewData["disbursement"] = disbService.findLatestDisbursements();
             ViewData["username"] = emp.Name;
+            //Get Latest Requisitions 
+            //Get Latest POs
+            //Get Latest Disbursements 
             return View();
         }
-
         [HttpPost]
         public IActionResult Export(){
             List<Employee> employees = (from er in dbcontext.employees
@@ -80,16 +79,58 @@ namespace Team7_StationeryStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult StartAnalytics()
+       /* public IActionResult StartAnalytics()
         {
+            int Year = DateTime.Now.Year;
+            int currentMonth = DateTime.Now.Month; // Auguest
+            int past1Month = currentMonth - 1; // July
+            int past2Month = currentMonth - 2; // June
+
+            var po = from p in dbcontext.purchaseOrders
+                     join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
+                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
+                     orderby h.Key.Year,h.Key.Month
+                     where (h.Key.Month >= past2Month && h.Key.Year == Year)
+                     select new
+                     {
+                         ItemCat = h.Key.name,
+                         Month = h.Key.Month.ToString("MMM"),
+                         Qty = h.Sum(x => x.quantity)
+                     };
+
+            
+
+
+
+
+            // Gathering of data
+            IEnumerable <Req> requisitionTable = from req in dbcontext.requisitions
+                                                   join req_d in dbcontext.requisitionDetails
+                                                   on req.Id equals req_d.RequisitionId into g
+                                                   from d in g.DefaultIfEmpty()
+                                                   orderby req.DateSubmitted
+                                                   select new Req_Complier
+                                                   {
+                                                       Date = req.DateSubmitted,
+                                                       /* Department = req.DepartmentId,
+                                                          Item = d.InventoryId,
+                                                       Qty = (float)d.RequestedQty
+                                                   };
+
+
+            trainer.TimeSeriesForcasting(requisitionTable);
             string traindata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\sampledata.csv";
             string testdata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\testdata.csv";
             System.Diagnostics.Debug.WriteLine("Starting Training");
             trainer.Train(traindata, testdata);           
             System.Diagnostics.Debug.WriteLine("Finished Training");
+        public IActionResult HomeManagerSupervisor()
+        {
+            Employee employee = dbcontext.employees.Where(x => x.Id == HttpContext.Session.GetString("userId")).FirstOrDefault();
+            ViewData["user"] = employee;
             return View();
         }
-
+        
         [HttpPost]
         public JsonResult AnalyzeResults(int requestedQty, int stockQty, string dateT)
         {
@@ -97,7 +138,7 @@ namespace Team7_StationeryStore.Controllers
             string year = dateT.Substring(0, 4);
             System.Diagnostics.Debug.WriteLine("Month: " + month);
             System.Diagnostics.Debug.WriteLine("Year" + year);
-            RequestModel rrn = new RequestModel()
+            Req_Complier rrn = new Req_Complier()
             {
                 RequestedQty = requestedQty.ToString(),
                 InventoryQty = stockQty.ToString(),
@@ -109,29 +150,49 @@ namespace Team7_StationeryStore.Controllers
             CarInventoryPrediction cp = predictor.Predict(inputJson);
             string results = JsonConvert.SerializeObject(cp, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });           
             return Json(results);
-        }
+        }*/
 
         [HttpPost]
         public JsonResult GetEmployeeTest(string id)
         {
             Disbursement d = disbService.findDisbursementById(id);
             Employee deptRep = deptService.findDeptRepresentative(d.DepartmentsId);
+            string name = deptRep.Name;
             string disbursementJson = JsonConvert.SerializeObject(d, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-            string rep = JsonConvert.SerializeObject(deptRep);
-            var result = new { disbursementJson, rep };
+            string repName = JsonConvert.SerializeObject(name,new JsonSerializerSettings {ReferenceLoopHandling=ReferenceLoopHandling.Ignore });
+            var result = new { disbursementJson, repName };
             return Json(result);
         }
-        public IActionResult viewAnalysis()
+        public IActionResult startPurchaseOrderAnalysis()
         {
+            ViewData["categories"] = invService.retrieveCategories();
             return View();
         }
-        public JsonResult GetDataToAnalyze()
+        public IActionResult ViewAnalysis(string category)
         {
-            List<Inventory> inventories = invService.retrieveCatalogue();
-            string model = JsonConvert.SerializeObject(inventories, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-            return Json(model);
+            ItemCategory cat = invService.retrieveCategory(category);
+            List<PurchaseOrderQuantity> poQ = invService.startPurchaseOrderAnalysis(cat);
+            ViewData["dict"] = poQ;
+            ViewData["category"] =cat.name ;
+            return View();
         }
+        public IActionResult startRequisitionAnalysis()
+        {
+            ViewData["categories"] = invService.retrieveCategories();
+            ViewData["departments"] = invService.getAllDepartments();
+            return View();
+        }
+        public IActionResult ViewRequisitionAnalysis(string category,string department)
+        {
 
+            ItemCategory cat = invService.retrieveCategory(category);
+            Departments dept = invService.getDepartmentDetail(department);
+            List<PurchaseOrderQuantity> reQ = requisitionService.startRequisitionAnalysis(cat, dept);
+            ViewData["dict"] = reQ;
+            ViewData["category"] = cat.name;
+            ViewData["department"] = dept.DeptName;
+            return View();
+        }
         [HttpPost]
         public JsonResult SaveChangesToDisb(string newDate, string newColl, string rqId)
         {
@@ -174,7 +235,6 @@ namespace Team7_StationeryStore.Controllers
 
         public IActionResult viewRetrieval(List<string> req)
         {
-
             List<Requisition> selectedReq = requisitionService.getRequisitionsByIds(req);
             System.Diagnostics.Debug.WriteLine("Selected Requests: " + selectedReq.Count);
             /*List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);
@@ -205,10 +265,10 @@ namespace Team7_StationeryStore.Controllers
             //Transfer retrieved requests here
             List<Requisition> selectedReq = requisitionService.getRequisitionsByIds(req);
             List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);
-
+            string userId = HttpContext.Session.GetString("userId");
             //Convert request to disbursement 
             Dictionary<Departments, List<RequisitionDetail>> requisitionsForDepartment = disbService.sortRequisitionByDept(selectedReqDetail);
-            disbService.saveRequisitionsAsDisbursement(requisitionsForDepartment);
+            disbService.saveRequisitionsAsDisbursement(userId,requisitionsForDepartment);
 
             return RedirectToAction("viewDisbursements");
         }
@@ -241,11 +301,114 @@ namespace Team7_StationeryStore.Controllers
             ViewData["PendingAdjList"] = invService.findAdjustmentVoucherList(Status.PENDING);
             return View();
         }
-        public IActionResult HomeManagerSupervisor()
+
+        public IActionResult sendDisbursement(string disId) {
+            Disbursement dis = disbService.findDisbursementById(disId);
+            Employee deptRep = deptService.findDeptRepresentative(dis.Departments.Id);
+            List<Requisition> requisitions = dis.Requisitions.ToList();
+            foreach(var r in requisitions)
+            {
+                requisitionService.updateRequisition(null, r.Id, ReqStatus.COLLECTION, null);
+            }
+            notifService.sendNotification(NotificationType.DISBURSEMENT, null, dis, null);
+            return Json(new { msg = "Sent to Dept Rep: {0}",deptRep.Name });
+        }
+
+        /*
+        [HttpPost]
+        public IActionResult Export(){
+            List<Employee> employees = (from er in dbcontext.employees
+                                 select er).ToList();
+
+            List<object> emps = new List<object>();
+            int k = 0;
+            foreach(Employee e in employees){
+                k++;
+                emps.Add(new string[6] { e.Id, e.Name , e.Email, e.Password, e.Role.ToString(), e.DepartmentsId});
+            }
+            emps.Insert(0, new string[6] {"emp_id", "name", "email", "password", "role", "departmentId"});
+            StringBuilder sb = new StringBuilder(); 
+
+            for (int i = 0; i < emps.Count; i++)
+			{
+                string[] employe = (string[])emps[i];
+
+                for(int j=0; j< employe.Length;j++){
+                sb.Append(employe[j] +',');
+                }
+                sb.Append("\r\n");
+			}
+            return File(Encoding.UTF8.GetBytes(sb.ToString()),"text/csv", "Grid.csv");
+        }
+
+        [HttpPost]
+        public IActionResult StartAnalytics()
         {
-            Employee employee = dbcontext.employees.Where(x => x.Id == HttpContext.Session.GetString("userId")).FirstOrDefault();
-            ViewData["user"] = employee;
+            int Year = DateTime.Now.Year;
+            int currentMonth = DateTime.Now.Month; // Auguest
+            int past1Month = currentMonth - 1; // July
+            int past2Month = currentMonth - 2; // June
+
+            var po = from p in dbcontext.purchaseOrders
+                     join pod in dbcontext.purchaseOrderDetails on p.Id equals pod.PurchaseOrderId
+                     group pod by new { pod.Inventory.ItemCategory.name, p.date.Month, p.date.Year } into h
+                     orderby h.Key.Year,h.Key.Month
+                     where (h.Key.Month >= past2Month && h.Key.Year == Year)
+                     select new
+                     {
+                         ItemCat = h.Key.name,
+                         Month = h.Key.Month.ToString("MMM"),
+                         Qty = h.Sum(x => x.quantity)
+                     };
+
+
+
+
+            // Gathering of data
+            IEnumerable <Req> requisitionTable = from req in dbcontext.requisitions
+                                                   join req_d in dbcontext.requisitionDetails
+                                                   on req.Id equals req_d.RequisitionId into g
+                                                   from d in g.DefaultIfEmpty()
+                                                   orderby req.DateSubmitted
+                                                   select new Req
+                                                   {
+                                                       Date = req.DateSubmitted,
+                                                       /* Department = req.DepartmentId,
+                                                          Item = d.InventoryId,
+                                                       Qty = (float) d.RequestedQty
+                                                   };
+
+
+            trainer.TimeSeriesForcasting(requisitionTable);
+            string traindata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\sampledata.csv";
+            string testdata = @"C:\Users\User'\source\repos\team7sa50\AD_WebApplication\Analytics\Data\testdata.csv";
+            System.Diagnostics.Debug.WriteLine("Starting Training");
+            trainer.Train(traindata, testdata);           
+            System.Diagnostics.Debug.WriteLine("Finished Training");
             return View();
         }
+*/
+
+      /*  [HttpPost]
+        public JsonResult AnalyzeResults(int requestedQty, int stockQty, string dateT)
+        {
+            string month = dateT.Substring(5, 2);
+            string year = dateT.Substring(0, 4);
+            System.Diagnostics.Debug.WriteLine("Month: " + month);
+            System.Diagnostics.Debug.WriteLine("Year" + year);
+            Req_Complier rrn = new Req_Complier()
+            {
+                RequestedQty = requestedQty.ToString(),
+                InventoryQty = stockQty.ToString(),
+                Month = month,
+                Year = year
+            };
+            string inputJson = JsonConvert.SerializeObject(rrn, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            System.Diagnostics.Debug.WriteLine("Results:" + inputJson);
+            CarInventoryPrediction cp = predictor.Predict(inputJson);
+            string results = JsonConvert.SerializeObject(cp, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });           
+            return Json(results);
+        }*/
+
     }
 }

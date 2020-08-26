@@ -16,6 +16,5 @@ namespace Team7_StationeryStore.Models
         public int DistributedQty { get; set; }
         public virtual Requisition Requisition { get; set; }
         public virtual Inventory Inventory { get; set; }
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,22 @@ namespace Team7_StationeryStore.Service
         {
             return dbcontext.requisitions.Where(x => !x.status.Equals(ReqStatus.AWAITING_APPROVAL) && !x.status.Equals(ReqStatus.REJECTED)).ToList();
 
+        }
+
+        public List<Requisition> findLatestRequisitions()
+        {
+            List<Requisition> rq = (from r in dbcontext.requisitions
+                                    select r).ToList();
+            List<Requisition> result = new List<Requisition>();
+            for (int i = 0; i < 5; i++)
+            {
+                result.Add(rq[i]);
+            }
+            return result;
+        }
+        public List<Requisition> retrieveAllRequisitions()
+        {
+            return dbcontext.requisitions.ToList();
         }
         public List<Requisition> findAllRequisitionsFromFilter(string departmentId)
         {
@@ -120,7 +137,7 @@ namespace Team7_StationeryStore.Service
             newRequisition.DepartmentId = emp.Departments.Id;
             foreach (var i in cartList)
             {
-                Inventory inv = dbcontext.inventories.Where(x => x.Id == i.Id).FirstOrDefault();
+/*                Inventory inv = dbcontext.inventories.Where(x => x.Id == i.Id).FirstOrDefault();*/
                 RequisitionDetail requisitionDetail = new RequisitionDetail();
                 requisitionDetail.Id= Guid.NewGuid().ToString();
                 requisitionDetail.RequisitionId = newRequisition.Id;
@@ -133,9 +150,30 @@ namespace Team7_StationeryStore.Service
             dbcontext.SaveChanges();
 
             notificationService.sendNotification(NotificationType.REQUISITION, newRequisition,null,null);
+        }
 
+
+        public void CreateRequisition(string userId, List<RequisitionDetail> requisitionDetails) {
+            Employee approver = deptService.setApprover(userId);
+            Requisition newRequisition = new Requisition(approver.Departments.DeptCode);
+            newRequisition.ApprovedEmployeeId = approver.Id; 
+            newRequisition.EmployeeId = userId;
+            newRequisition.DepartmentId = approver.Departments.Id;
+            int k = 0;
+            foreach (var rd in requisitionDetails)
+            {
+                rd.Id = "00000000-"+k.ToString();
+                rd.RequisitionId = newRequisition.Id;
+                dbcontext.Add(rd);
+                k++;
+            }
+            dbcontext.Add(newRequisition);
+            dbcontext.SaveChanges();
+
+            notificationService.sendNotification(NotificationType.REQUISITION, newRequisition, null, null);
 
         }
+
 
         public List<Requisition> getRequisitionsByIds(List<string> req)
         {
@@ -146,6 +184,61 @@ namespace Team7_StationeryStore.Service
                 selectedReq.Add(r);
             }
             return selectedReq; 
+        }
+
+        // To check if the requistion is fulfilled with iterating through each items.
+        public bool isPartialFufiled(Requisition req)
+        {
+            List<RequisitionDetail> details = req.RequisitionDetails.ToList();
+            bool verdict = false;
+            List<bool> result = new List<bool>();
+            foreach (var d in details)
+            {
+                if (d.RequestedQty - d.DistributedQty == 0) result.Add(false);
+                else result.Add(true);
+            }
+            if (result.Contains(true)) return verdict = true;
+            return verdict;
+        }
+
+        public Req_Complier joinRequisitionDetails(int year,int month) {
+            var re = from req in dbcontext.requisitions
+                     join req_d in dbcontext.requisitionDetails on req.Id equals req_d.RequisitionId
+                     group req_d by new { req.DateSubmitted.Year, req.DateSubmitted.Month, req_d.Inventory.ItemCategory.name } into g
+                     where (g.Key.Year == year && g.Key.Month >= month)
+                     select new Req_Complier
+                     {
+                         Year = g.Key.Year,
+                         Month = g.Key.Month,
+                         InventoryCategory = g.Key.name,
+                         Qty = g.Sum(x => x.RequestedQty)
+                     };
+
+            return (Req_Complier) re;
+        }
+        public List<PurchaseOrderQuantity> startRequisitionAnalysis(ItemCategory cat,Departments dept)
+        {
+            var past4Month = DateTime.Now.AddMonths(-4).Month;
+            var Year = DateTime.Now.Year;
+            var po = from req in dbcontext.requisitions
+                     join req_d in dbcontext.requisitionDetails on req.Id equals req_d.RequisitionId
+                     group req_d by new { req_d.Inventory.ItemCategory.name, req.Department.DeptName, req.DateSubmitted.Month, req.DateSubmitted.Year } into h
+                     where (h.Key.Month >= past4Month && h.Key.Year == Year && h.Key.DeptName == dept.DeptName && h.Key.name == cat.name)
+                     orderby (h.Key.Month)
+                     select new
+                     {
+                         Month = h.Key.Month,
+                         Qty = h.Sum(x => x.RequestedQty)
+                     };
+            List<PurchaseOrderQuantity> reQ = new List<PurchaseOrderQuantity>();
+            foreach (var c in po)
+            {
+                PurchaseOrderQuantity p = new PurchaseOrderQuantity();
+                p.Month = c.Month;
+                p.quantity = c.Qty;
+                reQ.Add(p);
+            }
+            return reQ;
         }
 
     }

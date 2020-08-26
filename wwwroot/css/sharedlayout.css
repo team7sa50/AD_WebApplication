@@ -1,0 +1,171 @@
+﻿
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: #f6f7fb;
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
+header {
+    height: 60px;
+    padding-top: 5px;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+header:hover{
+    background: white;
+}
+
+.logo {
+    color: #1e459c;
+    width: 200px;
+    height: 60px;
+    font-size: 20px;
+    padding-top: 15px;
+    padding-left: 15px;
+    display: inline-block;
+    float: left;
+}
+
+    .logo span {
+        color: #4877bd;
+    }
+
+/* The button used to open the sidebar */
+header .openbtn {
+    font-size: 15px;
+    position: relative;
+    cursor: pointer;
+    background: none;
+    color: rgb(31,77,137);
+    float: left;
+    text-align: left;
+    display: inline-block;
+    border: none;
+    width: 200px;
+    height: 55px;
+    font-weight: 700;
+}
+
+    header .openbtn:hover {
+        color: #4877bd;
+    }
+
+header ul{
+    list-style: none;
+}
+header .userdetails {
+    display: inline-block;
+    float: right;
+    font-size: 15px;
+    padding-right: 15px;
+    color: rgb(31,77,137);
+    font-weight: 700;
+}
+
+/* The sidebar menu */
+.sidebar {
+    height: 100%; /* 100% Full-height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */ /* Stay on top */
+    top: 0;
+    left: 0;
+    background-color: rgb(31, 77, 137);
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 70px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.closebutton {
+    float: right;
+    align-content: right;
+    width: 200px;
+    font-size: 20px;
+}
+
+/* The sidebar links */
+.sidebar a {
+    text-align: left;
+    padding: 10px 10px;
+    margin: 0;
+    height: 45px;
+    text-decoration: none;
+    font-size: 14px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.sidebar span {
+    font-size: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidebar a:hover {
+    background: white;
+    color: rgb(31, 77, 137);
+}
+
+/* Position and style the close button (top right corner) */
+.sidebar .closebtn {
+    font-size: 25px;
+    text-align: right;
+    width: 200px;
+}
+
+    .sidebar .closebtn:hover {
+        color: white;
+        background-color: rgb(31,77,137);
+    }
+
+.logout_btn {
+    padding: 5px;
+    background: #4877bd;
+    border: none;
+    height: 45px;
+    width: 100%;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    transition: 0.5s;
+    transition-property: background;
+    position: absolute;
+    bottom: 0;
+}
+
+    .logout_btn:hover {
+        background: #0B87A6;
+    }
+
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+.main {
+    transition: margin-left .5s; /* If you want a transition effect */
+    padding: 20px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+    .sidebar {
+        padding-top: 15px;
+    }
+
+        .sidebar a {
+            font-size: 18px;
+        }
+}
+
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: #f6f7fb;
+}

@@ -8,129 +8,79 @@
     var username = ViewData["username"];
 }
 
+    <head>
 
-<h5>ViewInventory</h5>
-<head>
+        <title>View Inventory</title>
+        <link href="~/css/ViewInventory.css" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+        <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    </head>
+<body>
 
-    <title></title>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <div id="main">
+        <h5>Inventory</h5>
+        <table id="itemtable">
+            <thead>
+                <tr>
+                    <th>Item Code</th>
+                    <th>Description</th>
+                    <th>Stock</th>
+                    <th>Adjustment Voucher</th>
+                </tr>
+            </thead>
 
-
-</head>
-
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Logic University</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dropdown
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-        </ul>
-
-        <span class="navbar-text" style="margin-right:50px">
-            @username
-        </span>
-        <form asp-controller="Stationery" asp-action="ViewCart" method="POST" class="form-inline my-2 my-lg-0">
-            <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="View Cart">
-        </form>
-
-    </div>
-</nav>
-<br>
-
-<h2 style="text-align:center">Inventory List</h2>
-
-<div class="container">
-    <div align=center>
-        <div>
-            <table class="table table-bordered table-striped">
-                <thead>
+            <tbody>
+                @foreach (var i in lists)
+                {
                     <tr>
-                        <th>Item Code</th>
-                        <th>Descripion</th>
-                        <th>Stock</th>
-                        <th>&nbsp;</th>
+                        <td><p class="code">@i.itemCode</p></td>
+                        <td class="itemdescri">@i.description</td>
+                        <td>@i.stock</td>
+                        <td><button class="btnadju" onclick="createAdjustment('@i.Id','@i.itemCode')"><i class="fas fa-pencil-alt"></i></button></td>
                     </tr>
-                </thead>
-
-                <tbody>
-                    @foreach (var i in lists)
-                    {
-                        <tr>
-
-                            <td class="text-center">@i.itemCode</td>
-                            <td class="text-left">@i.description</td>
-                            <td>@i.stock</td>
-                            <td class="text-right"><button class="btn btn-secondary" onclick="createAdjustment('@i.Id','@i.itemCode')">Create Adjustment Vouncher</button></td>
-
-                        </tr>
-                    }
-                </tbody>
-
-
-
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     </div>
-</div>
-<div class="modal fade" id="myInventoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
 
-                <h4 class="modal-title" id="myModalLabel">#Item Code Item Name</h4>
+    <div class="bg-modal">
+        <div class="modal-contents">
+            <button id="close" onclick="closePopUp()"><i class="fas fa-window-close"></i></button>
+            <div class="modal-header">
+                <p style="letter-spacing: 0px; color: grey;">Adjustment Voucher</p>
+                <span id="item"><p>Item Code:</p><p class="title" id="myModalLabel">#Item Code Item Name</p></span>
             </div>
+            <hr style="margin:unset;" />
             <div class="modal-body">
                 <form asp-controller="StationeryStore" asp-action="CreateAdjustment" method="POST">
-                    <label for="quantity">Quantity:</label>
-                    <input type="number" id="quantity" name="quantity" maxlength="2">
-                    <br />
-                    <label for="reason">Reason:</label>
-                    <input type="text"placeholder="Optional" style="height: 80px; width:100%;text-align:start" id="reason" name="reason" />
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity" name="quantity" min="-99" max="99">
+
+                    <label for="reason">Reason</label>
+                    <textarea placeholder="Reason(s) for adjustment voucher (optional)" id="reason" name="reason"></textarea>
+
                     <input type="hidden" id="itemId" name="itemId">
-                    <br />
-                    <input class="btn btn-primary btn-sm" type="submit" value="Submit">
-                    
+                    <button type="submit">Create Voucher</button>
                 </form>
             </div>
         </div>
     </div>
-</div>
-<script>
-    function createAdjustment(id, itemCode) {
-        $('#myInventoryModal').modal();
-        console.log(id);
-        console.log(itemCode);
-        document.getElementById("itemId").value = id;
-        document.getElementById("myModalLabel").innerHTML = itemCode;
 
-    }
-</script>
+
+    <script>
+        function createAdjustment(id, itemCode) {
+            document.querySelector('.bg-modal').style.display = "flex";
+            console.log(id);
+            console.log(itemCode);
+            document.getElementById("itemId").value = id;
+            document.getElementById("myModalLabel").innerHTML = itemCode;
+        }
+
+        function closePopUp() {
+            document.querySelector('.bg-modal').style.display = "none";
+        }
+    </script>
+</body>
 
 
 
