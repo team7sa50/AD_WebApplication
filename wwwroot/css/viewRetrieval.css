@@ -121,6 +121,7 @@ table.itemtable {
 
 #originalQty {
     padding: 2px;
+    display: block;
 }
 
 #genretrieval {

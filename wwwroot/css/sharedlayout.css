@@ -92,40 +92,45 @@ header .userdetails {
 }
 
 /* The sidebar links */
-.sidebar a {
+.sidebar button {
     text-align: left;
-    padding: 10px 10px;
+    padding: 5px 5px;
     margin: 0;
     height: 45px;
     text-decoration: none;
     font-size: 14px;
+    background: none;
     color: white;
     display: block;
+    letter-spacing: 1px;
     transition: 0.3s;
     font-family: 'Source Sans Pro', sans-serif;
+    border: none;
+    width: 100%
 }
 
 .sidebar span {
-    font-size: 14px;
+    font-size: 12px;
     font-family: 'Source Sans Pro', sans-serif;
 }
 
 /* When you mouse over the navigation links, change their color */
-.sidebar a:hover {
+.sidebar button:hover {
     background: white;
     color: rgb(31, 77, 137);
 }
 
 /* Position and style the close button (top right corner) */
 .sidebar .closebtn {
-    font-size: 25px;
     text-align: right;
     width: 200px;
+    background: none;
+    color: white;
+    border: none;
 }
 
     .sidebar .closebtn:hover {
-        color: white;
-        background-color: rgb(31,77,137);
+        color: orange;
     }
 
 .logout_btn {

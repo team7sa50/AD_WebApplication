@@ -17,21 +17,43 @@
         <header>
             <ul>
                 <li class="logo">Logic <span>Stationery</span></li>
-                <li> <button class="openbtn" onclick="openNav()"><i class="fas fa-bars" id="sidebar_btn"></i> Menu</button></li>
-                <li><p class="userdetails">Employee Name</p></li>
+                <li> <button class="openbtn" onclick="openNav()"><i class="fas fa-bars" id="sidebar_btn"></i></button></li>
+                <li><p class="userdetails">Adam Smith</p></li>
                 <script src="~/js/site.js"></script>
             </ul>
         </header>
 
         <!-- Sidebar Area-->
         <div id="mySidebar" class="sidebar" onclick="closeNav()">
-            <a href="#" class="closebtn">x</a>
-            <a href="@Url.Action("Index", "StationeryStore")"><i class="fas fa-desktop"><span>  Home</span></i></a>
-            <a href="@Url.Action("ViewInventory", "StationeryStore")"><i class="fas fa-cogs"><span>  Inventory</span></i></a>
-            <a href="@Url.Action("ViewRequisitions", "Requisition")"><i class="fas fa-table"><span>  Requisition</span></i></a>
-            <a href="#"><i class="fas fa-info-circle"><span>  Reports</span></i></a>
+            <button class="closebtn"><i class="fas fa-times"></i></button>
+            <form asp-controller="StationeryStore" asp-action="Home" method="POST">
+                <button type="submit" id="Home">
+                    <i class="fas fa-home"></i>
+                    <p>Home</p>
+                </button>
+            </form>
+            <form asp-controller="PurchaseOrder" asp-action="ViewAllPurchaseOrders" method="POST">
+                <button type="submit" id="PObutton">
+                    <i class="far fa-file-alt"></i>
+                    <p>Purchase Orders</p>
+                </button>
+            </form>
+            <form asp-controller="Requisition" asp-action="ViewRequisitions" method="POST">
+                <button type="submit" id="Reqbutton">
+                    <i class="far fa-user"></i>
+                    <p>Requisitions</p>
+                </button>
+            </form>
+            <form asp-controller="StationeryStore" asp-action="ViewInventory" method="POST">
+                <button type="submit" id="Invbutton">
+                    <i class="fas fa-box-open"></i>
+                    <p>Inventory</p>
+                </button>
+            </form>
             <button href="#" class="logout_btn">Logout</button>
         </div>
+
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

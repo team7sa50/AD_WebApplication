@@ -22,10 +22,13 @@ body {
     padding: 16px;
 }
 
+.requisitionfilter{
+    padding: 20px;
+}
 .requisitionfilter form {
-    padding-top: 40px;
-    padding-bottom: 40px;
-    padding-left: 40px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-left: 30px;
     border: none;
 }
 
@@ -118,6 +121,10 @@ body {
     background: #4877bd;
     border: none;
     color: white;
+}
+
+.viewDeta {
+    cursor: pointer;
 }
 
 #myDetail {
@@ -290,4 +297,8 @@ th.modal-table {
 
 #disbDetailsQty td {
     font-size: 10px;
+}
+
+.rstatus{
+    font-weight: 600;
 }
