@@ -140,6 +140,7 @@ namespace Team7_StationeryStore.ApiControllers
         public ActionResult generateDisbursement(List<string> reqId)
         {
             //Transfer retrieved requests here
+            string userId = "Mary";
             List<Requisition> selectedReq = reqService.getRequisitionsByIds(reqId);
             reqService.updateRequisitionStatus(selectedReq);
             List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);
@@ -163,6 +164,8 @@ namespace Team7_StationeryStore.ApiControllers
             List<Disbursement> disbursements = disService.retrieveDisbursements();
             return Content(JsonConvert.SerializeObject(disbursements, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
         }
+
+
         [HttpGet]
         [Route("api/[controller]/viewApprovedRequisitions")]
         public IActionResult viewApprovedRequisitions()
