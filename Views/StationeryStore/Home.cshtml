@@ -54,7 +54,7 @@
             <div id="clerkhome-left">
                 <div id="overViewTab">
                     <button onclick="openReq(event, 'requisitions')" id="defaultOpen" class="tablinks"><i class="fas fa-file-import"></i> Requisitions</button>
-                    <button onclick="openReq(event, 'disbursements')" class="tablinks"> <i class="fas fa-calendar-alt"></i> Scheduled</button>
+                    <button onclick="openReq(event, 'disbursements')" class="tablinks"> <i class="fas fa-calendar-alt"></i> Disbursement</button>
                     <button onclick="openReq(event, 'purchaseorders')" class="tablinks"><i class="fas fa-store-alt"></i> P.O</button>
                 </div>
                 <form asp-controller="StationeryStore" asp-action="viewRetrieval" method="POST">
@@ -75,8 +75,8 @@
                                 <td><input type=checkbox value="@r.Id" name="req"></td>
                                 <td class="deptName">@r.Department.DeptName</td>
                                 <td class="subDate">@r.DateSubmitted.ToShortDateString()</td>
-                                <td><p class="rstatus">@r.status</p></td>
-                                <td><p class="reqId">@r.Id.Substring(0, 6)</p></td>
+                                <td><p class="rstatus" style="text-align: center;">@r.status</p></td>
+                                <td><p class="reqId">@r.Id.Substring(0, 7)</p></td>
                             </tr>
                             }
                             <tr>
