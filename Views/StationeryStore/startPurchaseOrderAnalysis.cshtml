@@ -2,14 +2,20 @@
 @{
     ViewData["Title"] = "startPurchaseOrderAnalysis";
     var categories = (List<ItemCategory>)ViewData["categories"];
+    var user = (Employee)ViewData["user"];
+
+}
+@if (user.Role == Role.STORE_MANAGER || user.Role == Role.STORE_SUPERVISOR)
+{
+    Layout = "~/Views/Shared/_StoreManagerandSupervisor.cshtml";
+
 }
 
-
-    <head>
-        <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet">
-        <link href="~/css/POAnalytics.css" rel="stylesheet" />
-    </head>
+<head>
+    <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet">
+    <link href="~/css/POAnalytics.css" rel="stylesheet" />
+</head>
 <body>
     <div id="main">
         <div id="selectForm">

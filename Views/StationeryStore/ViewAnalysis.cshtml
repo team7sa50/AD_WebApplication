@@ -3,9 +3,14 @@
     ViewData["Title"] = "ViewAnalysis";
     var data = (List<PurchaseOrderQuantity>)ViewData["dict"];
     var category = ViewData["category"];
+    var user = (Employee)ViewData["user"];
 
 }
+@if (user.Role == Role.STORE_MANAGER || user.Role == Role.STORE_SUPERVISOR)
+{
+    Layout = "~/Views/Shared/_StoreManagerandSupervisor.cshtml";
 
+}
 <head>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <link rel="stylesheet" type="text/css" href="POAnalysisResults.css">
@@ -38,7 +43,7 @@
             bars: 'vertical', // Required for Material Bar Charts.
             vAxis: { format: 'decimal' },
             height: 400,
-            width: 1000,
+            width: 800,
             colors: ['#1b9e77', '#d95f02',]
         };
 

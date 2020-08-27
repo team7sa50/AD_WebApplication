@@ -151,6 +151,7 @@ namespace Team7_StationeryStore.Controllers
             List<PurchaseOrder> purchaseOrders = dbcontext.purchaseOrders.OrderByDescending(x=>x.date).ToList();
             ViewData["purchaseOrders"] = purchaseOrders;
             ViewData["username"] = user.Name;
+            ViewData["user"] = user;
             return View();
         }
         public IActionResult UpdateStatus(string poId)
@@ -184,6 +185,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["purchaseOrderDetail"] = purchaseOrderDetails;
             ViewData["username"] = emp.Name;
             ViewData["userid"] = userid;
+            ViewData["user"] = emp;
             PurchaseOrder po = invService.findPurchaseOrder(poId);
             ViewData["po"] = po;
             return View();

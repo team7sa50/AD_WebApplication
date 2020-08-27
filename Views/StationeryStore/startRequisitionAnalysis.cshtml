@@ -1,32 +1,47 @@
 ﻿
 @{
     ViewData["Title"] = "startRequisitionAnalysis";
-    var categories= (List<ItemCategory>)ViewData["categories"];
+    var categories = (List<ItemCategory>)ViewData["categories"];
     var departments = (List<Departments>)ViewData["departments"];
+    var user = (Employee)ViewData["user"];
+
 }
 
-<h1>startRequisitionAnalysis</h1>
-<h1>Select ItemCategory</h1>
-<div>
-    <form asp-controller="StationeryStore" asp-action="ViewRequisitionAnalysis" method="POST" class="form-inline my-2 my-lg-0">
+@if (user.Role == Role.STORE_MANAGER || user.Role == Role.STORE_SUPERVISOR)
+{
+    Layout = "~/Views/Shared/_StoreManagerandSupervisor.cshtml";
 
-        <select name="category" id="category">
+}
 
-            @foreach (var c in categories)
-            {
-                <option value="@c.Id"> @c.name</option>
+<head>
+    <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet">
+    <link href="~/css/POAnalytics.css" rel="stylesheet" />
+</head>
+<div id="main">
+    <div id="selectForm">
+        <p style="display: inline-block; color: #f7b733;"><i class="fas fa-calculator"></i></p>
+        <p style="display: inline-block;" id="title">Requisition Analytics</p>
+        <form asp-controller="StationeryStore" asp-action="ViewRequisitionAnalysis" method="POST" class="form-inline my-2 my-lg-0">
 
-            }
-        </select>
-        <select name="department" id="department">
+            <select name="category" id="category">
 
-            @foreach (var d in departments)
-            {
-                <option value="@d.Id"> @d.DeptName</option>
+                @foreach (var c in categories)
+                {
+                    <option value="@c.Id"> @c.name</option>
 
-            }
-        </select>
-        <input class="btn btn btn-outline-info my-2 my-sm-0" type="submit" value="Enter">
-    </form>
-</div>
+                }
+            </select>
+            <select name="department" id="department">
+
+                @foreach (var d in departments)
+                {
+                    <option value="@d.Id"> @d.DeptName</option>
+
+                }
+            </select>
+            <button id="submitBtn" type="submit"><i class="fas fa-arrow-right"></i></button>
+        </form>
+        </div>
+    </div>
 
