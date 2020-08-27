@@ -14,7 +14,9 @@
     <title>Home</title>
     <link rel="stylesheet" type="text/css" href="~/css/viewReq.css">
     <link rel="stylesheet" type="text/css" href="~/css/site.css">
-    
+    <script src="https://use.fontawesome.com/973befe495.js"></script>
+    <link href="https://code.jquery.com/jquery-3.3.1.js" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
 </head>
 
@@ -22,37 +24,9 @@
 
 
 
-    <!--Tab for All Requisitions-->
     <div id="main">
         <div class="requisitioncontainer" id="All">
-            <div class="requisitionfilter">
-
-                <form>
-                    <h1>Disbursement</h1>
-                    <div style="float:left;">
-                        <label for="Status">Status</label>
-                        <select id="status" name="Status">
-                            <option value="All" selected>All</option>
-                            <option value="Recieved">Recieved</option>
-                            <option value="Processing">Processing</option>
-                            <option value="Collection">Collection</option>
-                            <option value="Outstanding">Outstanding</option>
-                            <option value="Completed">Completed</option>
-                        </select>
-                    </div>
-                    <fieldset>
-                        <div style="float:left;margin-right:20px;">
-                            <label for="StartDate">Start date</label>
-                            <input type="Date" name="StartDate">
-                        </div>
-                        <div style="float:left;">
-                            <label for="EndDate">End date</label>
-                            <input type="Date" name="EndDate">
-                        </div>
-                        <input style="float:left;margin-right:20px;" type="submit" value="Filter">
-                    </fieldset>
-                </form>
-            </div>
+            <h4>Disbursements</h4>
             <table class="requisitiontable">
                 <tr>
                     <th>Id</th>
@@ -69,34 +43,110 @@
                         <td>@d.CollectionDate.ToString("dd-MMM-yyyy")</td>
                         <td>@d.status</td>
                         <td>
-                            <a onclick="openDetail('@d.Id')"><u>View</u></a>
+                            <a onclick="openDetailBox('@d.Id')"><u>View</u></a>
                         </td>
                     </tr>
                 }
             </table>
         </div>
 
-        <div id="myDetail" class="detail">
-            <a href="javascript:void(0)" id="detailclosebtn" onclick="closeDetail()">&times;</a>
+        <div class="bg-modal">
+            <div class="modal-contents">
+                <button id="close" onclick="closePopUp()"><i class="fas fa-times"></i></button>
+                <div class="disbTitle">
+                    <h1><span>Disbursement</span> Details</h1>
+                </div>
+                <div class="changeDisb" id="DisbDetails">
+                    <form id="submitForm">
+                        <label for="CollectionDate"> Collection Date</label>
+                        <p name="CollectionDate" id="collDateSpec">
+                        <label for="CollectionPoint">Collection Point</label>
+                        <p name="collPtSpec" id="collPtSpec"></p>
+                        <div class="modal-table1">
+                            <table style="width:100%">
+                                <tr style="border-bottom: 1px solid gray;">
+                                    <th>Item</th>
+                                    <th>Requested</th>
+                                    <th>Retrieved</th>
+                                </tr>
+                                <tbody id="disbDetailsQty" class="disbDetailsQty">
+                                </tbody>
+                            </table>
+                        </div>
+                        <input type="hidden" id="disId" />
+                        <button id="btnsubmit" onclick="changeStatus()">Submit Changes</button>
+                    </form>
 
-            <table class="detailRForm">
-
-                <tr>
-                    <th id="disid" style="font-size: 14px;"></th>
-                </tr>
-                <tr style="border-top: 1px solid gray;">
-                    <th>Department</th>
-                    <td id="dept"></td>
-                </tr>
-                <tbody class="table-body-req-detail"></tbody>
-            </table>
+                </div>
+            </div>
         </div>
+
+        
         <script>
+
+            function openDetailBox(e) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/StationeryStore/GetEmployeeTest',
+                    data: { 'id': e },
+                    dataType: "json",
+                    success: function (response) {
+                        var jsonObject = JSON.parse(response.disbursementJson);
+                        document.getElementById('collDateSpec').innerHTML = jsonObject.CollectionDate;
+                        document.getElementById('collPtSpec').innerHTML = jsonObject.Departments.CollectionPoint.Location;
+                        console.log("status is" + jsonObject.status);
+                        var status = jsonObject.status.toString();
+
+                        if (status == "2") {
+                            document.getElementById("btnsubmit").disabled = true;
+                        }
+                        else {
+                            document.getElementById("btnsubmit").disabled = false;
+                        }
+                        document.getElementById("disId").value = e;
+                        //document.getElementById('repSpec').appendChild(p);
+                        var items = jsonObject.DisbursementDetails;
+                        console.log("items is" + items);
+                        $('.disbDetailsQty').html("");
+
+                        var tabledisQty = document.getElementById('disbDetailsQty');
+                        for (var i = 0; i < items.length; i++) {
+                            var distributedQty = parseInt(items[i].RequisitionDetail.DistributedQty);
+                            var rowItem = `<tr>
+                            <td>${items[i].RequisitionDetail.Inventory.description}</td>
+                            <td>${items[i].RequisitionDetail.RequestedQty}</td>
+                            <td>${distributedQty}</td>
+                            <input type="hidden" id="rqdId" value=${jsonObject.Id}/>
+                            </tr>`;
+                            tabledisQty.innerHTML += rowItem;
+                        }
+                    }
+                });
+
+                document.querySelector('.bg-modal').style.display = "flex";
+            }
+
+            function closePopUp() {
+                document.querySelector('.bg-modal').style.display = "none";
+            }
+            function changeStatus() {
+                var disId = document.getElementById('disId').value;
+                console.log("disId :" + disId);
+                $.ajax({
+                    type: 'POST',
+                    url: '/StationeryStore/SaveStatusToCompletedInDisb',
+                    data: { 'disId': disId },
+                    success: function (result) {
+                        console.log("wow" + result);
+                    }
+                });
+                
+            }
             function openDetail(id) {
                 document.getElementById("disid").innerHTML = id;
                 console.log(status);
 
-                document.getElementById("myDetail").style.width = "350px";
+                document.getElementById("myDetail").style.width = "250px";
                 document.getElementById("All").style.marginRight = "300px";
                 $.ajax({
                     url: "/Department/findDisbursementDetail/id",
@@ -116,39 +166,7 @@
                     }
                 });
             }
-
-            /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
-            function closeDetail() {
-                document.getElementById("myDetail").style.width = "0";
-                document.getElementById("All").style.marginRight = "auto";
-
-            }
-
-            function showChangeStatus() {
-                document.getElementById("changeStatus").style.display = "block";
-                document.getElementById("originalStatus").style.display = "none";
-            }
-
-            function openReq(evt, cityName) {
-                // Declare all variables
-                var i, tabcontent, tablinks;
-
-                // Get all elements with class="tabcontent" and hide them
-                tabcontent = document.getElementsByClassName("requisitioncontainer");
-                for (i = 0; i < tabcontent.length; i++) {
-                    tabcontent[i].style.display = "none";
-                }
-
-                // Get all elements with class="tablinks" and remove the class "active"
-                tablinks = document.getElementsByClassName("tablinks");
-                for (i = 0; i < tablinks.length; i++) {
-                    tablinks[i].className = tablinks[i].className.replace(" active", "");
-                }
-
-                // Show the current tab, and add an "active" class to the button that opened the tab
-                document.getElementById(cityName).style.display = "block";
-                evt.currentTarget.className += " active";
-            }
+            
         </script>
 </body>
 </html>

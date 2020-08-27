@@ -239,7 +239,7 @@ body {
 }
 
 .modal-contents {
-    height: 600px;
+    height: 500px;
     width: 500px;
     background-color: white;
     text-align: center;
@@ -314,3 +314,55 @@ th.modal-table {
     #analyze:hover {
         border: 2px solid #028090;
     }
+#close {
+    float: right;
+    margin-right: 30px;
+    margin-top: 20px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #9c9c9c;
+}
+.disbTitle {
+    text-align: left;
+    padding: 20px;
+    margin-top: 20px;
+    color: #6a6a6a;
+    border: none;
+}
+#DisbDetails {
+    width: 100%;
+}
+div.changeDisb {
+    display: block;
+}
+
+.changeDisb {
+    padding: 30px;
+    padding-top: 0;
+    margin-bottom: 30px;
+}
+    .changeDisb label {
+        display: block;
+        font-weight: 600;
+        margin: 10px 0px;
+        color: rgb(31,77,137);
+    }
+.modal-table1 {
+    margin: auto;
+    height: 200px;
+    overflow: auto;
+    padding: 0px;
+    margin-top: 30px;
+}
+}
+
+.modal-table1 table {
+    width: 100% !important;
+    border-collapse: collapse;
+    overflow: auto;
+    background: #EBECF0;
+}
+.modal-table1 tbody {
+    text-align: center;
+}

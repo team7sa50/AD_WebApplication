@@ -155,6 +155,16 @@ namespace Team7_StationeryStore.Controllers
             return View();
         }
         [HttpPost]
+        public JsonResult SaveStatusToCompletedInDisb(string disId)
+        {
+            Disbursement d = dbcontext.disbursements.Where(x => x.Id == disId).FirstOrDefault();
+            d.status = DisbusementStatus.COMPLETED;
+            dbcontext.Update(d);
+            dbcontext.SaveChanges();
+            return Json("1");
+
+        }
+        [HttpPost]
         public JsonResult SaveChangesToDisb(string newDate, string newColl, string rqId)
         {
             rqId = rqId.Remove(rqId.Length - 1, 1);
@@ -169,7 +179,12 @@ namespace Team7_StationeryStore.Controllers
 
             DateTime collDateTimeObj = DateTime.Parse(newDate);
             dbDetail.CollectionDate = collDateTimeObj;
+            dbDetail.status = DisbusementStatus.DELIVERED;
+            notifService.sendNotification(NotificationType.DISBURSEMENT, null, dbDetail, null);
+
             dbcontext.SaveChanges();
+
+
             return Json("1");
         }
         [HttpPost]
@@ -196,6 +211,9 @@ namespace Team7_StationeryStore.Controllers
         public IActionResult viewRetrieval(List<string> req)
         {
             List<Requisition> selectedReq = requisitionService.getRequisitionsByIds(req);
+            selectedReq.ForEach(x => x.status = ReqStatus.COLLECTION);
+            dbcontext.UpdateRange(selectedReq);
+            dbcontext.SaveChanges();
             System.Diagnostics.Debug.WriteLine("Selected Requests: " + selectedReq.Count);
             ViewData["Requisitions"] = selectedReq;
 

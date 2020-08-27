@@ -25,7 +25,7 @@
 
     <div class="requisitionmenu">
         <button class="tablinks" onclick="openReq(event, 'Pending')" id="defaultOpen">Pending</button>
-        <button class="tablinks" onclick="openReq(event, 'Collected')">Collected</button>
+        <button class="tablinks" onclick="openReq(event, 'Collected')">Collected/Delivered</button>
     </div>
 
     <div id="main">
@@ -121,6 +121,7 @@
                     <th>Collection Date</th>
                     <th>Department</th>
                     <th>Compiled On</th>
+                    <th>Status</th>
                     <th>Prepared By</th>
                 </tr>
                 <tbody id="completedUnfiltered">
@@ -130,6 +131,7 @@
                             <td>@d.CollectionDate</td>
                             <td>@d.Departments.DeptName</td>
                             <td>@d.GeneratedDate</td>
+                            <td>@d.status</td>
                             <td>@d.storeClerk.Name</td>
                         </tr>
                     }
@@ -428,7 +430,6 @@
                 console.log("wow" + result);
             }
         });
-        alert("Method REached");
         var clearTable = document.getElementById("Pending");
         clearTable.innerHTML = "";
     }

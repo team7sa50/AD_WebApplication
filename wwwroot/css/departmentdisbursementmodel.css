@@ -1,0 +1,154 @@
+﻿.bg-modal1{
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 100%;
+    min-height: 800px;
+    position: absolute;
+    top: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+#close1 {
+    float: right;
+    margin-right: 30px;
+    margin-top: 20px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #9c9c9c;
+}
+
+.modal-contents1 {
+    height: 600px;
+    width: 500px;
+    background-color: white;
+    margin-top: 100px;
+    position: absolute;
+    border-radius: 4px;
+}
+
+input.modal-contents1 {
+    margin: 15px auto;
+    display: block;
+    width: 50%;
+    padding: 8px;
+    border: 1px solid gray;
+}
+
+.disbTitle1 {
+    text-align: left;
+    padding: 20px;
+    margin-top: 20px;
+    color: #6a6a6a;
+    border: none;
+}
+
+#DisbDetails1 {
+    width: 100%;
+}
+
+.changeDisb1 {
+    width: 300px;
+    padding: 30px;
+    padding-top: 0;
+    align-content: left;
+    margin-bottom: 30px;
+}
+
+div.changeDisb1 {
+    display: block;
+}
+
+.changeDisb1 label {
+    display: block;
+    font-weight: 600;
+    margin: 10px 0px;
+    color: rgb(31,77,137);
+}
+
+.changeDisb1 select {
+    display: block;
+    width: 200px;
+    height: 30px;
+    color: grey;
+    font-size: 11px;
+    text-align: center;
+    padding-left: 50px;
+}
+
+.changeDisb1 input {
+    width: 200px;
+    height: 30px;
+    color: grey;
+    font-size: 11px;
+    align-items: center;
+    padding-left: 50px;
+}
+
+.changeDisb1 p {
+    display: block;
+    width: 200px;
+    height: 30px;
+    color: grey;
+    font-size: 11px;
+    align-items: center;
+    padding: 8px 80px;
+    border-bottom: 1px solid #D3D3D3;
+}
+
+form.changeDisb1 {
+    width: 100px;
+    border-radius: 8px;
+    font-size: 10px;
+    padding: 5px;
+    text-align: center;
+    border: none;
+    background: #0B87A6;
+    color: white;
+    margin-top: 35px;
+}
+
+.modal-contents1 {
+    font-size: 11px;
+}
+
+.modal-table {
+    margin: auto;
+    height: 200px;
+    overflow: auto;
+    padding: 0px;
+    margin-top: 30px;
+}
+
+    .modal-table1 th {
+        border-bottom: 1px solid #94949;
+        color: rgb(31,77,137);
+    }
+
+    .modal-table1 table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: auto;
+        background: #EBECF0;
+    }
+
+    .modal-table1 td {
+        font-size: 11px;
+    }
+
+    .modal-table tbody {
+        text-align: center;
+    }
+
+#submit1 {
+    margin-top: 30px;
+    margin-left: 180px;
+    font-size: 11px;
+    padding: 8px;
+    color: white;
+    background: rgb(31,77,137);
+    border: none;
+}
+
+
