@@ -136,5 +136,20 @@ namespace Team7_StationeryStore.ApiControllers
             List<Disbursement> disbursements = disService.retrieveDisbursements();
             return Content(JsonConvert.SerializeObject(disbursements, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
         }
+        [HttpGet]
+        [Route("api/[controller]/viewApprovedRequisitions")]
+        public IActionResult viewApprovedRequisitions()
+        {
+            var requisitions = (from r in dbcontext.requisitions
+                      where r.status == ReqStatus.APPROVED
+                      select new
+                      {
+                          Id = r.Id,
+                          Date = r.DateSubmitted,
+                          Status = r.status.ToString()
+                      }
+          );
+            return Content(JsonConvert.SerializeObject(requisitions, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+        }
     }
 }
