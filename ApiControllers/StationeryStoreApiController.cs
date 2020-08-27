@@ -163,5 +163,37 @@ namespace Team7_StationeryStore.ApiControllers
             List<Disbursement> disbursements = disService.retrieveDisbursements();
             return Content(JsonConvert.SerializeObject(disbursements, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
         }
+        [HttpGet]
+        [Route("api/[controller]/viewApprovedRequisitions")]
+        public IActionResult viewApprovedRequisitions()
+        {
+            var requisitions = (from r in dbcontext.requisitions
+                      where r.status == ReqStatus.APPROVED
+                      select new
+                      {
+                          Id = r.Id,
+                          Date = r.DateSubmitted,
+                          Status = r.status.ToString()
+                      }
+          );
+            return Content(JsonConvert.SerializeObject(requisitions, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+        }
+        [HttpPost]
+        [Route("api/[controller]/getAdjustmentVoucherByEmpId")]
+        public IActionResult getAdjustmentVoucherByEmpId([FromBody]AdjustmentVoucher value)
+        {
+            var adjustmentVouchers = (from a in dbcontext.adjustmentVouchers
+                                where a.EmEmployeeId == value.EmEmployeeId
+                                select new
+                                {
+                                    Description = a.Inventory.description,
+                                    Date = a.date,
+                                    Quantity=a.qty,
+                                    Reason=a.reason,
+                                    Status = a.status.ToString(),
+                                } );
+            return Content(JsonConvert.SerializeObject(adjustmentVouchers, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+
+        }
     }
 }
