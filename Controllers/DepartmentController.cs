@@ -38,6 +38,7 @@ namespace Team7_StationeryStore.Controllers
             string userid = HttpContext.Session.GetString("userId");
             Departments dept = deptService.findDepartmentByEmployee(userid);
             ViewData["dept"] = dept;
+            ViewData["Authorizer"] = deptService.IsAuthorizer(userid);
             return View();
         }
 
@@ -51,6 +52,8 @@ namespace Team7_StationeryStore.Controllers
             ViewData["stationeryCatalgoue"] = stationeryCatalogue;
             ViewData["categories"] = categories;
             ViewData["user"] = emp;
+            ViewData["Authorizer"] = deptService.IsAuthorizer(userid);
+
             return View();
         }
 
@@ -67,6 +70,10 @@ namespace Team7_StationeryStore.Controllers
             ViewData["categories"] = categories;
             ViewData["stationeryCatalgoue"] = items;
             ViewData["userid"] = userid;
+            string userId = HttpContext.Session.GetString("userId");
+
+            ViewData["Authorizer"] = deptService.IsAuthorizer(userId);
+
             return View("viewCatalogue");
         }
 
@@ -86,6 +93,8 @@ namespace Team7_StationeryStore.Controllers
             ViewData["username"] = emp.Name;
             ViewData["userid"] = userid;
             ViewData["user"] = emp;
+            ViewData["Authorizer"] = deptService.IsAuthorizer(userid);
+
             return View();
         }
         public void AddItem(string userid, string itemid, int qty)
@@ -161,6 +170,7 @@ namespace Team7_StationeryStore.Controllers
             Employee emp = deptService.findEmployeeById(userId);
             ViewData["username"] = emp.Name;
             ViewData["user"] = emp;
+            ViewData["Authorizer"] = deptService.IsAuthorizer(userId);
             return View();
         }
 
@@ -176,6 +186,8 @@ namespace Team7_StationeryStore.Controllers
             Requisition requisition = reqService.findRequisition(reqid);
             ViewData["reqid"] = requisition.Id;
             ViewData["reqstatus"] = requisition.status;
+            ViewData["Authorizer"] = deptService.IsAuthorizer(userid);
+
             return View();
         }
 
@@ -183,12 +195,15 @@ namespace Team7_StationeryStore.Controllers
         public IActionResult viewDepartmentRequisition() {
             string deptId = HttpContext.Session.GetString("Department");
             string userId = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userId);
+
             List<Requisition> pendingRequisitions = reqService.findRequisitionsByDept(deptId, ReqStatus.AWAITING_APPROVAL);
             List<Requisition> allRequisitions = reqService.findRequisitionsByDept(deptId, null);
             bool IsAuthorized = deptService.IsAuthorizer(userId);
             ViewData["PendingRequisitions"] = pendingRequisitions;
             ViewData["AllRequisitions"] = allRequisitions;
             ViewData["Authorizer"] = IsAuthorized;
+            ViewData["user"] = emp;
             return View();
         }
 
@@ -207,6 +222,8 @@ namespace Team7_StationeryStore.Controllers
             TempData["UserId"] = userId;
             Employee emp = deptService.findEmployeeById(userId);
             ViewData["username"] = emp.Name;
+            ViewData["Authorizer"] = deptService.IsAuthorizer(userId);
+
             return View();
         }
 
@@ -219,9 +236,10 @@ namespace Team7_StationeryStore.Controllers
         }
 
         public IActionResult viewDepartmentDisbursements() {
-
+            string userId = HttpContext.Session.GetString("userId");
             List<Disbursement> disbursements = disService.retrieveDisbursementByDept(HttpContext.Session.GetString("Department"));
             ViewData["disbursements"] = disbursements;
+            ViewData["Authorizer"] = deptService.IsAuthorizer(userId);
             return View();
         }
 
@@ -237,6 +255,7 @@ namespace Team7_StationeryStore.Controllers
             List<Employee> deptEmployees = deptService.findDepartmentEmployeeList(userId);
             TempData["UserId"] = userId;
             ViewData["Employees"] = deptEmployees;
+            ViewData["Authorizer"] = deptService.IsAuthorizer(userId);
             return View();
         }
 
@@ -279,6 +298,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["requisition"] = req;
             ViewData["username"] = emp.Name;
             ViewData["requisitionDetail"] = requisitionDetails;
+            ViewData["Authorizer"] = deptService.IsAuthorizer(userid);
             return View();
         }
 
@@ -291,6 +311,8 @@ namespace Team7_StationeryStore.Controllers
             ViewData["username"] = emp.Name;
             CollectionPoint c = dbcontext.collectionPoints.Where(x => x.Id == dept.CollectionPointId).FirstOrDefault();
             ViewData["collectionpoint"] = c;
+            ViewData["Authorizer"] = deptService.IsAuthorizer(userid);
+
             return View();
         }
 
@@ -302,6 +324,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["department"] = dept;
             Employee emp = deptService.findEmployeeById(userid);
             ViewData["username"] = emp.Name;
+            ViewData["Authorizer"] = deptService.IsAuthorizer(userid);
             return View();
         }
 

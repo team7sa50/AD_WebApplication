@@ -104,14 +104,23 @@ namespace Team7_StationeryStore.Service
                                                      select cp).ToList();
             return collectionPoint;
         }
-
         public bool IsAuthorizer(string userId) {
-            Employee approver = setApprover(userId);
-            if (approver.Id != userId)
+            Departments department = findDepartmentByEmployee(userId);
+            //To extract authorization that is from the dept and have overlapping dates with Today
+            EmployeeAuthorize employeeAuthorize = dbcontext.employeeAuthorizes
+                                                .Where(x => DateTime.Now >= x.startDate
+                                                        && DateTime.Now <= x.endDate
+                                                        && x.DepartmentsId == department.Id).FirstOrDefault();
+
+            if (employeeAuthorize != null && employeeAuthorize.EmployeeId == userId)
             {
-                return false;
+                return true;
             }
-            else return true;
+            //If there is no Authorize Employee on the day and login user is dept head
+            else if (employeeAuthorize == null && department.Employees.Where(x=>x.Role == Role.DEPT_HEAD).FirstOrDefault().Id == userId){
+                return true;
+            }
+            else return false;
         }
 
     }

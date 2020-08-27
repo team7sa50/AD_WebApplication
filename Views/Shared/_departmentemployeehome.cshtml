@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "_departmentemployeehome";
+    bool isAuthorized = (Boolean)ViewData["Authorizer"];
 }
 
 <!DOCTYPE html>
@@ -25,14 +26,19 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active" style="margin-left:400px">
-                    <a class="nav-link" href="@Url.Action("viewRequisitionList", "Department")"><i class="fas fa-table"><span> NOTIFICATIONS</span></i></a>
+                @if (isAuthorized)
+                {
+                    <li class="nav-item active" style="margin-left:400px">
+                        <a class="nav-link" href="@Url.Action("viewDepartmentRequisition", "Department")"><i class="fas fa-table"><span> Department Requisition</span></i></a>
+                    </li>
+                }
+                @if (!isAuthorized)
+                { 
+                    <li class="nav-item" style="margin-left:50px">
+                        <a class="nav-link" href="@Url.Action("viewCatalogue", "Department")"><i class="fas fa-desktop"><span> CATALOGUE</span></i></a>
 
-                </li>
-                <li class="nav-item" style="margin-left:50px">
-                    <a class="nav-link" href="@Url.Action("viewCatalogue", "Department")"><i class="fas fa-desktop"><span> CATALOGUE</span></i></a>
-
-                </li>
+                    </li>
+                    }
 
                 <li class="nav-item" style="margin-left:50px">
                     <a class="nav-link" href="@Url.Action("viewRequisitionList", "Department")"><i class="fas fa-table"><span> REQUISITION HISTORY</span></i></a>
