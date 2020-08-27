@@ -22,14 +22,16 @@ namespace Team7_StationeryStore.ApiControllers
         protected DepartmentService deptService;
         protected DisbursementService disService;
         protected NotificationService notiService;
+        protected RetrievalService rservice;
 
-        public StationeryStoreApiController(RequisitionService reqService, InventoryService invService, DepartmentService deptService, DisbursementService disService, NotificationService notiService, StationeryContext dbcontext)
+        public StationeryStoreApiController(RequisitionService reqService, InventoryService invService, DepartmentService deptService, DisbursementService disService, NotificationService notiService, StationeryContext dbcontext, RetrievalService rservice)
         {
             this.deptService = deptService;
             this.invService = invService;
             this.reqService = reqService;
             this.dbcontext = dbcontext;
             this.disService = disService;
+            this.rservice = rservice;
             this.notiService = notiService;
         }
         [HttpGet]
@@ -39,6 +41,7 @@ namespace Team7_StationeryStore.ApiControllers
             List<Inventory> inventories = invService.getAllInventories();
             return Content(JsonConvert.SerializeObject(inventories));
         }
+
         [HttpGet]
         [Route("api/[controller]/viewInventoryDetail")]
         public ActionResult viewInventoryDetail(string invId)
@@ -129,6 +132,30 @@ namespace Team7_StationeryStore.ApiControllers
             };
             return Content(JsonConvert.SerializeObject(response));
         }
+
+        //Hello Zijian, this is the POST disbursement API 
+        // It will change the status to "processing" automatically, don't need to post status again 
+        [HttpPost]
+        [Route("api/[controller]/generateDisbursement")]
+        public ActionResult generateDisbursement(List<string> reqId)
+        {
+            //Transfer retrieved requests here
+            List<Requisition> selectedReq = reqService.getRequisitionsByIds(reqId);
+            reqService.updateRequisitionStatus(selectedReq);
+            List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);
+            //Convert request to disbursement 
+            Dictionary<Departments, List<RequisitionDetail>> requisitionsForDepartment = disService.sortRequisitionByDept(selectedReqDetail);
+            disService.saveRequisitionsAsDisbursement(userId,requisitionsForDepartment);
+            Object response = new
+            {
+                message = "Successfully created",
+                code = HttpStatusCode.OK
+
+            };
+            return Content(JsonConvert.SerializeObject(response));
+        }
+
+        ////Hello Zijian, this is the GET disbursement API; the web display all disbursements, not just the generated one so we follow 
         [HttpGet]
         [Route("api/[controller]/viewAllDisbursements")]
         public IActionResult viewAllDisbursements()

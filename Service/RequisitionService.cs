@@ -247,5 +247,13 @@ namespace Team7_StationeryStore.Service
             return reQ;
         }
 
+        public void updateRequisitionStatus(List<Requisition> reqList){
+            foreach(var r in reqList){
+                r.status = ReqStatus.PROCESSING;
+            }
+            dbcontext.SaveChanges();
+        }
+
     }
 }
+ 

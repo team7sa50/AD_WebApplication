@@ -222,6 +222,7 @@ namespace Team7_StationeryStore.Controllers
         {
             //Transfer retrieved requests here
             List<Requisition> selectedReq = requisitionService.getRequisitionsByIds(req);
+            requisitionService.updateRequisitionStatus(selectedReq);
             List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);
             string userId = HttpContext.Session.GetString("userId");
             //Convert request to disbursement 
