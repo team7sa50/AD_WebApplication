@@ -151,5 +151,22 @@ namespace Team7_StationeryStore.ApiControllers
           );
             return Content(JsonConvert.SerializeObject(requisitions, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
         }
+        [HttpPost]
+        [Route("api/[controller]/getAdjustmentVoucherByEmpId")]
+        public IActionResult getAdjustmentVoucherByEmpId([FromBody]AdjustmentVoucher value)
+        {
+            var adjustmentVouchers = (from a in dbcontext.adjustmentVouchers
+                                where a.EmEmployeeId == value.EmEmployeeId
+                                select new
+                                {
+                                    Description = a.Inventory.description,
+                                    Date = a.date,
+                                    Quantity=a.qty,
+                                    Reason=a.reason,
+                                    Status = a.status.ToString(),
+                                } );
+            return Content(JsonConvert.SerializeObject(adjustmentVouchers, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+
+        }
     }
 }
