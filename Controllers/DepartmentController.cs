@@ -232,7 +232,7 @@ namespace Team7_StationeryStore.Controllers
             string userId = HttpContext.Session.GetString("userId");
             if(action == "approve") { reqService.updateRequisition(userId, requisitionId, ReqStatus.APPROVED, remarks); }
             if(action == "reject") { reqService.updateRequisition(userId, requisitionId, ReqStatus.REJECTED, remarks); }
-            return RedirectToAction("viewDeptartmentRequisition");
+            return RedirectToAction("viewDepartmentRequisition");
         }
 
         public IActionResult viewDepartmentDisbursements() {
