@@ -29,11 +29,41 @@ namespace Team7_StationeryStore.Service
 
         }
 
-        public List<Requisition> findPendingREquisitionsFromStationery()
+        public List<string> retrieveReqStatus(Employee emp)
         {
-            return dbcontext.requisitions.Where(x => x.status.Equals(ReqStatus.APPROVED) || x.status.Equals(ReqStatus.OUTSTAND)).OrderBy(x => x.status).ThenBy(x => x.DateSubmitted).ToList();
+            List<string> statuses = new List<string>();
+            if (emp.Role == Role.STORE_CLERK)
+            {
+                foreach (var e in Enum.GetValues(typeof(ReqStatus)))
+                {
+                    if (e.ToString() == "APPROVED" || e.ToString() == "OUTSTAND")
+                    {
+                        Console.WriteLine("Enum: " + e.ToString());
+                        statuses.Add(e.ToString());
+                    }
+                }
+            }
+            else {
+                foreach (var e in Enum.GetValues(typeof(ReqStatus)))
+                {
+                    statuses.Add(e.ToString());
+                }
+
+            }
+            return statuses;
         }
 
+        public List<Requisition> findRequisitionsFromStationery(Employee emp)
+        {
+            if (emp.Role == Role.STORE_CLERK)
+            {
+                return dbcontext.requisitions.Where(x => x.status.Equals(ReqStatus.APPROVED) || x.status.Equals(ReqStatus.OUTSTAND))
+                                                    .OrderBy(x => x.status).ThenBy(x => x.DateSubmitted).ToList();
+            }
+            else {
+                return dbcontext.requisitions .OrderBy(x => x.DateSubmitted).ToList();
+            }
+        }
 
         public List<Requisition> findLatestRequisitions()
         {
