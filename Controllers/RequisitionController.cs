@@ -42,17 +42,10 @@ namespace Team7_StationeryStore.Controllers
             string userid = HttpContext.Session.GetString("userId");
             Employee emp = deptService.findEmployeeById(userid);
             List<Departments> departments = deptService.findAllDepartments();
-            List<Requisition> requisitions = reqService.findPendingREquisitionsFromStationery();
+            List<Requisition> requisitions = reqService.findRequisitionsFromStationery(emp);
             List<Requisition> oustandingReq = reqService.findOustandingRequisitions();
-            List<string> statuses = new List<string>();
+            List<string> statuses = reqService.retrieveReqStatus(emp);
             foreach (var e in Enum.GetValues(typeof(ReqStatus)))
-            {
-                if (e.ToString() == "APPROVED" || e.ToString() == "OUTSTAND")
-                {
-                    Console.WriteLine("Enum: " + e.ToString());
-                    statuses.Add(e.ToString());
-                }
-            }
             ViewData["status"] = statuses;
             ViewData["outsandingReq"] = oustandingReq;
             ViewData["departments"] = departments; 
