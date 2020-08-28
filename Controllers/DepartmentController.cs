@@ -351,7 +351,19 @@ namespace Team7_StationeryStore.Controllers
         {
             return RedirectToAction("Home");
         }
+        public IActionResult DepartmentAnalysis()
+        {
+            string userid = HttpContext.Session.GetString("userId");
+            bool IsAuthorized = deptService.IsAuthorizer(userid);
 
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["user"] = emp;
+            List<AnalysisModel> aQ = deptService.startDepartmentAnalysis(emp.Id);
+            ViewData["dict"] = aQ;
+            ViewData["Authorizer"] = IsAuthorized;
+
+            return View();
+        }
 
     }
 }

@@ -122,6 +122,33 @@ namespace Team7_StationeryStore.Service
             }
             else return false;
         }
+        public List<AnalysisModel> startDepartmentAnalysis(string userId)
+        {
+            Departments department = findDepartmentByEmployee(userId);
+
+            var past4Month = DateTime.Now.AddMonths(-1).Month;
+            var Year = DateTime.Now.Year;
+            var po = from req in dbcontext.requisitions
+                     join req_d in dbcontext.requisitionDetails on req.Id equals req_d.RequisitionId
+                     group req_d by new {  req.Department.DeptName,req_d.Inventory.ItemCategory.name, req.DateSubmitted.Month, req.DateSubmitted.Year } into h
+                     where (h.Key.Month >= past4Month && h.Key.Year == Year && h.Key.DeptName == department.DeptName )
+                     select new
+                     {
+                         Month = h.Key.Month,
+                         Qty = h.Sum(x => x.RequestedQty),
+                         Category=h.Key.name
+                     };
+            List<AnalysisModel> aQ = new List<AnalysisModel>();
+            foreach (var c in po)
+            {
+                AnalysisModel a = new AnalysisModel();
+                a.quantity = c.Qty;
+                a.Category = c.Category;
+                aQ.Add(a);
+            }
+            return aQ;
+        }
+
 
     }
 }
