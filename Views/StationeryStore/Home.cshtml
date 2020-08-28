@@ -26,25 +26,21 @@
         <div id="clerkhometop">
             <form asp-controller="PurchaseOrder" asp-action="ViewAllPurchaseOrders" method="POST">
                 <button type="submit" id="PObutton" class="clerkhome-container">
-                    <i class="far fa-file-alt"></i>
                     <p>Purchase Orders</p>
                 </button>
             </form>
             <form asp-controller="Requisition" asp-action="ViewRequisitions" method="POST">
                 <button type="submit" id="Reqbutton" class="clerkhome-container">
-                    <i class="far fa-user"></i>
                     <p>Requisitions</p>
                 </button>
             </form>
             <form asp-controller="StationeryStore" asp-action="ViewInventory" method="POST">
                 <button type="submit" id="Invbutton" class="clerkhome-container">
-                    <i class="fas fa-box-open"></i>
                     <p>Inventory</p>
                 </button>
             </form>
             <form asp-controller="StationeryStore" asp-action="ViewDisbursements" method="POST">
                 <button type="submit" id="Disbbutton" class="clerkhome-container">
-                    <i class="fas fa-truck"></i>
                     <p>Disbursements</p>
                 </button>
             </form>

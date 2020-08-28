@@ -77,17 +77,12 @@ table.itemtable {
     font-size: 14px;
     font-weight: 600;
     display: inline-block;
-    width: 90px;
     padding: 5px;
     color: #0076BE;
 }
 
 .totalqty {
-    display: inline-block;
-    font-size: 17px;
     color: #1c9599;
-    text-align: center;
-    width: 50px;
 }
 
 .departmentName {

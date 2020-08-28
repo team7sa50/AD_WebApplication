@@ -7,7 +7,6 @@
     int i;
     int totalQtyPerDept;
     List<Requisition> requis = (List<Requisition>)ViewData["Requisitions"];
-    int j = 0;
     string identi;
     string result;
 }
@@ -16,10 +15,11 @@
         <meta charset="utf=8">
         <title>Home</title>
         <link rel="stylesheet" type="text/css" href="~/css/viewRetrieval.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
         <script src="https://use.fontawesome.com/973befe495.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
-        <!--<script src="~/js/viewRetrieval.js"></script>-->
+
     </head>
 
 <body>
@@ -27,8 +27,8 @@
     {
     <div class="itemcontainer">
         <div class="itemheader">
-            <p class="itemname">@r.Key</p>
-            <p class="totalqty">Total: @r.Value</p>
+            <p class="itemname">@r.Key <span class="totalqty">Total: @r.Value</span></p>
+
         </div>
 
         <table class="itemtable">
@@ -43,42 +43,42 @@
                 totalQtyPerDept = 0;
                 identi = r.Key + rd.Key;
                 result = string.Concat(identi.Where(c => !char.IsWhiteSpace(c)));
-        <tbody id="@result">
-            @foreach (var rz in rd.Value)
-            {
-                if (rz.Inventory.description == r.Key)
-                {
-                    totalQtyPerDept += rz.RequestedQty;
-                    if (i == 0)
-                    {
-                        identi = "";
-                        identi = r.Key + rd.Key;
-                        result = string.Concat(identi.Where(c => !char.IsWhiteSpace(c)));
-                        <tr class="departmentOverview" onclick="showRequests('@result')">
-                            <td class="departmentName">@rd.Key</td>
-                            <td>@totalQtyPerDept</td>
-                            <td></td>
-                        </tr>
-                    }
-                    <tr class="requestdetail" style=" visibility:collapse;">
-                        <td class="requestId">@rz.Requisition.Id</td>
-                        <td class="requestedQty">@rz.RequestedQty</td>
-                        <td class="recommendedQty">
-                            <p id="originalQty">@rz.DistributedQty  <i class="fas fa-edit" onclick="showChangeQty()"></i></p>
-                            <form asp-controller="StationeryStore" asp-action="updateRetrievalQty" method="POST">
-                                <input type="hidden" id="rqId" name="rqId" value="@rz.Requisition.Id" />
-                                <input type="hidden" id="itemId" name="itemId" value="@r.Key" />
-                                @foreach (var rqs in requis)
-                                {<input type=hidden value="@rqs.Id" name="requi"> }
-                                <input id="newQty" name="newQty" type="text" placeholder="@rz.DistributedQty" />
-                                <button type="submit" id="newQtySub" name="newQtySub" style="font-size:11px"><i class="fas fa-arrow-right"></i></button>
-                                </form>
-                                </td>
+                <tbody id="@result">
+                    @foreach (var rz in rd.Value) {
+                        if (rz.Inventory.description == r.Key)
+                        {
+                            totalQtyPerDept += rz.RequestedQty;
+                            if (i == 0)
+                            {
+                                identi = "";
+                                identi = r.Key + rd.Key;
+                                result = string.Concat(identi.Where(c => !char.IsWhiteSpace(c)));
+                                <tr class="departmentOverview" onclick="showRequests('@result')">
+                                    <td class="departmentName">@rd.Key</td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
-                                i++;
                             }
+
+                            <tr class="requestdetail" style=" visibility:collapse;">
+                                <td class="requestId">@rz.Requisition.Id</td>
+                                <td class="requestedQty">@rz.RequestedQty</td>
+                                <td class="recommendedQty">
+                                    <p id="originalQty">@rz.DistributedQty  <i class="fas fa-edit" onclick="showChangeQty()"></i></p>
+                                    <form asp-controller="StationeryStore" asp-action="updateRetrievalQty" method="POST">
+                                        <input type="hidden" id="rqId" name="rqId" value="@rz.Requisition.Id" />
+                                        <input type="hidden" id="itemId" name="itemId" value="@r.Key" />
+                                        @foreach (var rqs in requis)
+                                        {<input type=hidden value="@rqs.Id" name="requi">}
+                                        <input id="newQty" name="newQty" type="text" placeholder="@rz.DistributedQty" />
+                                        <button type="submit" id="newQtySub" name="newQtySub" style="font-size:11px"><i class="fas fa-arrow-right"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            i++;
                         }
-        </tbody>
+                    }
+                </tbody>
             }
         </table>
     </div>
@@ -99,18 +99,14 @@
     <script>
 
  function showRequests(identifier) {
-            console.log("reached the showRequest function");
             var x = document.getElementById(identifier).querySelectorAll('.requestdetail');
             var i;
             for (i = 0; i < x.length; i++) {
-              console.log("wow");
                 if (x[i].style.visibility === "collapse") {
                     x[i].style.visibility = "visible";
-                    console.log("It was closed, now visible");
                 }
                 else if (x[i].style.visibility === "visible") {
                     x[i].style.visibility = "collapse";
-                    console.log("It was visible, now closed");
                 }
             }
         }

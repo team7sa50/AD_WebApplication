@@ -67,7 +67,7 @@
                     <th>Department</th>
                     <th>Compiled On</th>
                     <th>Prepared By</th>
-                    <th>Acknowledgement</th>
+                    <th>Status</th>
                 </tr>
                 <tbody id="pendingUnfiltered">
                     @foreach (var d in disb)
@@ -78,7 +78,7 @@
                             <td>@d.Departments.DeptName</td>
                             <td>@d.GeneratedDate.ToShortDateString()</td>
                             <td>@d.storeClerk.Name</td>
-                            <td><button onclick="" style="color:#1f5f89"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></td>
+                            <td>@d.status</td>
                         </tr>
                     }
                 </tbody>
@@ -182,7 +182,6 @@
     document.getElementById("defaultOpen").click();
 
     function tableToJson(table) {
-        console.log("converting table to JSON");
         var data = [];
 
         // first row needs to be headers
@@ -216,15 +215,11 @@
         var value = $(this).val();
         /* search the html table for the matching dept name */
         if (value.length < 2) {
-            console.log("All dept selected");
             var data1 = getAll(tableJson);
-            console.log("Data to be passed in to buildTable: " + data1);
             buildTable(data1, "pendingUnfiltered");
         }
         else if (value.length > 1) {
-            console.log(value + " selected");
             var data2 = searchTable(value, tableJson);
-            console.log("Data to be passed in to buildTable: " + data2);
             buildTable(data2, "pendingUnfiltered");
         }
     });
@@ -232,7 +227,6 @@
     $('#dateCollectionPending').change('keyup', function () {
         var value = $(this).val();
         var inputDate = new Date(value);
-        console.log(inputDate);
         var dataByDate = searchTableByCollDate(inputDate, tableJson);
         buildTable(dataByDate, "pendingUnfiltered");
         $(this).value = "";
@@ -241,21 +235,16 @@
     $('#dateCompiledPending').change('keyup', function () {
         var value = $(this).val();
         var inputDate = new Date(value);
-        console.log(inputDate);
         var dataByDate = searchTableByComDate(inputDate, tableJson);
         buildTable(dataByDate, "pendingUnfiltered");
         $(this).value = "";
     });
 
     function searchTable(value, data) {
-        console.log("Reached searchTable");
-        console.log("Printing value:", value);
-        console.log("Printing data: ", data);
         var obj = JSON.parse(data);
         var filteredData = [];
         for (var i = 0; i < obj.length; i++) {
             var name = obj[i].department;
-            console.log('Department from JSON:', name);
             if (name == value) {
                 filteredData.push(obj[i]);
             }
@@ -265,14 +254,11 @@
 
     function searchTableByCollDate(inputDate, data) {
         var obj = JSON.parse(data);
-        console.log("Date input:", inputDate);
         var filteredData = [];
         for (var i = 0; i < obj.length; i++) {
             var name = obj[i].collectiondate;
             var rowDate = new Date(name);
-            console.log('Collection date from JSON:', rowDate);
             if (rowDate.toDateString() == inputDate.toDateString()) {
-                console.log("found a record with matching date");
                 filteredData.push(obj[i]);
             }
         }
@@ -281,14 +267,12 @@
 
     function searchTableByComDate(inputDate, data) {
         var obj = JSON.parse(data);
-        console.log("Date input:", inputDate);
         var filteredData = [];
         for (var i = 0; i < obj.length; i++) {
             var name = obj[i].collectiondate;
             var rowDate = new Date(name);
 
             if (rowDate.toDateString() == inputDate.toDateString()) {
-                console.log("found a record with matching date");
                 filteredData.push(obj[i]);
             }
         }
@@ -308,25 +292,18 @@
     var comTableJSON = JSON.stringify(tableToJson(comTable));
 
     $('#deptCompleted').change('keyup', function () {
-        /*get the value selected*/
         var value = $(this).val();
-        /* search the html table for the matching dept name */
         if (value.length < 2) {
-            console.log("All dept selected");
             var data1 = getAll(comTableJSON);
-            buildTable(data1, "completedUnfiltered");
         }
         else if (value.length > 1) {
-            console.log(value + " selected");
             var data2 = searchTable(value, comTableJSON);
-            buildTable(data2, "completedUnfiltered");
         }
     });
 
     $('#completedCompiledDate').change('keyup', function () {
         var value = $(this).val();
         var inputDate = new Date(value);
-        console.log(inputDate);
         var dataByDate = searchTableByComDate(inputDate, comTableJSON);
         buildTable(dataByDate, "pendingUnfiltered");
         $(this).value = "";
@@ -335,7 +312,6 @@
     $('#completedCollDate').change('keyup', function () {
         var value = $(this).val();
         var inputDate = new Date(value);
-        console.log(inputDate);
         var dataByDate = searchTableByComDate(inputDate, comTableJSON);
         buildTable(dataByDate, "pendingUnfiltered");
         $(this).value = "";
@@ -345,13 +321,12 @@
         var tableOld = document.getElementById(tableBodyId);
         tableOld.innerHTML = "";
         for (var i = 0; i < data.length; i++) {
-            console.log(data[i]);
-            var row = `<tr>
+            var row = `<tr onclick="viewDisDetail('${data[i].id}')">
                 <td>${data[i].collectiondate}</td>
                 <td>${data[i].department}</td>
                 <td>${data[i].compiledon}</td>
-                <td>Adam Smith</td>
-                <td><button onclick="" style="color:#1f5f89"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></td>
+                <td>${data[i].preparedby}</td>
+                <td>${data[i].status}</td>
                 </tr>`;
             tableOld.innerHTML += row;
         }
@@ -388,12 +363,10 @@
                 $("#collPtSpec").val(jsonObject.Departments.CollectionPoint.Location);
                 var p = document.createElement('p');
                 var deptrep = JSON.parse(response.repName);
-                console.log("representative name is" + deptrep);
                 //$("repSpec").innerHTML = deptrep;
                 document.getElementById('repSpec').innerHTML = deptrep;
                 //document.getElementById('repSpec').appendChild(p);
                 var items = jsonObject.DisbursementDetails;
-                console.log("items is" + items);
                 var tabledisQty = document.getElementById('disbDetailsQty');
                 for (var i = 0; i < items.length; i++) {
                     var distributedQty = parseInt(items[i].RequisitionDetail.DistributedQty);
@@ -419,13 +392,11 @@
         var newDate = $("#collDateSpec").val();
         var newLocation = $("#collPtSpec").val();
         var rqId = $("#rqdId").val();
-        console.log("Printing:" + newDate);
         $.ajax({
             type: 'POST',
             url: '/StationeryStore/SaveChangesToDisb',
             data: { 'newDate': newDate, 'newColl': newLocation, 'rqId': rqId },
             success: function (result) {
-                console.log("wow" + result);
             }
         });
         alert("Method REached");

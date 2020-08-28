@@ -47,25 +47,17 @@ body {
     border-radius: 5px;
 }
 
-    #PObutton:hover {
+#PObutton:hover {
         opacity: 0.8;
-    }
-
-.clerkhome-container i {
-    font-size: 55px;
-    z-index: 10;
-    float: left;
-    color: #f3f3f3;
-    display: inline-block;
-    transform: translate(0%,10%);
 }
+
 
 .clerkhome-container p {
     font-size: 18px;
     font-weight: 600;
     padding-top: 30px;
-    letter-spacing: -1;
-    transform: translate(0%,-60%);
+    display: inline-block;
+    text-align: center;
 }
 
 #overViewTab {
@@ -86,9 +78,9 @@ body {
     background-image: linear-gradient(to right top, #f0b865, #f1bc6d, #f2c076, #f3c37e, #f4c786);
 }
 
-    #Invbutton:hover {
+#Invbutton:hover {
         opacity: 0.8;
-    }
+}
 
 #Disbbutton {
     background-image: linear-gradient(to right top, #db6b7f, #db6b7f, #db6b7f, #db6b7f, #db6b7f);

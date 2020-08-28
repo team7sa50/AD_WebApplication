@@ -74,7 +74,6 @@
 
 <script>
     function myFunction() {
-        console.log("hello myfunction");
         var x = document.getElementById("myDIV");
         if (x.style.display === "none") {
             x.style.display = "block";
@@ -89,7 +88,6 @@
                 $('.table-body-noti-detail').html("");
                 var today = new Date();
                 var count = response.length;
-                console.log("count is" + count);
                 for (const item of response) {
                     $('.table-body-noti-detail').append(`<tr><td><button onclick="clickDetail('${item.reqId}')">${item.Name} sends new requisition at ${item.date}</button></td></tr>`)
                 }
@@ -99,7 +97,6 @@
 </script>
 <script>
     function clickDetail(id) {
-        console.log("detail id" + id);
         $.ajax({
             url: "/Department/viewNewRequisition",
             method: "POST",
@@ -127,17 +124,6 @@
                 $('.table-body-noti-detail').html("");
                 var today = new Date();
                 var count = response.length;
-                // $('.table-body-noti-detail').append(`<tr><td>${response[0].Name}"sends new requisition at"${response[0].date}</td></tr>`)
-                //document.getElementById("req1").innerHTML = response[0].Name + "sends a new requisition at" + response[0].date;
-                //document.getElementById("reqvalue").value = response[0].reqId;
-                //console.log(response[0].reqId);
-                // for (const item of response) {
-                //     $('.table-body-noti-detail').append(`<tr><button onclick="clickDetail(`${item.reqId}`)"><td>${item.Name} sends new requisition at ${item.date}</td></button></tr>`)
-                // }
-                //for (var i = 0; i < count; i++) {
-                //    document.getElementById("req+" + i).innerHTML = response[i].Name + "sends a new requisition at" + response[i].date;
-                //   document.getElementById("reqvalue+" + i).value = response[i].reqId;
-                //  console.log(response[i]);
             }
         }
             });

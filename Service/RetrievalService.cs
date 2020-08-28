@@ -78,14 +78,11 @@ namespace Team7_StationeryStore.Service
                     reqPerIt[item].Add(rd);
                 }
             }
-
             return reqPerIt;
-
         }
 
         public void recommendQty(Dictionary<string, List<RequisitionDetail>> reqPerIt)
         {
-
             int itemQty;
             int itemNeeded;
             foreach (var r in reqPerIt)
@@ -96,17 +93,25 @@ namespace Team7_StationeryStore.Service
                 itemQty = item.stock;
                 foreach (var rd in r.Value)
                 {
-                    itemNeeded = rd.RequestedQty;
-                    if (itemQty >= itemNeeded)
+                    if (rd.DistributedQty == 0)
                     {
-                        rd.DistributedQty = itemNeeded;
+                        itemNeeded = rd.RequestedQty;
+                        if (itemQty >= itemNeeded)
+                        {
+                            rd.DistributedQty = itemNeeded;
+                            itemQty -= itemNeeded;
+                        }
+                        else if (itemQty < itemNeeded)
+                        {
+                            if (itemQty < 0) itemQty = 0;
+                            rd.DistributedQty = itemQty;
+                            itemQty -= rd.DistributedQty;
+                        }
+                        dbcontext.SaveChanges();
                     }
-                    else if (itemQty < itemNeeded)
-                    {
-                        rd.DistributedQty = itemQty;
-                    }
-                    dbcontext.SaveChanges();
                 }
+                item.stock = itemQty;
+                dbcontext.SaveChanges();
             };
         }
 
