@@ -41,7 +41,7 @@
                         <td>@d.Id</td>
                         <td>@d.GeneratedDate.ToString("dd-MMM-yyyy")</td>
                         <td>@d.CollectionDate.ToString("dd-MMM-yyyy")</td>
-                        <td>@d.status</td>
+                        <td id="status">@d.status</td>
                         <td>
                             <a onclick="openDetailBox('@d.Id')"><u>View</u></a>
                         </td>
@@ -74,7 +74,7 @@
                             </table>
                         </div>
                         <input type="hidden" id="disId" />
-                        <button id="btnsubmit" onclick="changeStatus()">Submit Changes</button>
+                        <button id="btnsubmit" onclick="changeStatus()">Update</button>
                     </form>
 
                 </div>
@@ -134,9 +134,10 @@
                 console.log("disId :" + disId);
                 $.ajax({
                     type: 'POST',
-                    url: '/StationeryStore/SaveStatusToCompletedInDisb',
+                    url: '/StationeryStore/SaveStatusToCompletedInDisb/',
                     data: { 'disId': disId },
                     success: function (result) {
+                        //window.location.href = '/Department/viewDepartmentDisbursements/';        
                         console.log("wow" + result);
                     }
                 });

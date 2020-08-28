@@ -329,7 +329,7 @@ namespace Team7_StationeryStore.Controllers
         }
 
         
-        public IActionResult submit(string Location, string Time)
+        public IActionResult submit(string Location)
         {
             string userid = HttpContext.Session.GetString("userId");
             
@@ -342,7 +342,6 @@ namespace Team7_StationeryStore.Controllers
             {
                 CollectionPoint c = dbcontext.collectionPoints.Where(x => x.Id == dept.CollectionPointId).FirstOrDefault();
                 c.Location = Location;
-                c.Time = Time;
                 dbcontext.SaveChanges();
             }
             return RedirectToAction("viewDepartment");

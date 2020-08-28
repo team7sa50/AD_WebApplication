@@ -5,7 +5,9 @@
     var department = (Departments)ViewData["department"];
     var collectionpoint = (CollectionPoint)ViewData["collectionpoint"];
 }
-
+@{
+    Layout = "~/Views/Shared/_departmentrepresentativehome.cshtml";
+}
 <head>
     <title></title>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -14,62 +16,53 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
 
-<header>
-    <ul>
-        <li class="logo">Logic <span>Stationery</span></li>
-        <li> <button class="menubtn" href="#inventory">Inventory</li>
-        <li> <button class="menubtn" href="#requisitions">Requisitions</button></li>
-        <li><p class="userdetails">@username</p> <img src="~/lib/img/employeeicon.jpg"> </li>
-    </ul>
-</header>
-
-<h2 style="text-align:center">Your Cart</h2>
+<h2 style="text-align:center">Department</h2>
 
 <div class="container">
-    
+
     <div align=center>
         <div>
             <table class="table table-bordered table-striped">
-                
 
-                
-                    <tr>
-                        <td>Department Code</td>
-                        <td class="text-center">@department.DeptCode</td>
-                    </tr>
-                    <tr>
-                        <td>Department Name</td>
-                        <td class="text-center">@department.DeptName</td>
-                    </tr>
-                    <tr>
-                        <td>Contact Name</td>
-                        <td class="text-center">@department.ContactName</td>
-                    </tr>
-                    <tr>
-                        <td>Telephone Number</td>
-                        <td class="text-center">@department.PhoneNumber</td>
-                    </tr>
-                    <tr>
-                        <td>Fax Number</td>
-                        <td class="text-center">@department.FaxNumber</td>
-                    </tr>
-                    <tr>
-                        <td>Department Head</td>
-                        <td class="text-center">@department.DeptHead</td>
-                    </tr>
-                    <tr>
-                        <td>Collection Point (Location)</td>
-                        <td class="text-center">@collectionpoint.Location</td>
-                    </tr>
-                    <tr>
-                        <td>Collection Point (Time)</td>
-                        <td class="text-center">@collectionpoint.Time</td>
-                    </tr>
-                    <tr>
-                        <td>Department Representative</td>
-                        <td class="text-center">@username</td>
-                    </tr>                 
-                
+
+
+                <tr>
+                    <td>Department Code</td>
+                    <td class="text-center">@department.DeptCode</td>
+                </tr>
+                <tr>
+                    <td>Department Name</td>
+                    <td class="text-center">@department.DeptName</td>
+                </tr>
+                <tr>
+                    <td>Contact Name</td>
+                    <td class="text-center">@department.ContactName</td>
+                </tr>
+                <tr>
+                    <td>Telephone Number</td>
+                    <td class="text-center">@department.PhoneNumber</td>
+                </tr>
+                <tr>
+                    <td>Fax Number</td>
+                    <td class="text-center">@department.FaxNumber</td>
+                </tr>
+                <tr>
+                    <td>Department Head</td>
+                    <td class="text-center">@department.DeptHead</td>
+                </tr>
+                <tr>
+                    <td>Collection Point (Location)</td>
+                    <td class="text-center">@collectionpoint.Location</td>
+                </tr>
+                <tr>
+                    <td>Collection Point (Time)</td>
+                    <td class="text-center">@collectionpoint.Time</td>
+                </tr>
+                <tr>
+                    <td>Department Representative</td>
+                    <td class="text-center">@username</td>
+                </tr>
+
 
 
 
