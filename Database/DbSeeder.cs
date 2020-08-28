@@ -109,7 +109,7 @@ namespace Team7_StationeryStore.Database
                 item1.ItemCategoryId = category1.Id;
                 item1.itemCode = "C001";
                 item1.description = "Clips Double 1";
-                item1.stock = 100;
+                item1.stock = 30;
                 item1.measurementUnit = "Dozen";
                 item1.location = "bin01";
                 item1.reorderLevel = 50;
@@ -122,7 +122,7 @@ namespace Team7_StationeryStore.Database
                 item2.ItemCategoryId = category1.Id;
                 item2.itemCode = "C002";
                 item2.description = "Clips Double 2";
-                item2.stock = 100;
+                item2.stock = 30;
                 item2.measurementUnit = "Dozen";
                 item2.location = "bin01";
                 item2.reorderLevel = 50;
@@ -135,7 +135,7 @@ namespace Team7_StationeryStore.Database
                 item3.ItemCategoryId = category1.Id;
                 item3.itemCode = "C003";
                 item3.description = "Clips Double 3/4";
-                item3.stock = 100;
+                item3.stock = 30;
                 item3.measurementUnit = "Dozen";
                 item3.location = "bin01";
                 item3.reorderLevel = 50;
@@ -148,7 +148,7 @@ namespace Team7_StationeryStore.Database
                 item4.ItemCategoryId = category1.Id;
                 item4.itemCode = "C004";
                 item4.description = "Clips Paper Large";
-                item4.stock = 100;
+                item4.stock = 30;
                 item4.measurementUnit = "Box";
                 item4.location = "bin01";
                 item4.reorderLevel = 50;
@@ -161,7 +161,7 @@ namespace Team7_StationeryStore.Database
                 item5.ItemCategoryId = category1.Id;
                 item5.itemCode = "C005";
                 item5.description = "Clips Paper Medium";
-                item5.stock = 100;
+                item5.stock = 30;
                 item5.measurementUnit = "Box";
                 item5.location = "bin01";
                 item5.reorderLevel = 50;
@@ -174,7 +174,7 @@ namespace Team7_StationeryStore.Database
                 item6.ItemCategoryId = category1.Id;
                 item6.itemCode = "C006";
                 item6.description = "Clips Paper Small";
-                item6.stock = 100;
+                item6.stock = 30;
                 item6.measurementUnit = "Box";
                 item6.location = "bin01";
                 item6.reorderLevel = 50;
@@ -187,7 +187,7 @@ namespace Team7_StationeryStore.Database
                 item7.ItemCategoryId = category2.Id;
                 item7.itemCode = "E001";
                 item7.description = "Envelope Brown(3x6)";
-                item7.stock = 1000;
+                item7.stock = 30;
                 item7.measurementUnit = "Each";
                 item7.location = "bin02";
                 item7.reorderLevel = 600;
@@ -200,7 +200,7 @@ namespace Team7_StationeryStore.Database
                 item8.ItemCategoryId = category2.Id;
                 item8.itemCode = "E002";
                 item8.description = "Envelope Brown(3x6) w/Window";
-                item8.stock = 1000;
+                item8.stock = 30;
                 item8.measurementUnit = "Each";
                 item8.location = "bin02";
                 item8.reorderLevel = 600;
@@ -213,7 +213,7 @@ namespace Team7_StationeryStore.Database
                 item9.ItemCategoryId = category2.Id;
                 item9.itemCode = "E003";
                 item9.description = "Envelope Brown(5x7)";
-                item9.stock = 1000;
+                item9.stock = 30;
                 item9.measurementUnit = "Each";
                 item9.location = "bin02";
                 item9.reorderLevel = 600;
@@ -226,7 +226,7 @@ namespace Team7_StationeryStore.Database
                 item10.ItemCategoryId = category2.Id;
                 item10.itemCode = "E004";
                 item10.description = "Envelope Brown(5x7) w/Window";
-                item10.stock = 1000;
+                item10.stock = 30;
                 item10.measurementUnit = "Each";
                 item10.location = "bin02";
                 item10.reorderLevel = 600;
@@ -239,7 +239,7 @@ namespace Team7_StationeryStore.Database
                 item11.ItemCategoryId = category7.Id;
                 item11.itemCode = "P004";
                 item11.description = "Pancer Brown(5x7) w/Window";
-                item11.stock = 1000;
+                item11.stock = 30;
                 item11.measurementUnit = "Each";
                 item11.location = "bin07";
                 item11.reorderLevel = 600;
@@ -252,7 +252,7 @@ namespace Team7_StationeryStore.Database
                 item12.ItemCategoryId = category6.Id;
                 item12.itemCode = "PE004";
                 item12.description = "Pen red";
-                item12.stock = 1000;
+                item12.stock = 30;
                 item12.measurementUnit = "Each";
                 item12.location = "bin07";
                 item12.reorderLevel = 600;
@@ -904,9 +904,9 @@ namespace Team7_StationeryStore.Database
                     Id = Guid.NewGuid().ToString(),
                     GeneratedDate = DateTime.Now,
                     CollectionDate = DateTime.Now,
-                    status = DisbusementStatus.PENDING,
+                    status = DisbusementStatus.DELIVERED,
                     storeClerk = employee1,
-                    Departments = regr
+                    Departments = EN
                 };
                 dbcontext.Add(d1);
                 DisbursementDetail d1detail1 = new DisbursementDetail();
@@ -923,7 +923,7 @@ namespace Team7_StationeryStore.Database
                     GeneratedDate = DateTime.Now,
                     CollectionDate = DateTime.Now,
                     storeClerk=employee1,
-                    status = DisbusementStatus.COMPLETED,
+                    status = DisbusementStatus.DELIVERED,
                     Departments = Comm
                 };
                 dbcontext.Add(d2);
@@ -949,6 +949,12 @@ namespace Team7_StationeryStore.Database
                     Departments = EN
                 };
                 dbcontext.Add(d4);
+                DisbursementDetail d4detail1 = new DisbursementDetail();
+                d4detail1.Id = Guid.NewGuid().ToString();
+                d4detail1.DisbursementId = d4.Id;
+                d4detail1.RequisitionDetailId = requisition2Detail.Id;
+                d4detail1.disbursedQty = 20;
+                dbcontext.Add(d4detail1);
 
                 Disbursement d5 = new Disbursement()
                 {

@@ -38,7 +38,7 @@ namespace Team7_StationeryStore.Service
         }
         public List<Disbursement> retrieveDisbursementByDept(string deptId)
         {
-            return dbcontext.disbursements.Where(x => x.DepartmentsId == deptId).ToList();
+            return dbcontext.disbursements.Where(x => x.DepartmentsId == deptId && (x.status==DisbusementStatus.DELIVERED || x.status==DisbusementStatus.COMPLETED)).ToList();
         }
         public List<Disbursement> retrieveDisbursements()
         {
@@ -147,10 +147,11 @@ namespace Team7_StationeryStore.Service
         public List<Disbursement> getAllCompletedDisbursements()
         {
             List<Disbursement> dibCompleted = (from d in dbcontext.disbursements
-                                               where d.status == DisbusementStatus.COMPLETED
+                                               where d.status == DisbusementStatus.COMPLETED  || d.status==DisbusementStatus.DELIVERED
                                                select d).ToList();
             return dibCompleted;
         }
+
 
         public Disbursement findDisbursementById(string id)
         {

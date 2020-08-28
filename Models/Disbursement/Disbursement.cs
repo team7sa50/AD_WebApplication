@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Team7_StationeryStore.Models
 {
     public enum DisbusementStatus { 
-        PENDING,REJECT,COMPLETED
+        PENDING,REJECT,COMPLETED,DELIVERED
     }
     public class Disbursement
     {

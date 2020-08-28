@@ -48,6 +48,9 @@ namespace Team7_StationeryStore.Controllers
             ViewData["pos"] = invService.findLatestPurchaseOrder();
             ViewData["disbursement"] = disbService.findLatestDisbursements();
             ViewData["username"] = emp.Name;
+            //Get Latest Requisitions 
+            //Get Latest POs
+            //Get Latest Disbursements 
             return View();
         }
         public IActionResult HomeManagerSupervisor()
@@ -86,7 +89,18 @@ namespace Team7_StationeryStore.Controllers
             return File(Encoding.UTF8.GetBytes(sb.ToString()),"text/csv", "Grid.csv");
         }
 
-
+        [HttpPost]
+        public IActionResult updateRetrievalQty(string rqId, string itemId, string newQty, List<string> requi)
+        {
+            RequisitionDetail rd = (from r in dbcontext.requisitionDetails
+                                    where r.Inventory.description == itemId &&
+                                    r.Requisition.Id == rqId
+                                    select r).FirstOrDefault();
+            rd.DistributedQty = int.Parse(newQty);
+            dbcontext.SaveChanges();
+            System.Diagnostics.Debug.WriteLine("updateRetrievalQty reqlist: " + requi.Count);
+            return RedirectToAction("viewRetrieval", new { req = requi }) ;
+        }
 
         [HttpPost]
         public JsonResult GetEmployeeTest(string id)
@@ -141,6 +155,16 @@ namespace Team7_StationeryStore.Controllers
             return View();
         }
         [HttpPost]
+        public JsonResult SaveStatusToCompletedInDisb(string disId)
+        {
+            Disbursement d = dbcontext.disbursements.Where(x => x.Id == disId).FirstOrDefault();
+            d.status = DisbusementStatus.COMPLETED;
+            dbcontext.Update(d);
+            dbcontext.SaveChanges();
+            return Json("1");
+
+        }
+        [HttpPost]
         public JsonResult SaveChangesToDisb(string newDate, string newColl, string rqId)
         {
             rqId = rqId.Remove(rqId.Length - 1, 1);
@@ -155,7 +179,12 @@ namespace Team7_StationeryStore.Controllers
 
             DateTime collDateTimeObj = DateTime.Parse(newDate);
             dbDetail.CollectionDate = collDateTimeObj;
+            dbDetail.status = DisbusementStatus.DELIVERED;
+            notifService.sendNotification(NotificationType.DISBURSEMENT, null, dbDetail, null);
+
             dbcontext.SaveChanges();
+
+
             return Json("1");
         }
         [HttpPost]
@@ -179,29 +208,23 @@ namespace Team7_StationeryStore.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult updateRetrievalQty(string rqId, string itemId, string newQty, List<string> requi)
-        {
-            RequisitionDetail rd = (from r in dbcontext.requisitionDetails
-                                    where r.Inventory.description == itemId &&
-                                    r.Requisition.Id == rqId
-                                    select r).FirstOrDefault();
-            rd.DistributedQty = int.Parse(newQty);
-            dbcontext.SaveChanges();
-            return RedirectToAction("viewRetrieval", new { req = requi });
-        }
-
         public IActionResult viewRetrieval(List<string> req)
         {
             List<Requisition> selectedReq = requisitionService.getRequisitionsByIds(req);
+            selectedReq.ForEach(x => x.status = ReqStatus.COLLECTION);
+            dbcontext.UpdateRange(selectedReq);
+            dbcontext.SaveChanges();
+            System.Diagnostics.Debug.WriteLine("Selected Requests: " + selectedReq.Count);
             ViewData["Requisitions"] = selectedReq;
 
             List<RequisitionDetail> selectedReqD = new List<RequisitionDetail>();
             foreach (var r in selectedReq) {
+                System.Diagnostics.Debug.WriteLine("Starting to loop through requisitions: " + "1");
                 List<RequisitionDetail> rds = (from rd in dbcontext.requisitionDetails
                                                where rd.Requisition == r
                                                select rd).ToList();
                foreach(var rd in rds){
+                    System.Diagnostics.Debug.WriteLine("Checking for rd: " + rd.Id);
                     selectedReqD.Add(rd);
                 }
              }
