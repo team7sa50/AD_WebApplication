@@ -679,10 +679,19 @@ namespace Team7_StationeryStore.Database
                 RequisitionDetail requisition1Detail2 = new RequisitionDetail();
                 requisition1Detail2.Id = Guid.NewGuid().ToString();
                 requisition1Detail2.RequisitionId = requisition1.Id;
-                requisition1Detail2.InventoryId = item2.Id;
+                requisition1Detail2.InventoryId = item11.Id;
                 requisition1Detail2.RequestedQty = 20;
                 requisition1Detail2.DistributedQty = 0;
                 dbcontext.Add(requisition1Detail2);
+
+
+                RequisitionDetail requisition1Detail3 = new RequisitionDetail();
+                requisition1Detail3.Id = Guid.NewGuid().ToString();
+                requisition1Detail3.RequisitionId = requisition1.Id;
+                requisition1Detail3.InventoryId = item10.Id;
+                requisition1Detail3.RequestedQty = 20;
+                requisition1Detail3.DistributedQty = 0;
+                dbcontext.Add(requisition1Detail3);
 
                 Requisition requisition2 = new Requisition();
                 requisition2.Id = CS.DeptCode + "_" + DateTime.Now.ToString("MM/dd/yyyy/HH:mm:ss");

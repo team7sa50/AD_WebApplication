@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewData["Title"] = "DepartmentAnalysis";
+}
+
+
+@{
+    Layout = "~/Views/Shared/_departmentheadhome.cshtml";
+
+    var data = (List<AnalysisModel>)ViewData["dict"];
+    var user = (Employee)ViewData["user"];
+
+}
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link rel="stylesheet" type="text/css" href="POAnalysisResults.css">
+</head>
+<body>
+    <div id="main" style="width: 65%;margin: auto;">
+        <h1 id="heading">Results</h1>
+            <div id="piechart_3d" style="width: 900px; height: 500px;display: flex;justify-content: center;"></div>
+    </div>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load("current", { packages: ["corechart"] });
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Item', 'Quantity'],
+            @foreach(var item in data)
+             {
+            @:['@(item.Category)', @(item.quantity)],
+            }
+
+            ]);
+
+            var options = {
+                title: 'Order Items Analysis For Past Month',
+                is3D: true,
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+            chart.draw(data, options);
+        }
+    </script>
+   
+</body>
+
+
