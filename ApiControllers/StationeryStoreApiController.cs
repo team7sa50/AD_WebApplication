@@ -137,11 +137,11 @@ namespace Team7_StationeryStore.ApiControllers
         // It will change the status to "processing" automatically, don't need to post status again 
         [HttpPost]
         [Route("api/[controller]/generateDisbursement")]
-        public ActionResult generateDisbursement(List<string> reqId)
+        public ActionResult generateDisbursement([FromBody]List<Requisition> requisitions)
         {
             //Transfer retrieved requests here
             string userId = "Mary";
-            List<Requisition> selectedReq = reqService.getRequisitionsByIds(reqId);
+            List<Requisition> selectedReq = reqService.getRequisitionsByRequisitionIds(requisitions);
             reqService.updateRequisitionStatus(selectedReq);
             List<RequisitionDetail> selectedReqDetail = rservice.getRequisitionDetail(selectedReq);
             //Convert request to disbursement 

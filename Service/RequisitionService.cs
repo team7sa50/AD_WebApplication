@@ -221,6 +221,16 @@ namespace Team7_StationeryStore.Service
             }
             return selectedReq; 
         }
+        public List<Requisition> getRequisitionsByRequisitionIds(List<Requisition> requisitions)
+        {
+            List<Requisition> selectedReq = new List<Requisition>();
+            foreach (var value in requisitions)
+            {
+                Requisition r = findRequisition(value.Id);
+                selectedReq.Add(r);
+            }
+            return selectedReq;
+        }
 
         // To check if the requistion is fulfilled with iterating through each items.
         public bool isPartialFufiled(Requisition req)
