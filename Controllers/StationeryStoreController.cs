@@ -48,6 +48,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["pos"] = invService.findLatestPurchaseOrder();
             ViewData["disbursement"] = disbService.findLatestDisbursements();
             ViewData["username"] = emp.Name;
+            ViewData["user"] = emp;
             //Get Latest Requisitions 
             //Get Latest POs
             //Get Latest Disbursements 
@@ -233,6 +234,9 @@ namespace Team7_StationeryStore.Controllers
             Dictionary<string, List<RequisitionDetail>> reqPerIt = rservice.getReqDetailPerItem(selectedReqD);
             rservice.recommendQty(reqPerIt);
             ViewData["reqPerDept"] = rservice.getReqPerDeptPerItem(reqPerIt);
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["user"] = emp;
             return View();        
         }
 
@@ -256,12 +260,17 @@ namespace Team7_StationeryStore.Controllers
             ViewData["completedDisb"] = disbService.getAllCompletedDisbursements();
             ViewData["collectPoints"] = deptService.findAllCollectionPts();
             ViewData["departments"] = deptService.findAllDepartments();
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["user"] = emp;
             return View();
         }
         //should set collection date as next workign day 
 
         public IActionResult CreateAdjustment(string itemId, int quantity, string reason) {
             string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["user"] = emp;
             invService.CreateAdjustmentVoucher(userid, itemId, quantity, reason);
             return RedirectToAction("ViewInventory");
         }
@@ -274,6 +283,9 @@ namespace Team7_StationeryStore.Controllers
        
 
         public IActionResult viewAdjustmentVouchers() {
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["user"] = emp;
             ViewData["adjList"] = invService.findAdjustmentVoucherList(null);
             ViewData["PendingAdjList"] = invService.findAdjustmentVoucherList(Status.PENDING);
             return View();

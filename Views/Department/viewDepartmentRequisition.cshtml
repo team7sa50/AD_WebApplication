@@ -31,7 +31,6 @@ else if(user.Role== Role.DEPT_REP)
     <title>Requisitions</title>
     <link rel="stylesheet" type="text/css" href="~/css/viewReq.css">
     @*    <link rel="stylesheet" type="text/css" href="~/css/site.css">*@
-    <script src="https://use.fontawesome.com/973befe495.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
     <link href="https://code.jquery.com/jquery-3.3.1.js" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -48,34 +47,35 @@ else if(user.Role== Role.DEPT_REP)
     <div id="main">
         <div class="requisitioncontainer" id="All">
             <div class="requisitionfilter">
-
+                <h1>Requisitions</h1>
+                <!--
                 <form>
-                    <h1>Requisitions</h1>
                     <div style="float:left;">
-                        <label for="Status">Status</label>
-                        <select id="status" name="Status">
-                            <option value="All" selected>All</option>
-                            <option value="Recieved">Recieved</option>
-                            <option value="Processing">Processing</option>
-                            <option value="Collection">Collection</option>
-                            <option value="Outstanding">Outstanding</option>
-                            <option value="Completed">Completed</option>
-                        </select>
-                    </div>
-                    </fieldset>
-                    <fieldset>
-                        <div style="float:left;margin-right:20px;">
-                            <label for="StartDate">Start date</label>
-                            <input type="Date" name="StartDate">
-                        </div>
-                        <div style="float:left;">
-                            <label for="EndDate">End date</label>
-                            <input type="Date" name="EndDate">
-                        </div>
-                        <input style="float:left;margin-right:20px;" type="submit" value="Filter">
-                    </fieldset>
-
+                <label for="Status">Status</label>
+                <select id="status" name="Status">
+                    <option value="All" selected>All</option>
+                    <option value="Recieved">Recieved</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Collection">Collection</option>
+                    <option value="Outstanding">Outstanding</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
+            </fieldset>
+            <fieldset>
+                <div style="float:left;margin-right:20px;">
+                    <label for="StartDate">Start date</label>
+                    <input type="Date" name="StartDate">
+                </div>
+                <div style="float:left;">
+                    <label for="EndDate">End date</label>
+                    <input type="Date" name="EndDate">
+                </div>
+                <input style="float:left;margin-right:20px;" type="submit" value="Filter">
+            </fieldset>
                 </form>
+                                -->
+
             </div>
             <table class="requisitiontable">
                 <tr>
@@ -99,58 +99,57 @@ else if(user.Role== Role.DEPT_REP)
         </div>
 
         <!--Tab for Pending Requisitions-->
-        <div id="main">
-            <div class="requisitioncontainer" id="Pending">
-                <div class="requisitionfilter">
+                            <div id="main">
+                                <div class="requisitioncontainer" id="Pending">
+                                    <div class="requisitionfilter">
 
-                    <form>
-                        <h1>Requisitions</h1>
-                        <div style="float:left;">
-                            <label for="Status">Status</label>
-                            <select id="status" name="Status">
-                                <option value="All" selected>All</option>
-                                <option value="Recieved">Recieved</option>
-                                <option value="Processing">Processing</option>
-                                <option value="Collection">Collection</option>
-                                <option value="Outstanding">Outstanding</option>
-                                <option value="Completed">Completed</option>
-                            </select>
-                        </div>
-                        </fieldset>
-                        <fieldset>
-                            <div style="float:left;margin-right:20px;">
-                                <label for="StartDate">Start date</label>
-                                <input type="Date" name="StartDate">
-                            </div>
-                            <div style="float:left;">
-                                <label for="EndDate">End date</label>
-                                <input type="Date" name="EndDate">
-                            </div>
-                            <input style="float:left;margin-right:20px;" type="submit" value="Filter">
-                        </fieldset>
+                                        <h1>Requisitions</h1>
+                                        <!-- <form>
+                                          <div style="float:left;">
+                                        <label for="Status">Status</label>
+                                        <select id="status" name="Status">
+                                            <option value="All" selected>All</option>
+                                            <option value="Recieved">Recieved</option>
+                                            <option value="Processing">Processing</option>
+                                            <option value="Collection">Collection</option>
+                                            <option value="Outstanding">Outstanding</option>
+                                            <option value="Completed">Completed</option>
+                                        </select>
+                                    </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <div style="float:left;margin-right:20px;">
+                                            <label for="StartDate">Start date</label>
+                                            <input type="Date" name="StartDate">
+                                        </div>
+                                        <div style="float:left;">
+                                            <label for="EndDate">End date</label>
+                                            <input type="Date" name="EndDate">
+                                        </div>
+                                        <input style="float:left;margin-right:20px;" type="submit" value="Filter">
+                                    </fieldset></form>    -->
 
-                    </form>
-                </div>
-                <table class="requisitiontable">
-                    <tr>
-                        <th>Id</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Details</th>
-                    </tr>
-                    @foreach (var c in plists)
-                    {
-                        <tr>
-                            <td>@c.Id</td>
-                            <td>@c.DateSubmitted</td>
-                            <td>@c.status</td>
-                            <td>
-                                <a onclick="openDetail('@c.Id', '@c.Department.DeptCode','@c.status')"><u>View</u></a>
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </div>
+                                    </div>
+                        <table class="requisitiontable">
+                            <tr>
+                                <th>Id</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                            </tr>
+                            @foreach (var c in plists)
+                            {
+                                <tr>
+                                    <td>@c.Id</td>
+                                    <td>@c.DateSubmitted</td>
+                                    <td>@c.status</td>
+                                    <td>
+                                        <a onclick="openDetail('@c.Id', '@c.Department.DeptCode','@c.status')"><u>View</u></a>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+</div>
         </div>
 
         <div id="myDetail" class="detail">
@@ -207,7 +206,8 @@ else if(user.Role== Role.DEPT_REP)
                     document.getElementById("rejectbtn").disabled = false;
                 }
 
-                document.getElementById("myDetail").style.width = "350px";
+                document.getElementById("myDetail").style.width = "300px";
+                document.getElementById("myDetail").style.marginTop = "5%";
                 document.getElementById("All").style.marginRight = "300px";
                 document.getElementById("Pending").style.marginRight = "300px";
                 $.ajax({
@@ -233,6 +233,8 @@ else if(user.Role== Role.DEPT_REP)
             function closeDetail() {
                 document.getElementById("myDetail").style.width = "0";
                 document.getElementById("All").style.marginRight = "auto";
+                document.getElementById("Pending").style.marginRight = "auto";
+
                 document.getElementById("Outstanding").style.marginRight = "auto";
                 document.getElementById("New").style.marginRight = "auto";
             }

@@ -22,9 +22,9 @@
             <div class="logincontainer">
                 <form asp-controller="Home" asp-action="Login" method="POST">
                     <h5>Your Email</h5>
-                    <input type="text" placeholder="Enter your email" name="email" />
+                    <input type="text" placeholder="Enter your email" name="email" required />
                     <h5>Password</h5>
-                    <input type="password" placeholder="Enter your password" name="password" />
+                    <input type="password" placeholder="Enter your password" name="password" required/>
                     <br>
                     <input type="submit" value="Login">
                 </form>
