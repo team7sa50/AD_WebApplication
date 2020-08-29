@@ -310,7 +310,7 @@
                                         <td>${data[i].date} </td>
                                         <td>${data[i].status} </td>
                                         <td>
-                                        <a onclick="openDetail(${data[i].id}, ${data[i].department})" class="viewDeta"><u>View</u></a>
+                                        <a onclick="openDetail('${data[i].id}', '${data[i].department}')" class="viewDeta"><u>View</u></a>
                                         </td>
                                         </tr>`;
                     tableOld.innerHTML += row;
@@ -322,7 +322,7 @@
                                         <td>${data[i].date} </td>
                                         <td>${data[i].status} </td>
                                         <td>
-                                        <a onclick="openDetail(${data[i].id}, ${data[i].department})" class="viewDeta"><u>View</u></a>
+                                        <a onclick="openDetail('${data[i].id}', '${data[i].department}')" class="viewDeta"><u>View</u></a>
                                         </td>
                                         </tr>`;
                     tableOld.innerHTML += row;
