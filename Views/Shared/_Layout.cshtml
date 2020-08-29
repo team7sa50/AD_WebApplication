@@ -1,7 +1,9 @@
 ﻿@using Team7_StationeryStore.Models;
 @model SharedViewModel;
 
-
+@{
+    var user = (Employee)ViewData["user"];
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +20,7 @@
             <ul>
                 <li class="logo">Logic <span>Stationery</span></li>
                 <li> <button class="openbtn" onclick="openNav()"><i class="fas fa-bars" id="sidebar_btn"></i></button></li>
-                <li><p class="userdetails">Adam Smith</p></li>
+                <li><p class="userdetails">@user.Name</p></li>
                 <script src="~/js/site.js"></script>
             </ul>
         </header>

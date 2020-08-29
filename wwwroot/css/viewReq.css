@@ -191,7 +191,7 @@ body {
     display: none;
 }
 
-#requisitionmenu {
+.requisitionmenu {
     height: 80px;
     max-width: 70%;
     margin: auto;
@@ -200,7 +200,8 @@ body {
     border-bottom: 2px solid #9c9c9c;
 }
 
-    #requisitionmenu button {
+
+    .requisitionmenu button {
         height: 40px;
         width: 100px;
         margin-left: 0;
@@ -212,13 +213,13 @@ body {
         color: #9c9c9c;
     }
 
-        #requisitionmenu button:hover {
+        .requisitionmenu button:hover {
             background-color: rgb(31,77,137);
             border: none;
             color: white;
         }
 
-        #requisitionmenu button.active {
+        .requisitionmenu button.active {
             border-bottom: 3px solid rgb(31,77,137);
         }
 

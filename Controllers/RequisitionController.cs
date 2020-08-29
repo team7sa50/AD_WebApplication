@@ -58,6 +58,9 @@ namespace Team7_StationeryStore.Controllers
             List<Departments> departments = deptService.findAllDepartments();
             List<Requisition> requisitions = reqService.findAllRequisitionsFromFilter(Department);
             List<Requisition> oustandingReq = reqService.findOustandingRequisitions();
+            string userid = HttpContext.Session.GetString("userId");
+            Employee emp = deptService.findEmployeeById(userid);
+            ViewData["user"] = emp;
             ViewData["outsandingReq"] = oustandingReq;
             ViewData["departments"] = departments;
             ViewData["requisitions"] = requisitions;

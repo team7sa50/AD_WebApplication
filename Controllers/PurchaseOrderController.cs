@@ -35,6 +35,7 @@ namespace Team7_StationeryStore.Controllers
             
            /* ViewData["username"] = emp.Name;*/
             ViewData["suppliers"] = suppliers;
+            ViewData["user"] = emp;
             return View();
 
         }
@@ -53,6 +54,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["categories"] = categories;
             /*ViewData["username"] = emp.Name;*/
             ViewData["supplier"] = s;
+            ViewData["user"] = emp;
             return View();
         }
         public IActionResult ViewCart(string supplier)
@@ -69,6 +71,7 @@ namespace Team7_StationeryStore.Controllers
             ViewData["username"] = emp.Name;
             ViewData["supplier"] = s;
             ViewData["userid"] = userid;
+            ViewData["user"] = emp;
             return View();
         }
         public IActionResult AddToCart(string itemId, int quantity)
