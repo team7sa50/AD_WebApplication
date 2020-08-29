@@ -38,7 +38,7 @@ else if(user.Role== Role.DEPT_REP)
 </head>
 
 <body>
-    <div class="requisitionmenu">
+    <div class="requisitionmenu" id="requisitionmenu">
         <button class="tablinks" onclick="openReq(event, 'All')">All</button>
         <button class="tablinks" onclick="openReq(event, 'Pending')" id="defaultOpen">Pending</button>
     </div>
@@ -210,6 +210,8 @@ else if(user.Role== Role.DEPT_REP)
                 document.getElementById("myDetail").style.marginTop = "5%";
                 document.getElementById("All").style.marginRight = "300px";
                 document.getElementById("Pending").style.marginRight = "300px";
+                document.getElementById("requisitionmenu").style.marginRight = "300px";
+
                 $.ajax({
                     url: "/Department/findRequisitionDetail/id",
                     method: "POST",
@@ -234,6 +236,7 @@ else if(user.Role== Role.DEPT_REP)
                 document.getElementById("myDetail").style.width = "0";
                 document.getElementById("All").style.marginRight = "auto";
                 document.getElementById("Pending").style.marginRight = "auto";
+                document.getElementById("requisitionmenu").style.marginRight = "auto";
 
                 document.getElementById("Outstanding").style.marginRight = "auto";
                 document.getElementById("New").style.marginRight = "auto";
