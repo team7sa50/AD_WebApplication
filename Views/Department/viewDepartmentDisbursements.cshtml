@@ -28,7 +28,7 @@
             <h4>Disbursements</h4>
             <table class="requisitiontable">
                 <tr>
-                    <th>Id</th>
+                    <th>Department</th>
                     <th>Processed Date</th>
                     <th>Delivery Date</th>
                     <th>Status</th>
@@ -36,15 +36,15 @@
                 </tr>
                 @foreach (var d in dlist)
                 {
-                    <tr>
-                        <td>@d.Id</td>
-                        <td>@d.GeneratedDate.ToString("dd-MMM-yyyy")</td>
-                        <td>@d.CollectionDate.ToString("dd-MMM-yyyy")</td>
-                        <td id="status">@d.status</td>
-                        <td>
-                            <a onclick="openDetailBox('@d.Id')"><u>View</u></a>
-                        </td>
-                    </tr>
+            <tr>
+                <td>@d.Departments.DeptName</td>
+                <td>@d.GeneratedDate.ToString("dd-MMM-yyyy")</td>
+                <td>@d.CollectionDate.ToString("dd-MMM-yyyy")</td>
+                <td id="status">@d.status</td>
+                <td>
+                    <a onclick="openDetailBox('@d.Id')"><u>View</u></a>
+                </td>
+            </tr>
                 }
             </table>
         </div>
