@@ -802,103 +802,7 @@ namespace Team7_StationeryStore.Database
                 requisition4.status = ReqStatus.PROCESSING;
                 requisition4.Remarks = "nothing";
                 dbcontext.Add(requisition4);
-                /*
-                Requisition rq1 = new Requisition();
-                rq1.Id = Comm.DeptCode + "_" + DateTime.Now.AddDays(1);
-                rq1.ApprovedEmployee = employee10;
-                rq1.DepartmentId = Comm.Id;
-                rq1.Employee = employee12;
-                rq1.DateSubmitted = DateTime.Today;
-                rq1.status = ReqStatus.APPROVED;
-                dbcontext.Add(rq1);*/
-
-                /*RequisitionDetail rqd1 = new RequisitionDetail();
-                rqd1.Id = Guid.NewGuid().ToString();
-                rqd1.Requisition = requisition3;
-                rqd1.Inventory = item8;
-                rqd1.RequestedQty = 88;
-                dbcontext.Add(rqd1);
-
-                RequisitionDetail rqd2 = new RequisitionDetail();
-                rqd2.Id = Guid.NewGuid().ToString();
-                rqd2.Requisition = requisition3;
-                rqd2.Inventory = item7;
-                rqd2.RequestedQty = 77;
-                dbcontext.Add(rqd2);
-
-                RequisitionDetail rqd3 = new RequisitionDetail();
-                rqd3.Id = Guid.NewGuid().ToString();
-                rqd3.Requisition = requisition4;
-                rqd3.Inventory = item5;
-                rqd3.RequestedQty = 55;
-                dbcontext.Add(rqd3);
-
-                RequisitionDetail rqd4 = new RequisitionDetail();
-                rqd4.Id = Guid.NewGuid().ToString();
-                rqd4.Requisition = requisition2;
-                rqd4.Inventory = item4;
-                rqd4.RequestedQty = 44;
-                dbcontext.Add(rqd4);
-
-                RequisitionDetail rqd5 = new RequisitionDetail();
-                rqd5.Id = Guid.NewGuid().ToString();
-                rqd5.Requisition = requisition4;
-                rqd5.Inventory = item5;
-                rqd5.RequestedQty = 55;
-                dbcontext.Add(rqd5);
-
-                RequisitionDetail rqd6 = new RequisitionDetail();
-                rqd6.Id = Guid.NewGuid().ToString();
-                rqd6.Requisition = requisition2;
-                rqd6.Inventory = item7;
-                rqd6.RequestedQty = 30;
-                dbcontext.Add(rqd6);
-
-                Requisition rq3 = new Requisition();
-                rq3.Id = EN.DeptCode + "_" + DateTime.Now.AddDays(2);
-                rq3.ApprovedEmployee = employee4;
-                rq3.DepartmentId = EN.Id;
-                rq3.Employee = employee6;
-                rq3.DateSubmitted = DateTime.Today;
-                rq3.status = ReqStatus.APPROVED;
-                dbcontext.Add(rq3);
-
-                RequisitionDetail rqd7 = new RequisitionDetail();
-                rqd7.Id = Guid.NewGuid().ToString();
-                rqd7.Requisition = rq3;
-                rqd7.RequisitionId = rq3.Id;
-                rqd7.Inventory = item5;
-                rqd7.RequestedQty = 50;
-                dbcontext.Add(rqd7);
-
-                RequisitionDetail rqd8 = new RequisitionDetail();
-                rqd8.Id = Guid.NewGuid().ToString();
-                rqd8.Requisition = rq3;
-                rqd8.RequisitionId = rq3.Id;
-                rqd8.Inventory = item4;
-                rqd8.RequestedQty = 50;
-                dbcontext.Add(rqd8);
-
-                RequisitionDetail rqd9 = new RequisitionDetail();
-                rqd9.Id = Guid.NewGuid().ToString();
-                rqd9.Requisition = rq3;
-                rqd9.RequisitionId = rq3.Id;
-                rqd9.Inventory = item1;
-                rqd9.RequestedQty = 50;
-                dbcontext.Add(rqd8);
-               
-                Disbursement disb1 = new Disbursement();
-                disb1.Id = Guid.NewGuid().ToString();
-                disb1.Departments = Comm;
-                disb1.GeneratedDate = DateTime.Today.AddDays(-2);
-                disb1.CollectionDate = DateTime.Now;
-                disb1.status = DisbusementStatus.COMPLETED;
-                dbcontext.Add(disb1);
-
-                DisbursementDetail disb1Detail = new DisbursementDetail();
-                disb1Detail.Id = Guid.NewGuid().ToString();
-                disb1Detail.Disbursement = disb1;
-                dbcontext.Add(disb1Detail);*/
+              
                 AdjustmentVoucher vouncher = new AdjustmentVoucher();
                 vouncher.Id = Guid.NewGuid().ToString();
                 vouncher.EmEmployeeId = employee1.Id;
@@ -925,30 +829,6 @@ namespace Team7_StationeryStore.Database
                 d1detail1.disbursedQty = 20;
                 requisition1Detail.DistributedQty = 20;
                 dbcontext.Add(d1detail1);
-
-
-               /* Disbursement d2 = new Disbursement()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    GeneratedDate = DateTime.Now,
-                    CollectionDate = DateTime.Now,
-                    storeClerk=employee1,
-                    status = DisbusementStatus.DELIVERED,
-                    Departments = Comm
-                };
-                dbcontext.Add(d2);
-
-                Disbursement d3 = new Disbursement()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    GeneratedDate = DateTime.Now,
-                    CollectionDate = DateTime.Now,
-                    storeClerk=employee1,
-                    status = DisbusementStatus.COMPLETED,
-                    Departments = CS
-                };
-                dbcontext.Add(d3);
-                */
                 Disbursement d4 = new Disbursement()
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -966,17 +846,6 @@ namespace Team7_StationeryStore.Database
                 d4detail1.disbursedQty = 20;
                 requisition2Detail.DistributedQty = 20;
                 dbcontext.Add(d4detail1);
-                /*
-                Disbursement d5 = new Disbursement()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    GeneratedDate = DateTime.Now,
-                    CollectionDate = DateTime.Now,
-                    storeClerk=employee1,
-                    status = DisbusementStatus.COMPLETED,
-                    Departments = Comm
-                };
-                dbcontext.Add(d5);*/
                 dbcontext.SaveChanges();
 
             }
