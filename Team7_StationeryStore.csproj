@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\StationeryStore\NewFolder\**" />
+    <Content Remove="Views\StationeryStore\NewFolder\**" />
+    <EmbeddedResource Remove="Views\StationeryStore\NewFolder\**" />
+    <None Remove="Views\StationeryStore\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Models\Notification\AdjustmentVoucherNotif.cs" />
     <Compile Remove="Models\Notification\DisbursementNotif.cs" />
     <Compile Remove="Models\Notification\RequisitionNotif.cs" />
@@ -24,10 +31,6 @@
     <PackageReference Include="Microsoft.ML.TimeSeries" Version="1.5.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\StationeryStore\NewFolder\" />
   </ItemGroup>
 
 </Project>
